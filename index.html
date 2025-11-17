@@ -34,7 +34,7 @@
             width: 100%;
         }
 
-        /* Sidebar (Menu Lateral) - NOVO ESTILO */
+        /* Sidebar (Menu Lateral) */
         #sidebar {
             width: 200px;
             background-color: var(--color-secondary);
@@ -55,7 +55,7 @@
             font-size: 1.1em;
             cursor: pointer;
             transition: background-color 0.2s, color 0.2s;
-            display: flex; /* Para alinhar o ícone e o texto */
+            display: flex; 
             align-items: center;
         }
 
@@ -69,7 +69,6 @@
             color: white; 
         }
         
-        /* Ícones da Sidebar (Usando Emojis Unicode) */
         .sidebar-menu button::before {
             content: ''; 
             margin-right: 10px;
@@ -79,13 +78,13 @@
         }
         
         /* Definição de Ícones */
-        #btn-training::before { content: '🏠'; color: var(--color-evolve); } /* Quartel-General */
-        #btn-adventure::before { content: '🗺️'; color: var(--color-combat); } /* Aventura */
-        #btn-upgrades::before { content: '⏫'; color: var(--color-accent); } /* Upgrades */
-        #btn-equipment::before { content: '⚔️'; color: var(--color-hp); } /* Equipamento */
-        #btn-inventory::before { content: '📦'; color: var(--color-energy); } /* Inventário */
-        #btn-status::before { content: '👤'; color: var(--color-soul); } /* Status */
-        #btn-expedition::before { content: '🧭'; color: #f1c40f; } /* Expedição */
+        #btn-training::before { content: '🏠'; color: var(--color-evolve); } 
+        #btn-adventure::before { content: '🗺️'; color: var(--color-combat); } 
+        #btn-upgrades::before { content: '⏫'; color: var(--color-accent); } 
+        #btn-equipment::before { content: '⚔️'; color: var(--color-hp); } 
+        #btn-inventory::before { content: '📦'; color: var(--color-energy); } 
+        #btn-status::before { content: '👤'; color: var(--color-soul); } 
+        #btn-expedition::before { content: '🧭'; color: #f1c40f; } 
 
 
         /* Área de Conteúdo Principal */
@@ -94,15 +93,12 @@
             padding: 20px;
             overflow-y: auto;
             max-height: 100vh;
-            display: none; /* Esconde o conteúdo do jogo no início */
-            position: relative; /* Para posicionar o botão de áudio */
+            display: none; 
+            position: relative; 
         }
         
-        /* Botão de Áudio */
+        /* Botão de Áudio (Dentro do Jogo) */
         #audio-control-button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
             background-color: var(--color-secondary);
             border: 1px solid var(--color-accent);
             color: var(--color-text);
@@ -169,6 +165,33 @@
             transform: translateY(2px);
             box-shadow: 0 2px var(--color-accent);
         }
+        
+        /* Estilo para o Slider de Volume */
+        .volume-control-container {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: var(--color-secondary);
+            border-radius: 5px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .volume-control-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        /* Ajuste a posição do controle de volume para o menu inicial */
+        #start-menu .volume-control-container {
+            position: absolute;
+            bottom: 30px; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%; 
+            max-width: 300px;
+        }
+
 
         /* Painel de Criação de Personagem - ESTILO ISOLADO */
         #character-creation-panel {
@@ -278,7 +301,6 @@
             border-color: var(--color-energy);
         }
 
-
         /* -------------------------------------- */
         /* RESPONSIVIDADE (MOBILE / TELAS PEQUENAS) */
         /* -------------------------------------- */
@@ -313,7 +335,7 @@
                 text-align: center;
                 padding: 8px 10px;
                 font-size: 0.9em;
-                justify-content: center; /* Centraliza o conteúdo no mobile */
+                justify-content: center; 
             }
             
             /* Remove o ícone extra para economizar espaço no mobile */
@@ -390,8 +412,13 @@
             
             <div class="menu-button-stack">
                 <button onclick="showCharacterCreation()">NOVO JOGO</button> 
-                <button onclick="loadGame()">CARREGAR JOGO</button>
+                <button onclick="loadGame(true)">CARREGAR JOGO</button>
                 <button onclick="alert('Sair: Por enquanto, feche a aba.')">SAIR</button>
+            </div>
+            
+            <div class="volume-control-container">
+                <label for="volume-slider-start">🎶 Volume: <span id="volume-label-start">100</span></label>
+                <input type="range" id="volume-slider-start" min="0" max="100" value="100" oninput="setVolume(this.value)">
             </div>
         </div>
 
@@ -445,9 +472,17 @@
 
         <div id="main-content">
             
-            <button id="audio-control-button" onclick="toggleMute()">
-                🔊 Mute
-            </button>
+            <div style="position: absolute; top: 10px; right: 10px; z-index: 10; text-align: right;">
+                <button id="audio-control-button" onclick="toggleMute()" style="margin-bottom: 5px;">
+                    🔊 Mute
+                </button>
+                
+                <div class="volume-control-container" style="width: 150px; padding: 5px; margin-left: auto;">
+                    <label for="volume-slider-game" style="font-size: 0.8em; margin: 0;">Volume: <span id="volume-label-game">100</span></label>
+                    <input type="range" id="volume-slider-game" min="0" max="100" value="100" oninput="setVolume(this.value)">
+                </div>
+            </div>
+
 
             <div id="header">
                 <h2></h2>
@@ -640,6 +675,9 @@
         // Variável da Classe
         let selectedClass = null; 
 
+        // Variáveis de Áudio
+        let currentVolume = 1.0; // 0.0 a 1.0
+
         // Estrutura de Classes do Personagem 
         const CLASSES = {
             warrior: {
@@ -754,6 +792,10 @@
         // Referências de Áudio
         const gameThemeMusic = document.getElementById('game-theme-music');
         const audioControlButton = document.getElementById('audio-control-button');
+        const volumeSliderStart = document.getElementById('volume-slider-start');
+        const volumeLabelStart = document.getElementById('volume-label-start');
+        const volumeSliderGame = document.getElementById('volume-slider-game');
+        const volumeLabelGame = document.getElementById('volume-label-game');
 
         // ====================================================================
         // II. FUNÇÕES DE DISPLAY E NAVEGAÇÃO
@@ -808,6 +850,19 @@
 
             // === ATUALIZAÇÃO DO PAINEL AVENTURA ===
             updateAdventurePanel();
+            
+            // === ATUALIZAÇÃO DO VOLUME E MUTE ===
+            const volValue = Math.round(currentVolume * 100);
+            if (volumeSliderStart) {
+                volumeSliderStart.value = volValue;
+                volumeLabelStart.textContent = volValue;
+            }
+            if (volumeSliderGame) {
+                volumeSliderGame.value = volValue;
+                volumeLabelGame.textContent = volValue;
+            }
+            
+            audioControlButton.textContent = gameThemeMusic.muted ? '🔇 Unmute' : '🔊 Mute';
         }
 
         // Atualiza o estado dos botões de Missões Diárias e Únicas
@@ -882,18 +937,9 @@
 
         // Exibe o painel de Criação de Personagem
         function showCharacterCreation() {
-            // TENTA INICIAR O ÁUDIO AQUI, APÓS O CLIQUE DO USUÁRIO
-            try {
-                gameThemeMusic.play();
-                // O estado do mute deve ser lido do Local Storage, ou ser false por padrão
-                const isMuted = localStorage.getItem('isMuted') === 'true';
-                gameThemeMusic.muted = isMuted;
-                audioControlButton.textContent = isMuted ? '🔇 Unmute' : '🔊 Mute';
-            } catch (e) {
-                console.log("Autoplay de áudio bloqueado.");
-                audioControlButton.textContent = '🔇 Tocar Música';
-            }
-
+            // Tenta dar play na música (usuário interagiu)
+            attemptToPlayMusic();
+            
             // Esconde o menu inicial
             startMenu.style.display = 'none'; 
             // Esconde a sidebar e o conteúdo principal do jogo
@@ -1017,26 +1063,60 @@
         // III. FUNÇÕES DE ÁUDIO
         // ====================================================================
 
-        function toggleMute() {
-            // Se a música nunca foi tocada (por autoplay block), tenta tocar
-            if (gameThemeMusic.paused) {
-                gameThemeMusic.play().then(() => {
-                    gameThemeMusic.muted = false;
-                    audioControlButton.textContent = '🔊 Mute';
-                }).catch(e => {
-                    // Se falhar de novo (porque o navegador está sendo muito restritivo), 
-                    // apenas alterna o ícone, mas a música ainda pode estar bloqueada.
-                    gameThemeMusic.muted = !gameThemeMusic.muted;
-                    audioControlButton.textContent = gameThemeMusic.muted ? '🔇 Unmute' : '🔊 Mute';
-                });
-            } else {
-                // Se já estava tocando, apenas alterna o mute
-                gameThemeMusic.muted = !gameThemeMusic.muted;
-                audioControlButton.textContent = gameThemeMusic.muted ? '🔇 Unmute' : '🔊 Mute';
+        // Define o volume e atualiza o estado
+        function setVolume(value) {
+            const vol = value / 100;
+            currentVolume = vol;
+            gameThemeMusic.volume = vol;
+            
+            // Se o volume for zero, mute o áudio
+            if (vol === 0) {
+                gameThemeMusic.muted = true;
+            } else if (gameThemeMusic.muted && vol > 0) {
+                // Se estava mutado (pelo botão) e aumentou o volume, desmute
+                gameThemeMusic.muted = false;
             }
-            // Salva o estado do mute
+            
+            // Salva o volume e o estado do mute
+            localStorage.setItem('gameVolume', vol); 
             localStorage.setItem('isMuted', gameThemeMusic.muted); 
-            saveGame(); 
+            
+            updateDisplay();
+        }
+
+        // Alterna entre Mute e Unmute
+        function toggleMute() {
+            // Se o volume estiver em 0, não faz sentido desmutar
+            if (currentVolume === 0 && gameThemeMusic.muted) {
+                 alert("Volume está em 0. Por favor, aumente o volume para ouvir.");
+                 return;
+            }
+
+            gameThemeMusic.muted = !gameThemeMusic.muted;
+            
+            // Se tentar desmutar e a música não estiver tocando, tenta dar play
+            if (!gameThemeMusic.muted && gameThemeMusic.paused) {
+                 // Tenta tocar apenas se o usuário interagiu explicitamente
+                 gameThemeMusic.play().catch(e => {
+                     console.log("Falha ao tocar após clique no botão de mute.", e);
+                     alert("O navegador pode estar bloqueando o áudio. Tente dar 'Novo Jogo' ou 'Carregar Jogo' primeiro.");
+                     gameThemeMusic.muted = true; // Volta para o estado mutado se falhar
+                 });
+            }
+            
+            localStorage.setItem('isMuted', gameThemeMusic.muted); 
+            updateDisplay();
+        }
+
+        // Tenta tocar o áudio. Chamado na inicialização
+        function attemptToPlayMusic() {
+            // Tenta tocar o áudio imediatamente. 
+            // Na maioria dos navegadores, isso falhará na primeira vez, mas o play é chamado.
+            gameThemeMusic.play().then(() => {
+                console.log("Música iniciada com sucesso.");
+            }).catch(e => {
+                console.log("Autoplay bloqueado pelo navegador.");
+            });
         }
 
 
@@ -1064,16 +1144,33 @@
                 dailyStatus: dailyMissionStatus, 
                 uniqueStatus: uniqueMissionStatus,
                 heroCurrentHP: heroCurrentHP,
-                // Salva o estado do mute
-                isMuted: gameThemeMusic.muted 
+                // Salva o estado do áudio
+                isMuted: gameThemeMusic.muted,
+                gameVolume: currentVolume
             };
             localStorage.setItem('blazeAndSteelSave', JSON.stringify(gameData));
         }
 
         // Carrega o Estado do Jogo Salvo
-        function loadGame() {
+        function loadGame(isFromButton = false) {
             const savedData = localStorage.getItem('blazeAndSteelSave');
 
+            // 1. Carrega o estado do volume primeiro (independentemente de haver jogo salvo)
+            const savedVolume = localStorage.getItem('gameVolume');
+            if (savedVolume !== null) {
+                currentVolume = parseFloat(savedVolume);
+            } else {
+                currentVolume = 1.0; // Padrão
+            }
+            gameThemeMusic.volume = currentVolume;
+            
+            // Carrega o estado de mute (também separado)
+            const isMuted = localStorage.getItem('isMuted') === 'true';
+            gameThemeMusic.muted = isMuted;
+
+            // 2. Tenta tocar a música imediatamente
+            attemptToPlayMusic();
+            
             if (savedData) {
                 const gameData = JSON.parse(savedData); 
 
@@ -1094,7 +1191,7 @@
                 heroBaseHP = gameData.heroHP || 10;
                 heroBaseATK = gameData.heroATK || 1;
                 atkUpgradeCost = gameData.atkCost || 50;
-                hpUpgradeCost = gameData.hpCost || 50;
+                hpCost = gameData.hpCost || 50;
 
                 // Carrega Status de Combate
                 heroCurrentHP = gameData.heroCurrentHP || heroBaseHP;
@@ -1105,25 +1202,30 @@
 
                 // Carrega Cooldowns
                 missionCooldowns = gameData.missionCooldowns || { provisions: 0, workGold: 0 };
-
-                // Carrega Estado do Áudio E TENTA TOCAR
-                gameThemeMusic.muted = gameData.isMuted === true; 
-                try {
-                    gameThemeMusic.play();
-                    audioControlButton.textContent = gameThemeMusic.muted ? '🔇 Unmute' : '🔊 Mute';
-                } catch(e) {
-                    console.log("Autoplay de áudio bloqueado.");
-                    audioControlButton.textContent = '🔇 Tocar Música';
-                }
                 
+                // Carrega Estado do Áudio
+                gameThemeMusic.muted = gameData.isMuted === true; 
+                currentVolume = gameData.gameVolume !== undefined ? gameData.gameVolume : 1.0;
+                gameThemeMusic.volume = currentVolume;
+
+
                 updateDisplay();
                 startGame(); 
                 alert('Jogo Carregado com Sucesso!');
-            } else {
-                // Se não tiver jogo salvo, exibe a tela inicial/criação
+                
+            } else if (isFromButton) {
+                // Se tentou carregar do botão mas não tinha save
+                alert('Nenhum jogo salvo encontrado. Comece um Novo Jogo!');
                 startMenu.style.display = 'flex';
                 sidebar.style.display = 'none';
                 mainContent.style.display = 'none';
+                updateDisplay();
+            } else {
+                 // Inicialização Padrão (carrega áudio e exibe o menu)
+                startMenu.style.display = 'flex';
+                sidebar.style.display = 'none';
+                mainContent.style.display = 'none';
+                updateDisplay();
             }
         }
 
@@ -1469,7 +1571,7 @@
         // VII. INICIALIZAÇÃO
         // ====================================================================
 
-        // Tenta carregar o jogo salvo ao iniciar a página
+        // Tenta carregar o jogo salvo ao iniciar a página.
         loadGame();
         
     </script>
