@@ -86,6 +86,7 @@
             padding: 20px;
             overflow-y: auto;
             max-height: 100vh;
+            display: none; /* CORREÇÃO: Esconde o conteúdo do jogo no início */
         }
 
         /* Painéis de Conteúdo (Geral) */
@@ -104,7 +105,7 @@
             justify-content: center;
             width: 100%;
             height: 100vh;
-            position: absolute;
+            position: fixed; /* CORREÇÃO: Garante que cubra a tela */
             top: 0;
             left: 0;
             background-color: var(--color-primary);
@@ -146,6 +147,30 @@
             box-shadow: 0 2px var(--color-accent);
         }
 
+        /* Painel de Criação de Personagem - ESTILO ISOLADO */
+        #character-creation-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-primary);
+            z-index: 99;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        #character-creation-panel .content-panel {
+            max-width: 600px;
+            margin: auto;
+            padding: 30px;
+            border: 2px solid var(--color-accent);
+        }
+        
         /* Header e Display de Recursos */
         #header {
             display: flex;
@@ -301,6 +326,11 @@
             }
             
             /* Criação de Personagem Mobile */
+            #character-creation-panel .content-panel {
+                margin: 20px 10px;
+                padding: 20px;
+            }
+            
             #class-selection-container {
                 flex-direction: column;
                 align-items: center;
@@ -319,12 +349,44 @@
     <div id="app-wrapper">
 
         <div id="start-menu">
-            <img src="assets/blaze-and-steel.png.png" alt="Blaze and Steel Logo" class="game-logo"> 
+            <img src="assets/blaze-and-steel.png" alt="Blaze and Steel Logo" class="game-logo"> 
             
             <div class="menu-button-stack">
                 <button onclick="showCharacterCreation()">NOVO JOGO</button> 
                 <button onclick="loadGame()">CARREGAR JOGO</button>
                 <button onclick="alert('Sair: Por enquanto, feche a aba.')">SAIR</button>
+            </div>
+        </div>
+
+        <div id="character-creation-panel" style="display: none;">
+            <div class="content-panel" style="text-align: center;">
+                <h2>Crie Seu Herói!</h2>
+                <p>Escolha um nome e uma classe para começar sua aventura.</p>
+                
+                <div style="margin: 20px 0;">
+                    <label for="hero-name-input" style="font-weight: bold; display: block; margin-bottom: 5px;">Nome do Herói:</label>
+                    <input type="text" id="hero-name-input" placeholder="Ex: Herói Blaze" maxlength="20" style="padding: 10px; font-size: 1.2em; width: 80%; max-width: 300px; border-radius: 5px; border: 1px solid var(--color-accent); background-color: var(--color-primary); color: var(--color-text);">
+                </div>
+                
+                <h3>Selecione Sua Classe:</h3>
+                <div id="class-selection-container" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 15px;">
+                    </div>
+                
+                <div id="class-details" class="content-panel" style="margin-top: 20px; display: none; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto;">
+                    <h4>Detalhes da Classe Selecionada</h4>
+                    <p><strong>Classe:</strong> <span id="selected-class-name"></span></p>
+                    <p><strong>Estatísticas Iniciais:</strong></p>
+                    <ul>
+                        <li>❤️ HP Base: <span id="class-base-hp"></span></li>
+                        <li>⚔️ ATK Base: <span id="class-base-atk"></span></li>
+                        <li>⚡ Energia Inicial: <span id="class-initial-energy"></span></li>
+                    </ul>
+                    <p style="font-style: italic;"></p>
+                    
+                    <button id="confirm-creation-button" disabled onclick="finalizeCreation()" style="background-color: var(--color-evolve); color: white; padding: 12px 25px; border: none; border-radius: 5px; margin-top: 15px; width: 100%;">
+                        INICIAR JOGO!
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -356,38 +418,6 @@
 
             <div id="content-area">
                 
-                <div id="character-creation-panel" style="display: none;">
-                    <div class="content-panel" style="text-align: center;">
-                        <h2>Crie Seu Herói!</h2>
-                        <p>Escolha um nome e uma classe para começar sua aventura.</p>
-                        
-                        <div style="margin: 20px 0;">
-                            <label for="hero-name-input" style="font-weight: bold; display: block; margin-bottom: 5px;">Nome do Herói:</label>
-                            <input type="text" id="hero-name-input" placeholder="Ex: Herói Blaze" maxlength="20" style="padding: 10px; font-size: 1.2em; width: 80%; max-width: 300px; border-radius: 5px; border: 1px solid var(--color-accent); background-color: var(--color-primary); color: var(--color-text);">
-                        </div>
-                        
-                        <h3>Selecione Sua Classe:</h3>
-                        <div id="class-selection-container" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 15px;">
-                            </div>
-                        
-                        <div id="class-details" class="content-panel" style="margin-top: 20px; display: none; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto;">
-                            <h4>Detalhes da Classe Selecionada</h4>
-                            <p><strong>Classe:</strong> <span id="selected-class-name"></span></p>
-                            <p><strong>Estatísticas Iniciais:</strong></p>
-                            <ul>
-                                <li>❤️ HP Base: <span id="class-base-hp"></span></li>
-                                <li>⚔️ ATK Base: <span id="class-base-atk"></span></li>
-                                <li>⚡ Energia Inicial: <span id="class-initial-energy"></span></li>
-                            </ul>
-                            <p style="font-style: italic;"></p>
-                            
-                            <button id="confirm-creation-button" disabled onclick="finalizeCreation()" style="background-color: var(--color-evolve); color: white; padding: 12px 25px; border: none; border-radius: 5px; margin-top: 15px; width: 100%;">
-                                INICIAR JOGO!
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
                 <div id="training-panel" style="display: none;">
                     
                     <div id="special-missions-panel" class="content-panel" style="text-align: center;">
@@ -568,7 +598,7 @@
         // Variável da Classe
         let selectedClass = null; 
 
-        // Estrutura de Classes do Personagem (Caminhos de imagem ajustados para arquivos recentes)
+        // Estrutura de Classes do Personagem (Caminhos de imagem ajustados)
         const CLASSES = {
             warrior: {
                 name: "Guerreiro",
@@ -638,6 +668,7 @@
         // Referências do DOM
         const startMenu = document.getElementById('start-menu');
         const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content'); // Nova referência
         
         // Display de Recursos e Nível
         const powerLevelDisplay = document.getElementById('power-level-display');
@@ -804,8 +835,14 @@
 
         // NOVO: Exibe o painel de Criação de Personagem
         function showCharacterCreation() {
-            startMenu.style.display = 'none';
-            document.getElementById('character-creation-panel').style.display = 'block';
+            // Esconde o menu inicial
+            startMenu.style.display = 'none'; 
+            // Esconde a sidebar e o conteúdo principal do jogo
+            sidebar.style.display = 'none';
+            mainContent.style.display = 'none';
+            
+            // Exibe APENAS a tela de criação
+            document.getElementById('character-creation-panel').style.display = 'flex'; 
             generateClassButtons();
         }
         
@@ -885,7 +922,7 @@
             }
             
             // 3. Inicia o jogo
-            document.getElementById('character-creation-panel').style.display = 'none';
+            document.getElementById('character-creation-panel').style.display = 'none'; // Esconde a tela de criação
             startGame();
             saveGame(); // Salva o novo jogo
         }
@@ -893,6 +930,7 @@
         // Inicia o jogo após criação ou carregamento
         function startGame() {
             sidebar.style.display = 'block';
+            mainContent.style.display = 'block'; // CORREÇÃO: Exibe o conteúdo principal
             showPanel('training-panel'); 
             updateDisplay();
         }
@@ -977,28 +1015,16 @@
                 dailyMissionStatus = gameData.dailyStatus || dailyMissionStatus;
                 uniqueMissionStatus = gameData.uniqueStatus || uniqueMissionStatus;
 
-                // Carrega Cooldowns (reinicia a contagem dos Cooldowns ativos)
+                // Carrega Cooldowns
                 missionCooldowns = gameData.missionCooldowns || { provisions: 0, workGold: 0 };
-                for (const key in missionCooldowns) {
-                    if (missionCooldowns[key] > 0) {
-                        // Se o jogo for carregado, a duração restante é o valor salvo.
-                        // Aqui, tratamos como se a missão já estivesse em andamento.
-                        const timeElapsed = (Date.now() - missionCooldowns[key]) / 1000;
-                        const originalDuration = (key === 'provisions' ? 30 : 60);
-                        const remaining = Math.max(0, originalDuration - timeElapsed);
-                        
-                        // Uma abordagem mais simples é apenas forçar a atualização dos botões no display
-                        // e deixar o loop inicial da missão tratar o valor salvo como tempo restante.
-                    }
-                }
-
+                
                 updateDisplay();
                 startGame(); 
                 alert('Jogo Carregado com Sucesso!');
             } else {
                 // Se não houver save, inicia com o menu de criação
-                alert('Nenhum jogo salvo encontrado. Crie um novo herói!');
-                showCharacterCreation();
+                // alert('Nenhum jogo salvo encontrado. Crie um novo herói!');
+                // Deixa o start-menu ativo por padrão
             }
         }
 
