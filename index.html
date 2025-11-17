@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blaze and Steel RPG</title>
+    <title>BLAZE AND STEEL</title>
     <style>
         /* Variáveis de Cores (CSS Custom Properties) */
         :root {
@@ -41,7 +41,7 @@
             padding: 20px 0;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
             display: none; 
-            flex-shrink: 0; /* Impede que ele encolha no PC */
+            flex-shrink: 0; 
         }
 
         .sidebar-menu button {
@@ -192,18 +192,6 @@
             background-color: #6c3483;
         }
         
-        /* Estilo das Missões */
-        .mission-button {
-            padding: 10px 15px;
-            margin: 5px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-        .mission-daily { background-color: #34495e; color: white; }
-        .mission-unique { background-color: #f1c40f; color: black; }
-        
         /* Estilo para o logo ADVENTURE */
         #adventure-title-logo {
             display: block;
@@ -214,6 +202,35 @@
             image-rendering: crisp-edges;
         }
 
+        /* Estilo para os botões de seleção de classe */
+        #class-selection-container button {
+            background-color: var(--color-secondary); 
+            color: var(--color-text); 
+            border: 2px solid var(--color-primary); 
+            padding: 10px 15px; 
+            border-radius: 5px; 
+            cursor: pointer;
+            width: 150px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+        
+        #class-selection-container button img {
+            max-width: 80px; 
+            max-height: 80px; 
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+        
+        #class-selection-container button:hover {
+            border-color: var(--color-energy);
+        }
+
+
         /* -------------------------------------- */
         /* RESPONSIVIDADE (MOBILE / TELAS PEQUENAS) */
         /* -------------------------------------- */
@@ -221,30 +238,30 @@
             
             /* Estrutura Principal */
             body {
-                overflow-y: auto; /* Permite rolar o conteúdo */
+                overflow-y: auto; 
             }
 
             #app-wrapper {
-                flex-direction: column; /* Coloca os itens um abaixo do outro (sidebar e conteúdo) */
+                flex-direction: column; 
             }
             
             /* Sidebar (Menu) */
             #sidebar {
-                width: 100%; /* Ocupa a largura total */
+                width: 100%; 
                 padding: 10px 0;
                 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-                order: -1; /* Força o menu a ir para o topo da tela */
+                order: -1; 
             }
 
             .sidebar-menu {
-                display: flex; /* Transforma o menu em botões lado a lado */
+                display: flex; 
                 flex-wrap: wrap;
                 justify-content: space-around;
                 gap: 5px;
             }
 
             .sidebar-menu button {
-                width: 45%; /* Cada botão ocupa metade da largura (duas colunas) */
+                width: 45%; 
                 text-align: center;
                 padding: 8px 10px;
                 font-size: 0.9em;
@@ -270,7 +287,7 @@
 
             .resource-display {
                 flex-wrap: wrap;
-                gap: 8px 15px; /* Ajusta o espaçamento */
+                gap: 8px 15px; 
             }
             
             /* Logo de Aventura */
@@ -281,6 +298,18 @@
             /* Botões do Menu Inicial */
             .menu-button-stack button {
                 width: 250px; 
+            }
+            
+            /* Criação de Personagem Mobile */
+            #class-selection-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #class-selection-container button {
+                width: 80%;
+                height: auto;
+                padding: 10px;
             }
         }
     </style>
@@ -293,16 +322,15 @@
             <img src="assets/blaze-and-steel.png.png" alt="Blaze and Steel Logo" class="game-logo"> 
             
             <div class="menu-button-stack">
-                <button onclick="startGame()">JOGAR</button>
-                <button onclick="saveGame()">SALVAR</button>
-                <button onclick="loadGame()">CARREGAR</button>
+                <button onclick="showCharacterCreation()">NOVO JOGO</button> 
+                <button onclick="loadGame()">CARREGAR JOGO</button>
                 <button onclick="alert('Sair: Por enquanto, feche a aba.')">SAIR</button>
             </div>
         </div>
 
         <div id="sidebar">
             <div id="hero-info" style="text-align: center; margin-bottom: 20px;">
-                <h3 id="hero-name">Herói CLT</h3>
+                <h3 id="hero-name"></h3>
                 <p>Nível: <span id="power-level">1</span></p>
             </div>
             <nav class="sidebar-menu">
@@ -318,7 +346,7 @@
 
         <div id="main-content">
             <div id="header">
-                <h2>Herói CLT</h2>
+                <h2></h2>
                 <div class="resource-display">
                     <div class="resource-item" style="color: var(--color-energy);">⚡ Energia: <span id="energy-count">0</span></div>
                     <div class="resource-item" style="color: var(--color-accent);">💰 Ouro: <span id="gold-count">0</span></div>
@@ -327,8 +355,40 @@
             </div>
 
             <div id="content-area">
+                
+                <div id="character-creation-panel" style="display: none;">
+                    <div class="content-panel" style="text-align: center;">
+                        <h2>Crie Seu Herói!</h2>
+                        <p>Escolha um nome e uma classe para começar sua aventura.</p>
+                        
+                        <div style="margin: 20px 0;">
+                            <label for="hero-name-input" style="font-weight: bold; display: block; margin-bottom: 5px;">Nome do Herói:</label>
+                            <input type="text" id="hero-name-input" placeholder="Ex: Herói Blaze" maxlength="20" style="padding: 10px; font-size: 1.2em; width: 80%; max-width: 300px; border-radius: 5px; border: 1px solid var(--color-accent); background-color: var(--color-primary); color: var(--color-text);">
+                        </div>
+                        
+                        <h3>Selecione Sua Classe:</h3>
+                        <div id="class-selection-container" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 15px;">
+                            </div>
+                        
+                        <div id="class-details" class="content-panel" style="margin-top: 20px; display: none; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto;">
+                            <h4>Detalhes da Classe Selecionada</h4>
+                            <p><strong>Classe:</strong> <span id="selected-class-name"></span></p>
+                            <p><strong>Estatísticas Iniciais:</strong></p>
+                            <ul>
+                                <li>❤️ HP Base: <span id="class-base-hp"></span></li>
+                                <li>⚔️ ATK Base: <span id="class-base-atk"></span></li>
+                                <li>⚡ Energia Inicial: <span id="class-initial-energy"></span></li>
+                            </ul>
+                            <p style="font-style: italic;"></p>
+                            
+                            <button id="confirm-creation-button" disabled onclick="finalizeCreation()" style="background-color: var(--color-evolve); color: white; padding: 12px 25px; border: none; border-radius: 5px; margin-top: 15px; width: 100%;">
+                                INICIAR JOGO!
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-                <div id="training-panel" style="display: block;">
+                <div id="training-panel" style="display: none;">
                     
                     <div id="special-missions-panel" class="content-panel" style="text-align: center;">
                         <h3>Missões Especiais</h3>
@@ -484,6 +544,7 @@
         // ====================================================================
 
         // Variáveis do Jogo
+        let heroName = "Novo Herói";
         let powerLevel = 1;
         let gold = 0;
         let currentExp = 0;
@@ -498,13 +559,54 @@
         let atkUpgradeCost = 50;
         let hpUpgradeCost = 50;
 
-        // Variáveis de Missão (para Cooldown)
-        let missionCooldowns = {
-            provisions: 0, 
-            workGold: 0
+        // Variáveis de Combate
+        let isFighting = false;
+        let heroCurrentHP = 10;
+        let heroMaxHP = 10; 
+        let currentMonster = null; 
+        
+        // Variável da Classe
+        let selectedClass = null; 
+
+        // Estrutura de Classes do Personagem (Caminhos de imagem ajustados para arquivos recentes)
+        const CLASSES = {
+            warrior: {
+                name: "Guerreiro",
+                description: "Especialista em combate corpo-a-corpo, focado em vida e dano balanceado.",
+                initialHP: 15,
+                initialATK: 2,
+                initialEnergy: 50,
+                imagePath: "assets/image_1ca763.png" // Assumido: Imagem do Guerreiro
+            },
+            mage: {
+                name: "Mago",
+                description: "Frágil, mas com alto potencial de dano mágico e grande reserva de energia.",
+                initialHP: 8,
+                initialATK: 1, 
+                initialEnergy: 150,
+                imagePath: "assets/image_1ad244.png" // Assumido: Imagem do Mago
+            },
+            archer: {
+                name: "Arqueiro",
+                description: "Rápido e preciso, com bom equilíbrio entre ataque e defesa.",
+                initialHP: 10,
+                initialATK: 1,
+                initialEnergy: 75,
+                imagePath: "assets/image_1cfa1a.png" // Assumido: Imagem do Arqueiro
+            },
+            fighter: {
+                name: "Lutador",
+                description: "Focado em defesa e recuperação, o lutador é difícil de derrubar.",
+                initialHP: 20,
+                initialATK: 1,
+                initialEnergy: 75,
+                imagePath: "assets/image_1cfa20.png" // Assumido: Imagem do Lutador
+            }
         };
 
-        // Variáveis de Missões Diárias/Únicas
+
+        // Variáveis de Missão (para Cooldown)
+        let missionCooldowns = { provisions: 0, workGold: 0 };
         const DAILY_COOLDOWN_MS = 24 * 60 * 60 * 1000;
         let dailyMissionStatus = {
             scouting: { completedAt: 0 },
@@ -515,12 +617,6 @@
             firstQuest: { completed: false },
             tutorialComplete: { completed: false }
         };
-
-        // Variáveis de Combate
-        let isFighting = false;
-        let heroCurrentHP = 10;
-        let heroMaxHP = 10; 
-        let currentMonster = null; 
 
         // Objeto central para a seleção de monstros por Nível
         const MONSTERS_BY_LEVEL = {
@@ -536,7 +632,6 @@
                 { name: "Bandido de Estrada", baseHP: 80, atk: 12, expReward: 120, goldReward: 25, energyCost: 10 },
                 { name: "Golem de Pedra Pequeno", baseHP: 150, atk: 5, expReward: 110, goldReward: 20, energyCost: 10 }
             ]
-            // Adicione mais níveis e monstros aqui
         };
 
 
@@ -552,6 +647,17 @@
         const expCount = document.getElementById('exp-count');
         const expRequired = document.getElementById('exp-required');
         const levelUpButton = document.getElementById('level-up-button');
+        
+        // Referências de NOME e TÍTULO
+        const heroNameInput = document.getElementById('hero-name-input');
+        const heroNameDisplay = document.getElementById('hero-name');
+        const headerTitle = document.querySelector('#header h2');
+        
+        // Referências do Painel de Criação
+        const classContainer = document.getElementById('class-selection-container');
+        const classDetailsPanel = document.getElementById('class-details');
+        const confirmCreationButton = document.getElementById('confirm-creation-button');
+
 
         // Referências do Painel de Upgrades
         const upgradeAtkDisplay = document.getElementById('upgrade-atk-display');
@@ -577,6 +683,10 @@
 
         // Atualiza a exibição na tela
         function updateDisplay() {
+            // NOME
+            heroNameDisplay.textContent = heroName;
+            headerTitle.textContent = heroName;
+            
             // Recursos
             powerLevelDisplay.textContent = powerLevel;
             document.getElementById('power-level').textContent = powerLevel; 
@@ -692,11 +802,98 @@
             startBattleButton.disabled = energy < currentMonster.energyCost || isFighting;
         }
 
-        // Esconde o menu inicial e mostra o jogo
-        function startGame() {
+        // NOVO: Exibe o painel de Criação de Personagem
+        function showCharacterCreation() {
             startMenu.style.display = 'none';
+            document.getElementById('character-creation-panel').style.display = 'block';
+            generateClassButtons();
+        }
+        
+        // NOVO: Gera os botões de seleção de classe no painel
+        function generateClassButtons() {
+            classContainer.innerHTML = ''; 
+            
+            for (const key in CLASSES) {
+                const cls = CLASSES[key];
+                const button = document.createElement('button');
+                button.textContent = cls.name;
+                button.setAttribute('data-class-key', key);
+                button.onclick = () => selectClass(key);
+                
+                // Adiciona a imagem
+                if (cls.imagePath) {
+                    const img = document.createElement('img');
+                    img.src = cls.imagePath;
+                    img.alt = cls.name;
+                    button.prepend(img);
+                }
+
+                classContainer.appendChild(button);
+            }
+        }
+        
+        // NOVO: Seleciona uma classe e atualiza os detalhes
+        function selectClass(key) {
+            selectedClass = key;
+            const cls = CLASSES[key];
+            
+            // Atualiza o painel de detalhes
+            document.getElementById('selected-class-name').textContent = cls.name;
+            document.getElementById('class-base-hp').textContent = cls.initialHP;
+            document.getElementById('class-base-atk').textContent = cls.initialATK;
+            document.getElementById('class-initial-energy').textContent = cls.initialEnergy;
+            classDetailsPanel.querySelector('p:last-of-type').textContent = `"${cls.description}"`; 
+            classDetailsPanel.style.display = 'block';
+            
+            confirmCreationButton.disabled = false;
+            
+            // Atualiza o estilo dos botões para indicar a seleção
+            document.querySelectorAll('#class-selection-container button').forEach(btn => {
+                btn.style.borderColor = btn.getAttribute('data-class-key') === key ? 'var(--color-accent)' : 'var(--color-primary)';
+                btn.style.backgroundColor = btn.getAttribute('data-class-key') === key ? '#4f3655' : 'var(--color-secondary)';
+            });
+        }
+        
+        // NOVO: Finaliza a criação e inicia o jogo com a classe escolhida
+        function finalizeCreation() {
+            if (!selectedClass) {
+                alert("Por favor, selecione uma classe antes de começar!");
+                return;
+            }
+            
+            const cls = CLASSES[selectedClass];
+            
+            // 1. Aplica atributos da classe
+            heroBaseHP = cls.initialHP;
+            heroBaseATK = cls.initialATK;
+            heroCurrentHP = cls.initialHP;
+            heroMaxHP = cls.initialHP;
+            energy = cls.initialEnergy;
+            
+            // Reseta EXP, Ouro e Nível para 1 (novo jogo)
+            powerLevel = 1;
+            currentExp = 0;
+            expToNextLevel = 50;
+            gold = 0;
+            
+            // 2. Define o nome do herói
+            const chosenName = heroNameInput.value.trim();
+            if (chosenName) {
+                heroName = chosenName;
+            } else {
+                heroName = `Herói ${cls.name}`; 
+            }
+            
+            // 3. Inicia o jogo
+            document.getElementById('character-creation-panel').style.display = 'none';
+            startGame();
+            saveGame(); // Salva o novo jogo
+        }
+        
+        // Inicia o jogo após criação ou carregamento
+        function startGame() {
             sidebar.style.display = 'block';
-            showPanel('training-panel'); // Começa no Quartel-General
+            showPanel('training-panel'); 
             updateDisplay();
         }
 
@@ -725,6 +922,8 @@
         // Salva o Estado do Jogo no Navegador
         function saveGame() {
             const gameData = {
+                heroName: heroName, 
+                selectedClass: selectedClass, 
                 level: powerLevel,
                 exp: currentExp,
                 expRequired: expToNextLevel,
@@ -739,7 +938,6 @@
                 missionCooldowns: missionCooldowns,
                 dailyStatus: dailyMissionStatus, 
                 uniqueStatus: uniqueMissionStatus,
-                // Salva o HP atual do herói
                 heroCurrentHP: heroCurrentHP
             };
             localStorage.setItem('blazeAndSteelSave', JSON.stringify(gameData));
@@ -752,6 +950,10 @@
 
             if (savedData) {
                 const gameData = JSON.parse(savedData); 
+
+                // Carrega Nome e Classe
+                heroName = gameData.heroName || "Herói";
+                selectedClass = gameData.selectedClass || null; 
 
                 // Carrega Variáveis Principais
                 powerLevel = gameData.level || 1;
@@ -769,7 +971,7 @@
                 hpUpgradeCost = gameData.hpCost || 50;
 
                 // Carrega Status de Combate
-                heroCurrentHP = gameData.heroCurrentHP || 10;
+                heroCurrentHP = gameData.heroCurrentHP || heroBaseHP;
                 
                 // Carrega Status de Missões
                 dailyMissionStatus = gameData.dailyStatus || dailyMissionStatus;
@@ -779,7 +981,14 @@
                 missionCooldowns = gameData.missionCooldowns || { provisions: 0, workGold: 0 };
                 for (const key in missionCooldowns) {
                     if (missionCooldowns[key] > 0) {
-                        startMission(key, missionCooldowns[key]); 
+                        // Se o jogo for carregado, a duração restante é o valor salvo.
+                        // Aqui, tratamos como se a missão já estivesse em andamento.
+                        const timeElapsed = (Date.now() - missionCooldowns[key]) / 1000;
+                        const originalDuration = (key === 'provisions' ? 30 : 60);
+                        const remaining = Math.max(0, originalDuration - timeElapsed);
+                        
+                        // Uma abordagem mais simples é apenas forçar a atualização dos botões no display
+                        // e deixar o loop inicial da missão tratar o valor salvo como tempo restante.
                     }
                 }
 
@@ -787,8 +996,9 @@
                 startGame(); 
                 alert('Jogo Carregado com Sucesso!');
             } else {
-                // Se não houver save, inicia com o estado padrão
-                updateDisplay();
+                // Se não houver save, inicia com o menu de criação
+                alert('Nenhum jogo salvo encontrado. Crie um novo herói!');
+                showCharacterCreation();
             }
         }
 
@@ -798,7 +1008,7 @@
         
         // 1. Level Up
         function levelUp() {
-            while (currentExp >= expToNextLevel) { // Usa while para subir múltiplos níveis
+            while (currentExp >= expToNextLevel) { 
                 currentExp -= expToNextLevel;
                 powerLevel++;
                 expToNextLevel = Math.round(expToNextLevel * 1.5); 
