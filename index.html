@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>⚔️ Anime RPG de Aventura ⚔️</title>
     <style>
-        /* Estilos do Jogo (Mantendo seu design original) */
+        /* Estilos Base - Seu Design Original */
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #1a1a2e; /* Fundo escuro */
+            background-color: #111d40; /* Fundo mais escuro (Noite) */
             color: #e0e0e0;
             display: flex;
             justify-content: center;
@@ -17,7 +17,46 @@
             margin: 0;
             padding: 20px;
         }
+        
+        /* NOVO: Estilo para o Container do Menu Inicial */
+        #start-menu {
+            /* Remove o fundo e bordas do menu para que ele flutue no fundo noturno */
+            background-color: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            max-width: 400px; /* Torna o menu mais estreito */
+            padding: 0;
+        }
+        
+        /* NOVO: Estilos para os Botões do Menu (Simulando Pixel-Art Grande) */
+        .menu-button-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* Espaçamento entre botões */
+            margin-top: 30px;
+            width: 100%;
+        }
 
+        .menu-button-stack button {
+            width: 100%;
+            padding: 15px 30px;
+            font-size: 20px;
+            font-weight: bold;
+            color: white; /* Texto Branco */
+            background-color: #e74c3c; /* Vermelho/Laranja da Imagem */
+            border: 3px solid #f9c74f; /* Borda Amarela */
+            border-radius: 8px;
+            box-shadow: 0 6px 0 #8b0000; /* Sombra escura para efeito 3D */
+            letter-spacing: 2px;
+        }
+
+        .menu-button-stack button:hover {
+            background-color: #ff6347;
+            box-shadow: 0 4px 0 #8b0000;
+            transform: translateY(2px);
+        }
+        
+        /* Estilos do Jogo (Mantidos para o painel principal) */
         .game-container {
             width: 90%;
             max-width: 800px;
@@ -30,7 +69,6 @@
         }
 
         .pixel-art {
-            /* Regra fundamental para deixar imagens com cara de pixel art */
             image-rendering: pixelated;
             width: 150px; 
             height: 150px;
@@ -39,25 +77,6 @@
             margin: 10px auto;
         }
 
-        button {
-            background-color: #f9c74f;
-            color: #1a1a2e;
-            border: 2px solid #1a1a2e;
-            padding: 10px 20px;
-            margin: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-        }
-
-        button:hover {
-            background-color: #ffda6a;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-        
         /* Estilização para o placar */
         .stats-panel {
             margin-top: 15px;
@@ -66,7 +85,6 @@
             background-color: #3a3a5a;
         }
         
-        /* NOVO ESTILO: Garante que o conteúdo do jogo fique oculto até iniciar */
         #game-content {
             display: none;
         }
@@ -74,15 +92,13 @@
 </head>
 <body>
 
-<div class="game-container" id="start-menu">
-    <h1>⚔️ O Despertar do Herói RPG ⚔️</h1>
-    <p>A aventura aguarda. Você está pronto para treinar e evoluir?</p>
-    
-    <div class="pixel-art" style="background-color: #e74c3c;">
-        <p style="color:white; line-height: 130px;">[INÍCIO]</p>
+<div id="start-menu">
+    <div class="menu-button-stack">
+        <button onclick="startGame()">JOGAR</button>
+        <button onclick="alert('Salvar: Funcionalidade em desenvolvimento!')">SALVAR</button>
+        <button onclick="alert('Carregar: Funcionalidade em desenvolvimento!')">CARREGAR</button>
+        <button onclick="alert('Sair: Por enquanto, feche a aba.')">SAIR</button>
     </div>
-    
-    <button onclick="startGame()">▶️ INICIAR JOGO</button>
 </div>
 
 <div class="game-container" id="game-content">
@@ -137,17 +153,14 @@
         updateDisplay(); // Atualiza a exibição inicial
     }
 
+    // ... (O restante das funções do jogo - updateDisplay, startAdventure, levelUp, updateCharacterAppearance - é mantido)
 
-    // --- Funções Principais do Jogo (Lógica RPG) ---
-
-    // 1. Atualiza a exibição na tela
     function updateDisplay() {
         powerLevelDisplay.textContent = powerLevel;
         goldCount.textContent = gold;
         expCount.textContent = currentExp;
         expRequiredDisplay.textContent = expToNextLevel;
 
-        // Lógica para habilitar o botão de subir de nível
         if (currentExp >= expToNextLevel) {
             levelUpButton.disabled = false;
             levelUpButton.textContent = `SUBIR DE NÍVEL (Pronto!)`;
@@ -157,9 +170,7 @@
         }
     }
 
-    // 2. Ação de Aventura (Ganha EXP e Ouro)
     function startAdventure() {
-        // Ganhos aleatórios baseados no nível atual para manter o desafio
         const expGain = Math.floor(Math.random() * (powerLevel * 5) + 5); 
         const goldGain = Math.floor(Math.random() * (powerLevel * 2) + 1); 
 
@@ -168,7 +179,6 @@
 
         alert(`⚔️ Batalha Vencida! Você ganhou ${expGain} EXP e ${goldGain} Ouro.`);
 
-        // Se a EXP ultrapassar o necessário, limita
         if (currentExp > expToNextLevel) {
             currentExp = expToNextLevel;
         }
@@ -176,7 +186,6 @@
         updateDisplay();
     }
 
-    // 3. Ação de Subir de Nível
     function levelUp() {
         if (currentExp >= expToNextLevel) {
             powerLevel++; 
@@ -190,7 +199,6 @@
         }
     }
     
-    // 4. Lógica para Mudar o Visual do Personagem
     function updateCharacterAppearance(level) {
         let backgroundColor = '';
         switch(level) {
