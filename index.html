@@ -379,7 +379,7 @@
 <body>
     
     <audio id="game-theme-music" loop>
-        <source src="theme_music.mp3" type="audio/mpeg">
+        <source src="assets/theme_music.mp3" type="audio/mpeg"> 
         Seu navegador não suporta a tag de áudio.
     </audio>
 
@@ -882,12 +882,15 @@
 
         // Exibe o painel de Criação de Personagem
         function showCharacterCreation() {
-            // Tenta iniciar a música aqui para bypassar a restrição de autoplay
+            // TENTA INICIAR O ÁUDIO AQUI, APÓS O CLIQUE DO USUÁRIO
             try {
                 gameThemeMusic.play();
-                audioControlButton.textContent = '🔊 Mute';
+                // O estado do mute deve ser lido do Local Storage, ou ser false por padrão
+                const isMuted = localStorage.getItem('isMuted') === 'true';
+                gameThemeMusic.muted = isMuted;
+                audioControlButton.textContent = isMuted ? '🔇 Unmute' : '🔊 Mute';
             } catch (e) {
-                console.log("Autoplay de áudio bloqueado. O usuário deve interagir com o jogo.");
+                console.log("Autoplay de áudio bloqueado.");
                 audioControlButton.textContent = '🔇 Tocar Música';
             }
 
@@ -988,15 +991,6 @@
             sidebar.style.display = 'block';
             mainContent.style.display = 'block'; // Exibe o conteúdo principal
             showPanel('training-panel'); 
-
-            // Tenta iniciar a música aqui também para bypassar a restrição de autoplay
-            try {
-                gameThemeMusic.play();
-                audioControlButton.textContent = gameThemeMusic.muted ? '🔇 Unmute' : '🔊 Mute';
-            } catch (e) {
-                console.log("Autoplay de áudio bloqueado.");
-                audioControlButton.textContent = '🔇 Tocar Música';
-            }
             
             updateDisplay();
         }
@@ -1030,7 +1024,8 @@
                     gameThemeMusic.muted = false;
                     audioControlButton.textContent = '🔊 Mute';
                 }).catch(e => {
-                    // Se falhar de novo, apenas alterna o ícone (o usuário deve clicar)
+                    // Se falhar de novo (porque o navegador está sendo muito restritivo), 
+                    // apenas alterna o ícone, mas a música ainda pode estar bloqueada.
                     gameThemeMusic.muted = !gameThemeMusic.muted;
                     audioControlButton.textContent = gameThemeMusic.muted ? '🔇 Unmute' : '🔊 Mute';
                 });
@@ -1039,6 +1034,9 @@
                 gameThemeMusic.muted = !gameThemeMusic.muted;
                 audioControlButton.textContent = gameThemeMusic.muted ? '🔇 Unmute' : '🔊 Mute';
             }
+            // Salva o estado do mute
+            localStorage.setItem('isMuted', gameThemeMusic.muted); 
+            saveGame(); 
         }
 
 
@@ -1070,7 +1068,6 @@
                 isMuted: gameThemeMusic.muted 
             };
             localStorage.setItem('blazeAndSteelSave', JSON.stringify(gameData));
-            // alert('Jogo Salvo com Sucesso!'); // Desativei o alerta para não ser intrusivo
         }
 
         // Carrega o Estado do Jogo Salvo
@@ -1109,9 +1106,16 @@
                 // Carrega Cooldowns
                 missionCooldowns = gameData.missionCooldowns || { provisions: 0, workGold: 0 };
 
-                // Carrega Estado do Áudio
+                // Carrega Estado do Áudio E TENTA TOCAR
                 gameThemeMusic.muted = gameData.isMuted === true; 
-
+                try {
+                    gameThemeMusic.play();
+                    audioControlButton.textContent = gameThemeMusic.muted ? '🔇 Unmute' : '🔊 Mute';
+                } catch(e) {
+                    console.log("Autoplay de áudio bloqueado.");
+                    audioControlButton.textContent = '🔇 Tocar Música';
+                }
+                
                 updateDisplay();
                 startGame(); 
                 alert('Jogo Carregado com Sucesso!');
