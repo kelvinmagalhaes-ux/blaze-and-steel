@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>⚔️ Anime RPG de Aventura ⚔️</title>
     <style>
-        /* Estilos do Jogo */
+        /* Estilos do Jogo (Mantendo seu design original) */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #1a1a2e; /* Fundo escuro */
@@ -30,6 +30,7 @@
         }
 
         .pixel-art {
+            /* Regra fundamental para deixar imagens com cara de pixel art */
             image-rendering: pixelated;
             width: 150px; 
             height: 150px;
@@ -65,7 +66,7 @@
             background-color: #3a3a5a;
         }
         
-        /* NOVO ESTILO: Esconde o conteúdo do jogo inicialmente */
+        /* NOVO ESTILO: Garante que o conteúdo do jogo fique oculto até iniciar */
         #game-content {
             display: none;
         }
@@ -77,12 +78,11 @@
     <h1>⚔️ O Despertar do Herói RPG ⚔️</h1>
     <p>A aventura aguarda. Você está pronto para treinar e evoluir?</p>
     
-    <div class="pixel-art" style="background-color: #2ecc71;">
+    <div class="pixel-art" style="background-color: #e74c3c;">
         <p style="color:white; line-height: 130px;">[INÍCIO]</p>
     </div>
     
     <button onclick="startGame()">▶️ INICIAR JOGO</button>
-    <button onclick="alert('Funcionalidade não implementada.')">⚙️ OPÇÕES</button>
 </div>
 
 <div class="game-container" id="game-content">
@@ -102,7 +102,7 @@
     <hr>
     
     <h2>⚔️ Aventura e Treinamento ⚔️</h2>
-    <button onclick="startAdventure()">Explorar a Masmorra (Bazer uma Batalha)</button>
+    <button onclick="startAdventure()">Explorar a Masmorra (Batalhar)</button>
 
     <hr>
 
@@ -120,8 +120,8 @@
     let expToNextLevel = 50; 
 
     // Referências do DOM
-    const startMenu = document.getElementById('start-menu'); // NOVO
-    const gameContent = document.getElementById('game-content'); // NOVO
+    const startMenu = document.getElementById('start-menu');
+    const gameContent = document.getElementById('game-content');
     const powerLevelDisplay = document.getElementById('power-level');
     const goldCount = document.getElementById('gold-count');
     const expCount = document.getElementById('exp-count');
@@ -132,13 +132,13 @@
     // --- Funções do Menu ---
 
     function startGame() {
-        startMenu.style.display = 'none'; // Esconde o menu
-        gameContent.style.display = 'block'; // Mostra o conteúdo do jogo
-        updateDisplay(); // Inicia a exibição dos dados
+        startMenu.style.display = 'none'; // Esconde o menu inicial
+        gameContent.style.display = 'block'; // Mostra o jogo principal
+        updateDisplay(); // Atualiza a exibição inicial
     }
 
 
-    // --- Funções Principais do Jogo ---
+    // --- Funções Principais do Jogo (Lógica RPG) ---
 
     // 1. Atualiza a exibição na tela
     function updateDisplay() {
@@ -159,6 +159,7 @@
 
     // 2. Ação de Aventura (Ganha EXP e Ouro)
     function startAdventure() {
+        // Ganhos aleatórios baseados no nível atual para manter o desafio
         const expGain = Math.floor(Math.random() * (powerLevel * 5) + 5); 
         const goldGain = Math.floor(Math.random() * (powerLevel * 2) + 1); 
 
@@ -167,6 +168,7 @@
 
         alert(`⚔️ Batalha Vencida! Você ganhou ${expGain} EXP e ${goldGain} Ouro.`);
 
+        // Se a EXP ultrapassar o necessário, limita
         if (currentExp > expToNextLevel) {
             currentExp = expToNextLevel;
         }
@@ -206,9 +208,6 @@
         }
         characterArt.style.backgroundColor = backgroundColor;
     }
-
-    // Nota: A função updateDisplay não é chamada aqui no final, 
-    // pois ela é chamada apenas depois que o jogador clica em "INICIAR JOGO".
 </script>
 
 </body>
