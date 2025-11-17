@@ -57,13 +57,11 @@
         /* Estilo para a Imagem do Logo no Menu Inicial */
         .game-logo {
             max-width: 90%; 
-            width: 500px; /* Definindo uma largura específica para um bom tamanho */
+            width: 500px;
             height: auto; 
             margin-bottom: 30px; 
-            /* Para garantir a nitidez se a imagem for originalmente pixel-art */
             image-rendering: -webkit-optimize-contrast; 
             image-rendering: crisp-edges; 
-            /* Se for uma imagem de alta resolução, pode-se remover as duas linhas acima. */
         }
 
         .menu-button-stack {
@@ -137,7 +135,7 @@
             background-color: var(--color-bg-light);
             padding: 20px 0;
             border-right: 1px solid #3c3c5c;
-            min-height: calc(100vh - 80px); /* Para que a sidebar ocupe toda a altura */
+            min-height: calc(100vh - 80px); 
         }
         
         .nav-item {
@@ -171,7 +169,7 @@
         
         /* Ajustes específicos para o painel de Aventura */
         #adventure-panel .content-panel {
-             margin-bottom: 10px; /* Menos margem entre os cards internos */
+             margin-bottom: 10px; 
         }
 
         /* 7. ESTILOS DOS BOTÕES GERAIS */
@@ -201,12 +199,7 @@
 
 <div id="app-wrapper">
     <div id="start-menu">
-        <div id="start-menu">
-    <img src="https://imgur.com/a/IDH4VvP" alt="Blaze and Steel Logo" class="game-logo">
-    
-    <div class="menu-button-stack">
-        </div>
-</div>
+        <img src="https://i.imgur.com/IDH4VvP.png" alt="Blaze and Steel Logo" class="game-logo">
         
         <div class="menu-button-stack">
             <button onclick="startGame()">JOGAR</button>
@@ -244,12 +237,13 @@
                     
                     <div class="content-panel" style="text-align: center;">
                         <h3>Treino Básico</h3>
-                        <div style="width: 150px; height: 150px; background-color: var(--color-evolve); margin: 10px auto; border-radius: 50%;"></div>
+                        <div id="hero-click-area" onclick="clickToTrain()" style="cursor: pointer; width: 150px; height: 150px; background-color: var(--color-evolve); margin: 10px auto; border-radius: 50%;"></div>
+                        
                         <p>Clique no herói para treinar! Ganho Base: 1 ⚡</p>
                         <p style="font-size: 0.8em; opacity: 0.7;">Ganhando 0.5 ⚡ por segundo (Idle - Desativado)</p>
 
                         <button style="background-color: var(--color-evolve); color: white;">Estudo Intenso (5x Clique Base)</button>
-                        <button style="background-color: var(--color-accent); color: black;">REALIZAR TRABALHO EXTRA (+10 💰)</button>
+                        <button onclick="workExtra()" style="background-color: var(--color-accent); color: black;">REALIZAR TRABALHO EXTRA (+10 💰)</button>
                     </div>
 
                     <div id="evolution-panel" class="content-panel" style="text-align: center;">
@@ -387,7 +381,7 @@
         
         heroMaxHPDisplay.textContent = heroMaxHP;
         heroATKDisplay.textContent = heroATK;
-        heroCurrentHPDisplay.textContent = heroMaxHP; // Por enquanto, fora de combate é HP máximo.
+        heroCurrentHPDisplay.textContent = heroMaxHP; 
 
         // Lógica para habilitar o botão de subir de nível
         if (currentExp >= expToNextLevel) {
@@ -398,13 +392,41 @@
             levelUpButton.textContent = `SUBIR DE NÍVEL (Falta: ${expToNextLevel - currentExp} EXP)`;
         }
     }
+    
+    // --- NOVAS FUNÇÕES DE TREINAMENTO ---
 
-    // 2. Ação de Batalha (Simulação Simples de Turnos)
+    // 2. Geração de Energia por Clique
+    function clickToTrain() {
+        const baseEnergyGain = 1;
+        
+        energy += baseEnergyGain;
+        updateDisplay();
+        
+        // Efeito visual (feedback)
+        const clickArea = document.getElementById('hero-click-area');
+        clickArea.style.transform = 'scale(1.05)';
+        setTimeout(() => {
+            clickArea.style.transform = 'scale(1.0)';
+        }, 100);
+    }
+    
+    // 3. Geração de Ouro por Trabalho Extra
+    function workExtra() {
+        const goldGain = 10;
+        
+        gold += goldGain;
+        updateDisplay();
+        
+        alert(`💰 Você trabalhou e ganhou ${goldGain} Ouro!`);
+    }
+    
+    // --- FIM DAS NOVAS FUNÇÕES DE TREINAMENTO ---
+
+    // 4. Ação de Batalha (Simulação Simples de Turnos)
     function startBattle() {
         const battleButton = document.getElementById('start-battle-button');
         battleButton.disabled = true;
         
-        // Limpa e inicia o log
         combatLog.innerHTML = '<p>Iniciando combate...</p>';
         combatLog.scrollTop = combatLog.scrollHeight;
 
@@ -415,11 +437,9 @@
         const expGain = 10; 
         const goldGain = 30; 
         
-        // Simulação da Luta
         while (heroHP > 0 && monsterHP > 0 && turns < 100) { 
             turns++;
             
-            // Turno do Herói
             const heroDamage = heroBaseATK + powerLevel;
             monsterHP -= heroDamage;
             combatLog.innerHTML += `<p style="color: lightgreen;">Turno ${turns}: Herói ataca, causa ${heroDamage} dano. Slime HP: ${Math.max(0, monsterHP)}</p>`;
@@ -427,7 +447,6 @@
 
             if (monsterHP <= 0) break;
 
-            // Turno do Monstro
             const monsterDamage = 2;
             heroHP -= monsterDamage;
             combatLog.innerHTML += `<p style="color: tomato;">Turno ${turns}: Slime ataca, causa ${monsterDamage} dano. Herói HP: ${Math.max(0, heroHP)}</p>`;
@@ -435,12 +454,10 @@
         }
         
         if (heroHP > 0) {
-            // Vitória
             combatLog.innerHTML += '<p style="font-weight: bold; color: yellow;">VITÓRIA! O Slime foi derrotado!</p>';
             currentExp += expGain;
             gold += goldGain;
         } else {
-            // Derrota
             combatLog.innerHTML += '<p style="font-weight: bold; color: red;">DERROTA! Seu herói foi nocauteado.</p>';
         }
 
@@ -453,7 +470,7 @@
         updateDisplay();
     }
 
-    // 3. Ação de Subir de Nível
+    // 5. Ação de Subir de Nível
     function levelUp() {
         if (currentExp >= expToNextLevel) {
             powerLevel++; 
@@ -474,14 +491,11 @@
         item.addEventListener('click', () => {
             const targetPanelId = item.getAttribute('data-panel') + '-panel';
             
-            // 1. Remove 'active' de todos e adiciona no item clicado
             navItems.forEach(nav => nav.classList.remove('active'));
             item.classList.add('active');
             
-            // 2. Esconde todos os painéis de conteúdo
             allPanels.forEach(panel => panel.style.display = 'none');
             
-            // 3. Mostra o painel alvo
             const targetPanel = document.getElementById(targetPanelId);
             if (targetPanel) {
                 targetPanel.style.display = 'block';
