@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Herói CLT - Anime RPG</title>
     <style>
-        /* Paleta de Cores da Imagem */
+        /* Paleta de Cores e Variáveis */
         :root {
             --color-bg-dark: #1a1a2e; /* Fundo Principal */
             --color-bg-light: #2e2e4a; /* Containers / Sidebar */
@@ -14,6 +14,7 @@
             --color-energy: #f9c74f; /* Amarelo/Energia */
             --color-soul: #6a0572; /* Roxo/Alma */
             --color-evolve: #5d3591; /* Roxo do botão Evoluir */
+            --color-combat: #c0392b; /* Vermelho/Batalha */
         }
 
         /* 1. ESTILOS GERAIS E LAYOUT PRINCIPAL */
@@ -27,18 +28,18 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-y: scroll; /* Permite scroll se o conteúdo for grande */
+            overflow-y: scroll;
         }
         
         #app-wrapper {
             width: 100%;
-            max-width: 1200px; /* Limite máximo para a interface */
+            max-width: 1200px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* 2. MENU INICIAL (Pixel-Art - Mantido, mas centralizado) */
+        /* 2. MENU INICIAL (Pixel-Art) */
         #start-menu {
             position: fixed;
             top: 0;
@@ -85,7 +86,7 @@
         /* 3. ESTRUTURA DO JOGO (Após o clique em "JOGAR") */
         #game-content {
             display: none;
-            padding-top: 60px; /* Espaço para o cabeçalho fixo */
+            padding-top: 60px;
             flex-grow: 1;
         }
 
@@ -107,6 +108,7 @@
         .resource-display {
             display: flex;
             gap: 15px;
+            font-size: 1.1em;
         }
         .resource-item {
             font-weight: bold;
@@ -123,6 +125,7 @@
             background-color: var(--color-bg-light);
             padding: 20px 0;
             border-right: 1px solid #3c3c5c;
+            min-height: calc(100vh - 80px); /* Para que a sidebar ocupe toda a altura */
         }
         
         .nav-item {
@@ -152,10 +155,14 @@
             border-radius: 8px;
             margin-bottom: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-            text-align: center;
         }
         
-        /* 7. ESTILOS DOS BOTÕES GERAIS (para os painéis) */
+        /* Ajustes específicos para o painel de Aventura */
+        #adventure-panel .content-panel {
+             margin-bottom: 10px; /* Menos margem entre os cards internos */
+        }
+
+        /* 7. ESTILOS DOS BOTÕES GERAIS */
         .content-panel button {
             padding: 10px 20px;
             margin: 10px 5px;
@@ -176,10 +183,6 @@
         #evolution-panel button {
             background-color: var(--color-evolve);
         }
-        
-        #evolution-panel button:hover:not(:disabled) {
-            background-color: #7b4eb2;
-        }
     </style>
 </head>
 <body>
@@ -197,8 +200,8 @@
     <div id="header">
         <h2>Herói CLT</h2>
         <div class="resource-display">
-            <div class="resource-item">⚡ Energia: <span id="energy-count">0</span></div>
-            <div class="resource-item">💰 Ouro: <span id="gold-count">0</span></div>
+            <div class="resource-item" style="color: var(--color-energy);">⚡ Energia: <span id="energy-count">0</span></div>
+            <div class="resource-item" style="color: var(--color-accent);">💰 Ouro: <span id="gold-count">0</span></div>
             <div class="resource-item" style="color: var(--color-soul);">💀 Alma: <span id="soul-count">0</span></div>
         </div>
     </div>
@@ -218,29 +221,83 @@
 
             <div id="content-area">
 
-                <div id="training-panel" class="content-panel">
-                    <h3>Treinamento (Seu Nível Atual)</h3>
-                    <p>🌟 Nível de Poder: <span id="power-level">1</span></p>
-                    <p>✨ EXP: <span id="exp-count">0</span> / <span id="exp-required">50</span></p>
+                <div id="training-panel" style="display: block;">
                     
-                    <button onclick="startAdventure()">Explorar a Masmorra (Batalhar)</button>
-                </div>
-                
-                <div id="evolution-panel" class="content-panel">
-                    <h3>Evolução & Reencarnação</h3>
-                    <p>Suba de nível para ficar mais forte e liberar mais conteúdo.</p>
-                    
-                    <button id="level-up-button" onclick="levelUp()" disabled>
-                        SUBIR DE NÍVEL (Falta: 50 EXP)
-                    </button>
-                    <button onclick="alert('Reencarnar: Funcionalidade para o futuro!')" style="background-color: var(--color-soul);">
-                        REENCARNAR (Custo: 500 💀)
-                    </button>
+                    <div class="content-panel" style="text-align: center;">
+                        <h3>Treino Básico</h3>
+                        <div style="width: 150px; height: 150px; background-color: var(--color-evolve); margin: 10px auto; border-radius: 50%;"></div>
+                        <p>Clique no herói para treinar! Ganho Base: 1 ⚡</p>
+                        <p style="font-size: 0.8em; opacity: 0.7;">Ganhando 0.5 ⚡ por segundo (Idle - Desativado)</p>
+
+                        <button style="background-color: var(--color-evolve); color: white;">Estudo Intenso (5x Clique Base)</button>
+                        <button style="background-color: var(--color-accent); color: black;">REALIZAR TRABALHO EXTRA (+10 💰)</button>
+                    </div>
+
+                    <div id="evolution-panel" class="content-panel" style="text-align: center;">
+                        <h3>Evolução & Reencarnação</h3>
+                        <p>Suba de nível e recomece mais forte!</p>
+                        <p>🌟 Nível de Poder: <span id="power-level">1</span></p>
+                        <p>✨ EXP: <span id="exp-count">0</span> / <span id="exp-required">50</span></p>
+                        
+                        <button id="level-up-button" onclick="levelUp()" disabled>
+                            SUBIR DE NÍVEL (Falta: 50 EXP)
+                        </button>
+                        <button onclick="alert('Reencarnar: Funcionalidade para o futuro!')" style="background-color: var(--color-soul);">
+                            REENCARNAR (Custo: 500 💀)
+                        </button>
+                    </div>
                 </div>
 
-                <div id="adventure-panel" class="content-panel" style="display: none;">Aventura: Conteúdo Futuro.</div>
-                <div id="upgrades-panel" class="content-panel" style="display: none;">Upgrades: Use Ouro para comprar melhorias!</div>
+                <div id="adventure-panel" style="display: none;">
+
+                    <h2>🗺️ Aventura & Batalha</h2>
+
+                    <div style="display: flex; gap: 20px;">
+                        
+                        <div class="content-panel" style="flex: 2; text-align: center;">
+                            <h3>Slime Iniciante</h3>
+                            <div style="width: 150px; height: 150px; background-color: #e74c3c; margin: 10px auto; border: 2px solid var(--color-accent);"></div>
+                            <p>❤️ HP: <span id="monster-hp">20</span> / 20</p>
+                            <p>⚔️ ATK: <span id="monster-atk">2</span></p>
+                            <p style="font-size: 0.8em; margin-top: 15px;">
+                                Recompensa: 💰 30, ✨ 5, 💀 0, 10 XP
+                            </p>
+                            
+                            <button id="start-battle-button" onclick="startBattle()" style="background-color: var(--color-combat); color: white; width: 80%;">Iniciar Batalha!</button>
+                        </div>
+
+                        <div class="content-panel" style="flex: 1;">
+                            <h3>📝 Log de Combate</h3>
+                            <div id="combat-log" style="height: 250px; overflow-y: scroll; text-align: left; font-size: 0.9em; padding: 5px;">
+                                <p>A batalha começará aqui.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="content-panel" style="text-align: center;">
+                        <h3>Skills Ativas</h3>
+                        <p style="font-size: 0.9em;">Use a seu favor em combate!</p>
+                        <button style="background-color: #27ae60; color: white;">Estouro de Energia (15s)</button>
+                        <button style="background-color: #3498db; color: white;">Cura Rápida (30s)</button>
+                        <button style="background-color: #f1c40f; color: black;">Sorte de Novato (60s)</button>
+                    </div>
+
+                    <div class="content-panel" style="text-align: left;">
+                        <h3>Estatísticas de Batalha do Herói</h3>
+                        <p>❤️ HP: <span id="hero-current-hp">10</span> / <span id="hero-max-hp">10</span></p>
+                        <p>⚔️ ATK: <span id="hero-atk">1</span></p>
+                        <p>💥 Chance Crítico: <span id="hero-crit">5%</span> (Nv. 0)</p>
+                        <p>💨 Chance Esquiva: <span id="hero-dodge">5%</span> (Nv. 0)</p>
+                    </div>
                 </div>
+
+                <div id="upgrades-panel" class="content-panel" style="display: none;"><h2>✨ Upgrades</h2><p>Use Ouro para comprar melhorias!</p></div>
+                <div id="equipment-panel" class="content-panel" style="display: none;"><h2>🛡️ Equipamento</h2><p>Equipe itens para aumentar seus stats.</p></div>
+                <div id="inventory-panel" class="content-panel" style="display: none;"><h2>📦 Inventário</h2><p>Veja seus itens aqui.</p></div>
+                <div id="status-panel" class="content-panel" style="display: none;"><h2>📊 Status</h2><p>Seu Status Completo.</p></div>
+                <div id="expedition-panel" class="content-panel" style="display: none;"><h2>🚀 Expedição</h2><p>Envie seu herói em longas missões.</p></div>
+
+            </div>
         </div>
     </div>
 </div>
@@ -250,9 +307,14 @@
     let powerLevel = 1;
     let gold = 0;
     let currentExp = 0;
-    let expToNextLevel = 50;
-    let energy = 0; // Novo, para fidelidade
-    let soul = 0;   // Novo, para fidelidade
+    let expToNextLevel = 50; 
+    let energy = 0; 
+    let soul = 0;
+    
+    // VARIÁVEIS DE COMBATE
+    let heroBaseHP = 10;
+    let heroBaseATK = 1;
+    let monsterBaseHP = 20;
 
     // Referências do DOM
     const startMenu = document.getElementById('start-menu');
@@ -263,11 +325,17 @@
     const goldCount = document.getElementById('gold-count');
     const soulCount = document.getElementById('soul-count');
     
-    // Painel de Status
+    // Painel de Status/Treinamento
     const powerLevelDisplay = document.getElementById('power-level');
     const expCount = document.getElementById('exp-count');
     const expRequiredDisplay = document.getElementById('exp-required');
     const levelUpButton = document.getElementById('level-up-button');
+    
+    // Painel de Aventura
+    const heroCurrentHPDisplay = document.getElementById('hero-current-hp');
+    const heroMaxHPDisplay = document.getElementById('hero-max-hp');
+    const heroATKDisplay = document.getElementById('hero-atk');
+    const combatLog = document.getElementById('combat-log');
     
     // --- Funções do Menu ---
 
@@ -275,21 +343,32 @@
         startMenu.style.display = 'none';
         gameContent.style.display = 'block';
         updateDisplay();
+        // Garante que a primeira aba (Treinamento) esteja ativa
+        document.getElementById('training-panel').style.display = 'block';
     }
 
 
     // --- Funções Principais do Jogo (Lógica RPG) ---
 
+    // 1. Atualiza a exibição na tela
     function updateDisplay() {
         // Atualiza Recursos no Cabeçalho
         energyCount.textContent = energy;
         goldCount.textContent = gold;
         soulCount.textContent = soul;
 
-        // Atualiza o Painel de Status
+        // Atualiza o Painel de Status/Evolução
         powerLevelDisplay.textContent = powerLevel;
         expCount.textContent = currentExp;
         expRequiredDisplay.textContent = expToNextLevel;
+
+        // Atualiza Estatísticas do Herói (para Aventura)
+        const heroMaxHP = heroBaseHP + (powerLevel * 5); 
+        const heroATK = heroBaseATK + powerLevel;
+        
+        heroMaxHPDisplay.textContent = heroMaxHP;
+        heroATKDisplay.textContent = heroATK;
+        heroCurrentHPDisplay.textContent = heroMaxHP; // Por enquanto, fora de combate é HP máximo.
 
         // Lógica para habilitar o botão de subir de nível
         if (currentExp >= expToNextLevel) {
@@ -301,15 +380,53 @@
         }
     }
 
-    function startAdventure() {
-        const expGain = Math.floor(Math.random() * (powerLevel * 5) + 5); 
-        const goldGain = Math.floor(Math.random() * (powerLevel * 2) + 1); 
+    // 2. Ação de Batalha (Simulação Simples de Turnos)
+    function startBattle() {
+        const battleButton = document.getElementById('start-battle-button');
+        battleButton.disabled = true;
+        
+        // Limpa e inicia o log
+        combatLog.innerHTML = '<p>Iniciando combate...</p>';
+        combatLog.scrollTop = combatLog.scrollHeight;
 
-        currentExp += expGain;
-        gold += goldGain;
+        let heroHP = heroBaseHP + (powerLevel * 5);
+        let monsterHP = monsterBaseHP;
+        let turns = 0;
 
-        alert(`⚔️ Batalha Vencida! Você ganhou ${expGain} EXP e ${goldGain} Ouro.`);
+        const expGain = 10; 
+        const goldGain = 30; 
+        
+        // Simulação da Luta
+        while (heroHP > 0 && monsterHP > 0 && turns < 100) { 
+            turns++;
+            
+            // Turno do Herói
+            const heroDamage = heroBaseATK + powerLevel;
+            monsterHP -= heroDamage;
+            combatLog.innerHTML += `<p style="color: lightgreen;">Turno ${turns}: Herói ataca, causa ${heroDamage} dano. Slime HP: ${Math.max(0, monsterHP)}</p>`;
+            combatLog.scrollTop = combatLog.scrollHeight; // Scroll automático
 
+            if (monsterHP <= 0) break;
+
+            // Turno do Monstro
+            const monsterDamage = 2;
+            heroHP -= monsterDamage;
+            combatLog.innerHTML += `<p style="color: tomato;">Turno ${turns}: Slime ataca, causa ${monsterDamage} dano. Herói HP: ${Math.max(0, heroHP)}</p>`;
+            combatLog.scrollTop = combatLog.scrollHeight;
+        }
+        
+        if (heroHP > 0) {
+            // Vitória
+            combatLog.innerHTML += '<p style="font-weight: bold; color: yellow;">VITÓRIA! O Slime foi derrotado!</p>';
+            currentExp += expGain;
+            gold += goldGain;
+        } else {
+            // Derrota
+            combatLog.innerHTML += '<p style="font-weight: bold; color: red;">DERROTA! Seu herói foi nocauteado.</p>';
+        }
+
+        battleButton.disabled = false;
+        
         if (currentExp > expToNextLevel) {
             currentExp = expToNextLevel;
         }
@@ -317,6 +434,7 @@
         updateDisplay();
     }
 
+    // 3. Ação de Subir de Nível
     function levelUp() {
         if (currentExp >= expToNextLevel) {
             powerLevel++; 
@@ -331,7 +449,7 @@
     
     // --- Lógica de Navegação (Para Sidebar) ---
     const navItems = document.querySelectorAll('.nav-item');
-    const contentPanels = document.querySelectorAll('.content-panel');
+    const allPanels = document.querySelectorAll('#content-area > div'); // Seleciona todos os filhos diretos da área de conteúdo
 
     navItems.forEach(item => {
         item.addEventListener('click', () => {
@@ -342,7 +460,7 @@
             item.classList.add('active');
             
             // 2. Esconde todos os painéis de conteúdo
-            contentPanels.forEach(panel => panel.style.display = 'none');
+            allPanels.forEach(panel => panel.style.display = 'none');
             
             // 3. Mostra o painel alvo
             const targetPanel = document.getElementById(targetPanelId);
