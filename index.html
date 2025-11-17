@@ -349,7 +349,7 @@
     <div id="app-wrapper">
 
         <div id="start-menu">
-            <img src="assets/blaze-and-steel.png" alt="Blaze and Steel Logo" class="game-logo"> 
+            <img src="image_1d6e01.png" alt="Blaze and Steel Logo" class="game-logo"> 
             
             <div class="menu-button-stack">
                 <button onclick="showCharacterCreation()">NOVO JOGO</button> 
@@ -606,7 +606,7 @@
                 initialHP: 15,
                 initialATK: 2,
                 initialEnergy: 50,
-                imagePath: "assets/image_1ca763.png" // Assumido: Imagem do Guerreiro
+                imagePath: "image_1ca763.png" // Imagem do Guerreiro
             },
             mage: {
                 name: "Mago",
@@ -614,7 +614,7 @@
                 initialHP: 8,
                 initialATK: 1, 
                 initialEnergy: 150,
-                imagePath: "assets/image_1ad244.png" // Assumido: Imagem do Mago
+                imagePath: "image_1ad244.png" // Imagem do Mago
             },
             archer: {
                 name: "Arqueiro",
@@ -622,7 +622,7 @@
                 initialHP: 10,
                 initialATK: 1,
                 initialEnergy: 75,
-                imagePath: "assets/image_1cfa1a.png" // Assumido: Imagem do Arqueiro
+                imagePath: "image_1cfa1a.png" // Imagem do Arqueiro
             },
             fighter: {
                 name: "Lutador",
@@ -630,7 +630,7 @@
                 initialHP: 20,
                 initialATK: 1,
                 initialEnergy: 75,
-                imagePath: "assets/image_1cfa20.png" // Assumido: Imagem do Lutador
+                imagePath: "image_1cfa20.png" // Imagem do Lutador
             }
         };
 
@@ -1155,7 +1155,7 @@
         // 5. Início de Missões Diárias (24h de Cooldown)
         function startDailyMission(key) {
             const status = dailyMissionStatus[key];
-            const now = Date.now();
+            const now = Date.epoch;
 
             if (now < status.completedAt + DAILY_COOLDOWN_MS) {
                 alert("Essa missão só pode ser feita uma vez por dia!");
