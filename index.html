@@ -41,6 +41,7 @@
             padding: 20px 0;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
             display: none; 
+            flex-shrink: 0; /* Impede que ele encolha no PC */
         }
 
         .sidebar-menu button {
@@ -213,6 +214,75 @@
             image-rendering: crisp-edges;
         }
 
+        /* -------------------------------------- */
+        /* RESPONSIVIDADE (MOBILE / TELAS PEQUENAS) */
+        /* -------------------------------------- */
+        @media (max-width: 768px) {
+            
+            /* Estrutura Principal */
+            body {
+                overflow-y: auto; /* Permite rolar o conteúdo */
+            }
+
+            #app-wrapper {
+                flex-direction: column; /* Coloca os itens um abaixo do outro (sidebar e conteúdo) */
+            }
+            
+            /* Sidebar (Menu) */
+            #sidebar {
+                width: 100%; /* Ocupa a largura total */
+                padding: 10px 0;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+                order: -1; /* Força o menu a ir para o topo da tela */
+            }
+
+            .sidebar-menu {
+                display: flex; /* Transforma o menu em botões lado a lado */
+                flex-wrap: wrap;
+                justify-content: space-around;
+                gap: 5px;
+            }
+
+            .sidebar-menu button {
+                width: 45%; /* Cada botão ocupa metade da largura (duas colunas) */
+                text-align: center;
+                padding: 8px 10px;
+                font-size: 0.9em;
+            }
+            
+            /* Esconde os ícones no mobile para economizar espaço */
+            .sidebar-menu button::before {
+                content: none;
+            }
+
+            /* Conteúdo Principal */
+            #main-content {
+                padding: 10px;
+            }
+
+            /* Header (Recursos) */
+            #header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding-bottom: 10px;
+                margin-bottom: 10px;
+            }
+
+            .resource-display {
+                flex-wrap: wrap;
+                gap: 8px 15px; /* Ajusta o espaçamento */
+            }
+            
+            /* Logo de Aventura */
+            #adventure-title-logo {
+                max-width: 100%;
+            }
+            
+            /* Botões do Menu Inicial */
+            .menu-button-stack button {
+                width: 250px; 
+            }
+        }
     </style>
 </head>
 <body>
