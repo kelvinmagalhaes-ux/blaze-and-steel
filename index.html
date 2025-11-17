@@ -185,7 +185,7 @@
         /* Ajuste a posição do controle de volume para o menu inicial */
         #start-menu .volume-control-container {
             position: absolute;
-            bottom: 30px; 
+            bottom: 33px; 
             left: 50%;
             transform: translateX(-50%);
             width: 90%; 
@@ -497,6 +497,7 @@
                         <li>❤️ HP Base: <span id="class-base-hp"></span></li>
                         <li>⚔️ ATK Base: <span id="class-base-atk"></span></li>
                         <li>⚡ Energia Inicial: <span id="class-initial-energy"></span></li>
+                        <li style="font-weight: bold;">⚔️ Equipamento Inicial: <span id="class-initial-equipment"></span></li>
                     </ul>
                     <p style="font-style: italic;"></p>
                     
@@ -751,7 +752,7 @@
         let soul = 0;
         let energyPerClick = 1; 
         
-        // Variáveis de UPGRADE
+        // Variáveis de UPGRADE (Bases que são melhoradas por upgrades)
         let heroBaseATK = 1;
         let heroBaseHP = 10;
         let atkUpgradeCost = 50;
@@ -765,27 +766,23 @@
         
         // Variável da Classe
         let selectedClass = null; 
-        
-        // NOVO: Estrutura de Equipamento
+        let nextItemId = 1000; // ID para novos itens gerados
+
+        // Estrutura de Equipamento
         const EQUIPMENT_SLOTS = {
             weapon: { name: "Arma", currentItem: null },
             armor: { name: "Armadura", currentItem: null },
             accessory: { name: "Acessório", currentItem: null }
         };
         
-        // NOVO: Estrutura do Inventário (Itens iniciais)
-        let inventory = [
-            { id: 101, name: "Espada Quebrada", type: "weapon", atk: 2, rarity: "Comum", description: "Melhor que nada." },
-            { id: 201, name: "Armadura de Couro", type: "armor", hpBonus: 15, rarity: "Comum", description: "Oferece proteção básica." },
-            { id: 301, name: "Anel de Cobre", type: "accessory", energyBonus: 50, rarity: "Comum", description: "Um anel simples." },
-            { id: 102, name: "Espada de Ferro", type: "weapon", atk: 5, rarity: "Raro", description: "Uma lâmina afiada." }
-        ];
+        // Estrutura do Inventário (Inicia Vazio para o Novo Jogo)
+        let inventory = [];
 
         // Variáveis de Áudio
         let currentVolume = 1.0; // 0.0 a 1.0
         let hasInteracted = false; // Para controlar o bloqueio de autoplay
 
-        // Estrutura de Classes do Personagem 
+        // Estrutura de Classes do Personagem (ATUALIZADA com startingItems)
         const CLASSES = {
             warrior: {
                 name: "Guerreiro",
@@ -793,7 +790,11 @@
                 initialHP: 15,
                 initialATK: 2,
                 initialEnergy: 50,
-                imagePath: "assets/guerreiro.png" 
+                imagePath: "assets/guerreiro.png",
+                startingItems: [
+                    { id: 1, name: "Espada Curta", type: "weapon", atk: 2, rarity: "Comum", description: "Uma lâmina básica de treinamento." },
+                    { id: 2, name: "Armadura de Couro", type: "armor", hpBonus: 10, rarity: "Comum", description: "Proteção leve e confiável." }
+                ]
             },
             mage: {
                 name: "Mago",
@@ -801,7 +802,11 @@
                 initialHP: 8,
                 initialATK: 1, 
                 initialEnergy: 150,
-                imagePath: "assets/mago.png" 
+                imagePath: "assets/mago.png",
+                startingItems: [
+                    { id: 3, name: "Cajado de Madeira", type: "weapon", atk: 1, energyBonus: 50, rarity: "Comum", description: "Um cajado simples para canalizar magia." },
+                    { id: 4, name: "Manto de Pano", type: "armor", hpBonus: 5, rarity: "Comum", description: "Roupas leves que não atrapalham o movimento." }
+                ]
             },
             archer: {
                 name: "Arqueiro",
@@ -809,7 +814,11 @@
                 initialHP: 10,
                 initialATK: 1,
                 initialEnergy: 75,
-                imagePath: "assets/arqueiro.png" 
+                imagePath: "assets/arqueiro.png",
+                startingItems: [
+                    { id: 5, name: "Arco Curto", type: "weapon", atk: 3, rarity: "Comum", description: "Um arco simples para caça." },
+                    { id: 6, name: "Malha Leve", type: "armor", hpBonus: 8, rarity: "Comum", description: "Oferece defesa sem restringir a agilidade." }
+                ]
             },
             fighter: {
                 name: "Lutador",
@@ -817,7 +826,11 @@
                 initialHP: 20,
                 initialATK: 1,
                 initialEnergy: 75,
-                imagePath: "assets/lutador.png" 
+                imagePath: "assets/lutador.png",
+                startingItems: [
+                    { id: 7, name: "Luvas de Couro", type: "weapon", atk: 1, rarity: "Comum", description: "Aumenta o dano dos seus punhos." },
+                    { id: 8, name: "Cota de Malha", type: "armor", hpBonus: 15, rarity: "Comum", description: "Armadura pesada para maior resistência." }
+                ]
             }
         };
 
@@ -876,6 +889,7 @@
         const classContainer = document.getElementById('class-selection-container');
         const classDetailsPanel = document.getElementById('class-details');
         const confirmCreationButton = document.getElementById('confirm-creation-button');
+        const classInitialEquipmentDisplay = document.getElementById('class-initial-equipment');
 
 
         // Referências do Painel de Upgrades
@@ -1052,6 +1066,9 @@
             sidebar.style.display = 'none';
             mainContent.style.display = 'none';
             
+            // Reseta a variável de classe para forçar a seleção
+            selectedClass = null;
+
             // Exibe APENAS a tela de criação
             characterCreationPanel.style.display = 'flex'; 
             generateClassButtons();
@@ -1091,6 +1108,11 @@
             document.getElementById('class-base-atk').textContent = cls.initialATK;
             document.getElementById('class-initial-energy').textContent = cls.initialEnergy;
             classDetailsPanel.querySelector('p:last-of-type').textContent = `"${cls.description}"`; 
+            
+            // NOVO: Exibe o equipamento inicial
+            const startingItemsNames = cls.startingItems.map(item => item.name).join(' e ');
+            classInitialEquipmentDisplay.textContent = startingItemsNames || "Nenhum";
+            
             classDetailsPanel.style.display = 'block';
             
             confirmCreationButton.disabled = false;
@@ -1102,7 +1124,7 @@
             });
         }
         
-        // Finaliza a criação e inicia o jogo com a classe escolhida
+        // Finaliza a criação e inicia o jogo com a classe escolhida (ATUALIZADA)
         function finalizeCreation() {
             if (!selectedClass) {
                 alert("Por favor, selecione uma classe antes de começar!");
@@ -1111,7 +1133,7 @@
             
             const cls = CLASSES[selectedClass];
             
-            // 1. Aplica atributos da classe
+            // 1. Aplica atributos base da classe
             heroBaseHP = cls.initialHP;
             heroBaseATK = cls.initialATK;
             heroCurrentHP = cls.initialHP;
@@ -1123,6 +1145,12 @@
             currentExp = 0;
             expToNextLevel = 50;
             gold = 0;
+            inventory = []; // Zera o inventário
+            
+            // Zera slots de equipamento
+            for (const slotKey in EQUIPMENT_SLOTS) {
+                EQUIPMENT_SLOTS[slotKey].currentItem = null;
+            }
             
             // 2. Define o nome do herói
             const chosenName = heroNameInput.value.trim();
@@ -1131,8 +1159,22 @@
             } else {
                 heroName = `Herói ${cls.name}`; 
             }
+
+            // 3. Adiciona e Equipa os Itens Iniciais (NOVA LÓGICA)
+            cls.startingItems.forEach((starterItem, index) => {
+                // Cria uma cópia do item para que IDs de itens sejam únicos em saves
+                const newItem = { 
+                    ...starterItem, 
+                    id: nextItemId++, // Usa um ID incremental único para o item
+                    // Adiciona a raridade se não existir (para o display)
+                    rarity: starterItem.rarity || "Básico"
+                }; 
+                
+                inventory.push(newItem); // Adiciona ao inventário
+                equipItem(newItem, false); // Equipa o item (sem alerta, para não floodar)
+            });
             
-            // 3. Inicia o jogo
+            // 4. Inicia o jogo
             characterCreationPanel.style.display = 'none'; // Esconde a tela de criação
             startGame(); // CHAMA A FUNÇÃO PARA INICIAR O JOGO
             saveGame(); // Salva o novo jogo
@@ -1263,6 +1305,7 @@
                 // NOVO: Itens e Equipamento
                 inventory: inventory,
                 equipment: EQUIPMENT_SLOTS,
+                nextItemId: nextItemId, // Salva o próximo ID para manter a unicidade
                 
                 // Salva o estado do áudio
                 isMuted: gameThemeMusic.muted,
@@ -1327,12 +1370,21 @@
                 missionCooldowns = gameData.missionCooldowns || { provisions: 0, workGold: 0 };
                 
                 // NOVO: Carrega Itens e Equipamento
-                inventory = gameData.inventory || inventory;
+                inventory = gameData.inventory || [];
+                nextItemId = gameData.nextItemId || 1000;
                 
                 if (gameData.equipment) {
                     for (const slotKey in gameData.equipment) {
                         if (EQUIPMENT_SLOTS[slotKey]) {
-                            EQUIPMENT_SLOTS[slotKey].currentItem = gameData.equipment[slotKey].currentItem;
+                            // É crucial que o item carregado do save seja uma referência ao objeto no inventário
+                            const equippedItemId = gameData.equipment[slotKey].currentItem ? gameData.equipment[slotKey].currentItem.id : null;
+                            if (equippedItemId) {
+                                // Encontra a referência do item no inventário
+                                const itemReference = inventory.find(item => item.id === equippedItemId);
+                                EQUIPMENT_SLOTS[slotKey].currentItem = itemReference || null;
+                            } else {
+                                EQUIPMENT_SLOTS[slotKey].currentItem = null;
+                            }
                         }
                     }
                 }
@@ -1392,13 +1444,13 @@
                 gold -= atkUpgradeCost;
                 heroBaseATK += 1;
                 atkUpgradeCost = Math.round(atkUpgradeCost * 1.5); 
-                alert(`⚔️ Ataque Base aumentado para ${heroBaseATK}!`);
+                alert(`⚔️ Ataque Base (Upgrade) aumentado para ${heroBaseATK}!`);
             
             } else if (type === 'hp' && gold >= hpUpgradeCost) {
                 gold -= hpUpgradeCost;
                 heroBaseHP += 10;
                 hpUpgradeCost = Math.round(hpUpgradeCost * 1.5); 
-                alert(`❤️ HP Base aumentado para ${heroBaseHP}!`);
+                alert(`❤️ HP Base (Upgrade) aumentado para ${heroBaseHP}!`);
             
             } else {
                 alert("Você não tem Ouro suficiente para este upgrade!");
@@ -1476,11 +1528,11 @@
                 if (Math.random() < 0.15) { 
                     if (type === 'attack') {
                         heroBaseATK += 1;
-                        message += " E descobriu um novo golpe (+1 ATK Bônus)!";
+                        message += " E descobriu um novo golpe (+1 ATK Bônus Base)!";
                     } else if (type === 'defense') {
                         heroBaseHP += 5;
                         heroCurrentHP += 5; // Aumenta o HP atual também
-                        message += " E fortificou sua armadura (+5 HP Bônus)!";
+                        message += " E fortificou sua armadura (+5 HP Bônus Base)!";
                     }
                 }
                 
@@ -1624,14 +1676,8 @@
             // Restaura HP do monstro para a base a cada nova luta
             currentMonster.currentHP = currentMonster.baseHP; 
 
-            // Recalcula ATK Total do Herói (incluindo bônus de equipamento)
-            let heroATK = heroBaseATK + (powerLevel * 1); 
-            const weapon = EQUIPMENT_SLOTS.weapon.currentItem;
-            if (weapon) {
-                heroATK += weapon.atk || 0;
-            }
-            // A heroATK agora é o valor total já calculado em updateDisplay, mas para segurança...
-            heroATK = parseInt(document.getElementById('eq-total-atk').textContent) || heroATK;
+            // Recalcula ATK Total do Herói (buscando o valor do display, que já inclui equipamento)
+            let heroATK = parseInt(document.getElementById('eq-total-atk').textContent) || heroBaseATK; 
 
 
             // Limpa Log
@@ -1651,7 +1697,10 @@
 
                 // --- Turno do Herói ---
                 // O dano base é multiplicado pelo Nível (o multiplicador xNível é o nosso 'power curve')
-                const heroDamage = heroATK * powerLevel;
+                // Multiplicador de Nível para a Curva de Poder (multiplica o ATK Total)
+                const levelMultiplier = powerLevel > 0 ? (1 + (powerLevel - 1) * 0.2) : 1; 
+                const heroDamage = Math.round(heroATK * levelMultiplier);
+                
                 currentMonster.currentHP -= heroDamage;
                 currentMonster.currentHP = Math.max(0, currentMonster.currentHP); 
                 
@@ -1733,7 +1782,12 @@
                 itemDisplay.className = 'equipped-item-display';
                 
                 if (item) {
-                    itemDisplay.innerHTML = `<span style="font-weight: bold;">${item.name}</span> <span style="font-size: 0.8em; color: var(--color-hp);">(+${item.atk || item.hpBonus || item.energyBonus} ${item.atk ? 'ATK' : item.hpBonus ? 'HP' : 'EN'})</span>`;
+                    let statText = '';
+                    if (item.atk) statText = `+${item.atk} ATK`;
+                    else if (item.hpBonus) statText = `+${item.hpBonus} HP`;
+                    else if (item.energyBonus) statText = `+${item.energyBonus} EN`;
+
+                    itemDisplay.innerHTML = `<span style="font-weight: bold;">${item.name}</span> <span style="font-size: 0.8em; color: var(--color-hp);">(${statText})</span>`;
                     itemDisplay.onclick = () => inspectItem(item);
                     itemDisplay.style.cursor = 'pointer';
                 } else {
@@ -1763,11 +1817,15 @@
                 }
             }
             
-            // Calcula o total (Base + Nível)
-            const heroStatsHP = heroBaseHP + (powerLevel * 5); 
-            const heroStatsATK = heroBaseATK + (powerLevel * 1); 
+            // Stats Base = Valor Base da Classe/Upgrades + Bônus por Nível
+            // (Para um crescimento exponencial)
+            const hpPerLevel = 5;
+            const atkPerLevel = 1;
 
-            // Calcula o total (Base + Nível + Bônus)
+            const heroStatsHP = heroBaseHP + (powerLevel - 1) * hpPerLevel; 
+            const heroStatsATK = heroBaseATK + (powerLevel - 1) * atkPerLevel; 
+
+            // Calcula o total (Base + Bônus de Equipamento)
             const totalMaxHP = heroStatsHP + bonusHP;
             const totalMaxATK = heroStatsATK + bonusATK;
             const totalMaxEnergy = energy + bonusEnergy;
@@ -1794,6 +1852,12 @@
             heroCurrentHPDisplay.textContent = heroCurrentHP;
             heroMaxHPDisplay.textContent = heroMaxHP;
             heroTotalATKDisplay.textContent = totalMaxATK;
+            
+            // Multiplicador de Dano (Exemplo: +20% por nível)
+            const levelMultiplier = powerLevel > 0 ? (1 + (powerLevel - 1) * 0.2) : 1; 
+            heroLevelMultiplierDisplay.textContent = levelMultiplier.toFixed(1);
+
+            saveGame(); // Salva o novo estado após o update
         }
 
         // 3. Renderiza os itens no inventário
@@ -1863,13 +1927,13 @@
             document.getElementById('item-details-panel').style.display = 'block';
         }
         
-        // 5. Equipa o item
-        function equipItem(item) {
+        // 5. Equipa o item (Adicionado 'showAlert' para uso em inicialização)
+        function equipItem(item, showAlert = true) {
             const slotKey = item.type;
             
             // Verifica se o tipo de item corresponde a um slot válido
             if (!EQUIPMENT_SLOTS[slotKey]) {
-                alert(`Não é possível equipar ${item.name}. Tipo de item inválido: ${slotKey}`);
+                if (showAlert) alert(`Não é possível equipar ${item.name}. Tipo de item inválido: ${slotKey}`);
                 return;
             }
             
@@ -1879,9 +1943,9 @@
             // Atualiza todos os painéis
             renderEquipment();
             renderInventory();
-            inspectItem(item); // Reinspeciona para mostrar "DESEQUIPAR"
+            if (showAlert) inspectItem(item); // Reinspeciona para mostrar "DESEQUIPAR"
             saveGame();
-            alert(`${item.name} equipado no slot de ${EQUIPMENT_SLOTS[slotKey].name}.`);
+            if (showAlert) alert(`${item.name} equipado no slot de ${EQUIPMENT_SLOTS[slotKey].name}.`);
         }
         
         // 6. Desequipa o item
@@ -1897,7 +1961,6 @@
             renderEquipment();
             renderInventory();
             // Reinspeciona para atualizar o botão para "EQUIPAR"
-            // Se inspecionadoItem for null aqui, o painel de detalhes se fecharia (não queremos isso)
             if (inspectedItem) {
                 inspectItem(inspectedItem); 
             }
