@@ -34,7 +34,7 @@
             width: 100%;
         }
 
-        /* Sidebar (Menu Lateral) */
+        /* Sidebar (Menu Lateral) - NOVO ESTILO */
         #sidebar {
             width: 200px;
             background-color: var(--color-secondary);
@@ -54,7 +54,9 @@
             color: var(--color-text);
             font-size: 1.1em;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s, color 0.2s;
+            display: flex; /* Para alinhar o ícone e o texto */
+            align-items: center;
         }
 
         .sidebar-menu button:hover {
@@ -64,20 +66,26 @@
         .sidebar-menu button.active {
             background-color: var(--color-evolve);
             font-weight: bold;
+            color: white; 
         }
         
-        /* Ícones da Sidebar */
+        /* Ícones da Sidebar (Usando Emojis Unicode) */
         .sidebar-menu button::before {
-            content: ' ';
+            content: ''; 
             margin-right: 10px;
+            font-size: 1.2em;
+            width: 25px; 
+            text-align: center;
         }
-        #btn-training::before { content: '⚔️'; }
-        #btn-adventure::before { content: '✈️'; }
-        #btn-upgrades::before { content: '✨'; }
-        #btn-equipment::before { content: '🛡️'; }
-        #btn-inventory::before { content: '🎒'; }
-        #btn-status::before { content: '📊'; }
-        #btn-expedition::before { content: '🚀'; }
+        
+        /* Definição de Ícones */
+        #btn-training::before { content: '🏠'; color: var(--color-evolve); } /* Quartel-General */
+        #btn-adventure::before { content: '🗺️'; color: var(--color-combat); } /* Aventura */
+        #btn-upgrades::before { content: '⏫'; color: var(--color-accent); } /* Upgrades */
+        #btn-equipment::before { content: '⚔️'; color: var(--color-hp); } /* Equipamento */
+        #btn-inventory::before { content: '📦'; color: var(--color-energy); } /* Inventário */
+        #btn-status::before { content: '👤'; color: var(--color-soul); } /* Status */
+        #btn-expedition::before { content: '🧭'; color: #f1c40f; } /* Expedição */
 
 
         /* Área de Conteúdo Principal */
@@ -87,6 +95,21 @@
             overflow-y: auto;
             max-height: 100vh;
             display: none; /* Esconde o conteúdo do jogo no início */
+            position: relative; /* Para posicionar o botão de áudio */
+        }
+        
+        /* Botão de Áudio */
+        #audio-control-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--color-secondary);
+            border: 1px solid var(--color-accent);
+            color: var(--color-text);
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10;
         }
 
         /* Painéis de Conteúdo (Geral) */
@@ -290,11 +313,14 @@
                 text-align: center;
                 padding: 8px 10px;
                 font-size: 0.9em;
+                justify-content: center; /* Centraliza o conteúdo no mobile */
             }
             
-            /* Esconde os ícones no mobile para economizar espaço */
+            /* Remove o ícone extra para economizar espaço no mobile */
             .sidebar-menu button::before {
-                content: none;
+                content: none !important; 
+                margin-right: 0;
+                width: auto;
             }
 
             /* Conteúdo Principal */
@@ -341,10 +367,21 @@
                 height: auto;
                 padding: 10px;
             }
+
+            /* Áudio Control - Ajuste para mobile */
+            #audio-control-button {
+                top: 10px;
+                right: 10px;
+            }
         }
     </style>
 </head>
 <body>
+    
+    <audio id="game-theme-music" loop>
+        <source src="theme_music.mp3" type="audio/mpeg">
+        Seu navegador não suporta a tag de áudio.
+    </audio>
 
     <div id="app-wrapper">
 
@@ -396,17 +433,22 @@
                 <p>Nível: <span id="power-level">1</span></p>
             </div>
             <nav class="sidebar-menu">
-                <button id="btn-training" onclick="showPanel('training-panel')" class="active">⚔️ Quartel-General</button>
-                <button id="btn-adventure" onclick="showPanel('adventure-panel')">✈️ Aventura</button>
-                <button id="btn-upgrades" onclick="showPanel('upgrades-panel')">✨ Upgrades</button>
-                <button id="btn-equipment" onclick="showPanel('equipment-panel')">🛡️ Equipamento</button>
-                <button id="btn-inventory" onclick="showPanel('inventory-panel')">🎒 Inventário</button>
-                <button id="btn-status" onclick="showPanel('status-panel')">📊 Status</button>
-                <button id="btn-expedition" onclick="showPanel('expedition-panel')">🚀 Expedição</button>
+                <button id="btn-training" onclick="showPanel('training-panel')" class="active">Quartel-General</button>
+                <button id="btn-adventure" onclick="showPanel('adventure-panel')">Aventura</button>
+                <button id="btn-upgrades" onclick="showPanel('upgrades-panel')">Upgrades</button>
+                <button id="btn-equipment" onclick="showPanel('equipment-panel')">Equipamento</button>
+                <button id="btn-inventory" onclick="showPanel('inventory-panel')">Inventário</button>
+                <button id="btn-status" onclick="showPanel('status-panel')">Status</button>
+                <button id="btn-expedition" onclick="showPanel('expedition-panel')">Expedição</button>
             </nav>
         </div>
 
         <div id="main-content">
+            
+            <button id="audio-control-button" onclick="toggleMute()">
+                🔊 Mute
+            </button>
+
             <div id="header">
                 <h2></h2>
                 <div class="resource-display">
@@ -557,10 +599,10 @@
                     <div class="content-panel"><h2>🎒 Inventário</h2><p>Seus itens e recursos.</p></div>
                 </div>
                 <div id="status-panel" style="display: none;">
-                    <div class="content-panel"><h2>📊 Status do Herói</h2><p>Estatísticas detalhadas. (Em breve!)</p></div>
+                    <div class="content-panel"><h2>👤 Status do Herói</h2><p>Estatísticas detalhadas. (Em breve!)</p></div>
                 </div>
                 <div id="expedition-panel" style="display: none;">
-                    <div class="content-panel"><h2>🚀 Expedição</h2><p>Missões de longa duração.</p></div>
+                    <div class="content-panel"><h2>🧭 Expedição</h2><p>Missões de longa duração.</p></div>
                 </div>
 
             </div>
@@ -598,7 +640,7 @@
         // Variável da Classe
         let selectedClass = null; 
 
-        // Estrutura de Classes do Personagem (CAMINHOS DE IMAGEM ATUALIZADOS para pasta assets/)
+        // Estrutura de Classes do Personagem 
         const CLASSES = {
             warrior: {
                 name: "Guerreiro",
@@ -606,7 +648,7 @@
                 initialHP: 15,
                 initialATK: 2,
                 initialEnergy: 50,
-                imagePath: "assets/guerreiro.png" // CAMINHO ATUALIZADO
+                imagePath: "assets/guerreiro.png" 
             },
             mage: {
                 name: "Mago",
@@ -614,7 +656,7 @@
                 initialHP: 8,
                 initialATK: 1, 
                 initialEnergy: 150,
-                imagePath: "assets/mago.png" // CAMINHO ATUALIZADO
+                imagePath: "assets/mago.png" 
             },
             archer: {
                 name: "Arqueiro",
@@ -622,7 +664,7 @@
                 initialHP: 10,
                 initialATK: 1,
                 initialEnergy: 75,
-                imagePath: "assets/arqueiro.png" // CAMINHO ATUALIZADO
+                imagePath: "assets/arqueiro.png" 
             },
             fighter: {
                 name: "Lutador",
@@ -630,7 +672,7 @@
                 initialHP: 20,
                 initialATK: 1,
                 initialEnergy: 75,
-                imagePath: "assets/lutador.png" // CAMINHO ATUALIZADO
+                imagePath: "assets/lutador.png" 
             }
         };
 
@@ -708,7 +750,11 @@
         const heroLevelMultiplierDisplay = document.getElementById('hero-level-multiplier');
         const monsterHPDisplay = document.getElementById('monster-hp-display');
         const monsterATKDisplay = document.getElementById('monster-atk-display');
-        
+
+        // Referências de Áudio
+        const gameThemeMusic = document.getElementById('game-theme-music');
+        const audioControlButton = document.getElementById('audio-control-button');
+
         // ====================================================================
         // II. FUNÇÕES DE DISPLAY E NAVEGAÇÃO
         // ====================================================================
@@ -741,7 +787,7 @@
             upgradeAtkDisplay.textContent = heroBaseATK;
             atkCostDisplay.textContent = atkUpgradeCost;
             upgradeHpDisplay.textContent = heroBaseHP;
-            hpCostDisplay.textContent = hpCost;
+            hpCostDisplay.textContent = hpUpgradeCost;
 
             buyAtkUpgradeButton.disabled = gold < atkUpgradeCost;
             buyHpUpgradeButton.disabled = gold < hpUpgradeCost;
@@ -836,6 +882,15 @@
 
         // Exibe o painel de Criação de Personagem
         function showCharacterCreation() {
+            // Tenta iniciar a música aqui para bypassar a restrição de autoplay
+            try {
+                gameThemeMusic.play();
+                audioControlButton.textContent = '🔊 Mute';
+            } catch (e) {
+                console.log("Autoplay de áudio bloqueado. O usuário deve interagir com o jogo.");
+                audioControlButton.textContent = '🔇 Tocar Música';
+            }
+
             // Esconde o menu inicial
             startMenu.style.display = 'none'; 
             // Esconde a sidebar e o conteúdo principal do jogo
@@ -933,6 +988,16 @@
             sidebar.style.display = 'block';
             mainContent.style.display = 'block'; // Exibe o conteúdo principal
             showPanel('training-panel'); 
+
+            // Tenta iniciar a música aqui também para bypassar a restrição de autoplay
+            try {
+                gameThemeMusic.play();
+                audioControlButton.textContent = gameThemeMusic.muted ? '🔇 Unmute' : '🔊 Mute';
+            } catch (e) {
+                console.log("Autoplay de áudio bloqueado.");
+                audioControlButton.textContent = '🔇 Tocar Música';
+            }
+            
             updateDisplay();
         }
 
@@ -955,7 +1020,30 @@
         }
 
         // ====================================================================
-        // III. FUNÇÕES DE SALVAR/CARREGAR (localStorage)
+        // III. FUNÇÕES DE ÁUDIO
+        // ====================================================================
+
+        function toggleMute() {
+            // Se a música nunca foi tocada (por autoplay block), tenta tocar
+            if (gameThemeMusic.paused) {
+                gameThemeMusic.play().then(() => {
+                    gameThemeMusic.muted = false;
+                    audioControlButton.textContent = '🔊 Mute';
+                }).catch(e => {
+                    // Se falhar de novo, apenas alterna o ícone (o usuário deve clicar)
+                    gameThemeMusic.muted = !gameThemeMusic.muted;
+                    audioControlButton.textContent = gameThemeMusic.muted ? '🔇 Unmute' : '🔊 Mute';
+                });
+            } else {
+                // Se já estava tocando, apenas alterna o mute
+                gameThemeMusic.muted = !gameThemeMusic.muted;
+                audioControlButton.textContent = gameThemeMusic.muted ? '🔇 Unmute' : '🔊 Mute';
+            }
+        }
+
+
+        // ====================================================================
+        // IV. FUNÇÕES DE SALVAR/CARREGAR (localStorage)
         // ====================================================================
 
         // Salva o Estado do Jogo no Navegador
@@ -977,7 +1065,9 @@
                 missionCooldowns: missionCooldowns,
                 dailyStatus: dailyMissionStatus, 
                 uniqueStatus: uniqueMissionStatus,
-                heroCurrentHP: heroCurrentHP
+                heroCurrentHP: heroCurrentHP,
+                // Salva o estado do mute
+                isMuted: gameThemeMusic.muted 
             };
             localStorage.setItem('blazeAndSteelSave', JSON.stringify(gameData));
             // alert('Jogo Salvo com Sucesso!'); // Desativei o alerta para não ser intrusivo
@@ -1018,7 +1108,10 @@
 
                 // Carrega Cooldowns
                 missionCooldowns = gameData.missionCooldowns || { provisions: 0, workGold: 0 };
-                
+
+                // Carrega Estado do Áudio
+                gameThemeMusic.muted = gameData.isMuted === true; 
+
                 updateDisplay();
                 startGame(); 
                 alert('Jogo Carregado com Sucesso!');
@@ -1031,7 +1124,7 @@
         }
 
         // ====================================================================
-        // IV. FUNÇÕES DE PROGRESSÃO E MISSÕES
+        // V. FUNÇÕES DE PROGRESSÃO E MISSÕES
         // ====================================================================
         
         // 1. Level Up
@@ -1216,7 +1309,7 @@
         }
         
         // ====================================================================
-        // V. FUNÇÕES DE COMBATE E MONSTROS (LÓGICA ATUALIZADA)
+        // VI. FUNÇÕES DE COMBATE E MONSTROS
         // ====================================================================
 
         // Função para selecionar um monstro aleatório baseado no Nível do Herói
@@ -1261,7 +1354,7 @@
             return currentMonster;
         }
 
-        // 7. Lógica de Combate
+        // Lógica de Combate
         function startBattle() {
             if (!currentMonster) {
                 logToCombat("Não há monstro para lutar. Tente mudar de painel e voltar!");
@@ -1329,17 +1422,17 @@
                 updateDisplay();
                 
                 turn++;
-            }, 1000); // Reduzi o tempo para 1 segundo para acelerar a simulação
+            }, 1000); 
         }
 
-        // 8. Log de Combate
+        // Log de Combate
         function logToCombat(message) {
             const p = document.createElement('p');
             p.innerHTML = message;
             combatLog.prepend(p);
         }
 
-        // 9. Resolução da Batalha
+        // Resolução da Batalha
         function endBattle(heroWon) {
             isFighting = false;
             startBattleButton.textContent = 'Iniciar Batalha! (Custo: 5 ⚡)';
@@ -1369,7 +1462,7 @@
         }
 
         // ====================================================================
-        // VI. INICIALIZAÇÃO
+        // VII. INICIALIZAÇÃO
         // ====================================================================
 
         // Tenta carregar o jogo salvo ao iniciar a página
