@@ -175,8 +175,8 @@
             cursor: not-allowed;
         }
         
-        /* Estilo do Botão Evoluir */
-        #evolution-panel button {
+        /* Estilo do Botão Level Up */
+        #hero-training-panel button#level-up-button {
             background-color: var(--color-evolve);
             color: white;
             border: none;
@@ -187,10 +187,22 @@
             transition: background-color 0.2s;
         }
 
-        #evolution-panel button:hover:not(:disabled) {
+        #hero-training-panel button#level-up-button:hover:not(:disabled) {
             background-color: #6c3483;
         }
-
+        
+        /* Estilo das Missões */
+        .mission-button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .mission-daily { background-color: #34495e; color: white; }
+        .mission-unique { background-color: #f1c40f; color: black; }
+        
     </style>
 </head>
 <body>
@@ -238,38 +250,62 @@
 
                 <div id="training-panel" style="display: block;">
                     
-                    <div id="missions-panel" class="content-panel" style="text-align: center;">
-                        <h3>Quartel-General (Preparo)</h3>
-                        <p>Missões de tempo para gerar recursos!</p>
-                        
-                        <button id="magic-study-button" onclick="startMission('magic')" style="background-color: var(--color-evolve); color: white; padding: 10px; margin: 5px;">
-                            Estudo de Magia (Custo: 5 💰 | Ganho: 50 ⚡)
-                        </button>
-                        
-                        <button id="blacksmith-work-button" onclick="startMission('blacksmith')" style="background-color: var(--color-accent); color: black; padding: 10px; margin: 5px;">
-                            Trabalho no Ferreiro (+10 💰)
-                        </button>
+                    <div id="special-missions-panel" class="content-panel" style="text-align: center;">
+                        <h3>Missões Especiais</h3>
+                        <p>Progresso rápido e recompensas raras!</p>
 
-                        <button onclick="tradeResource('energyToGold')" style="background-color: grey; color: white; padding: 10px; margin: 5px;">
-                            Vender Recursos (-50 ⚡ | +15 💰)
+                        <div id="daily-missions" style="margin-bottom: 15px;">
+                            <h4>Diárias (Reseta em 24h)</h4>
+                            <button id="daily-scouting" class="mission-button mission-daily" onclick="startDailyMission('scouting')">
+                                Fazer Patrulha (Recompensa: 100 EXP | 50 💰)
+                            </button>
+                            <button id="daily-training-drills" class="mission-button mission-daily" onclick="startDailyMission('drills')">
+                                Exercícios de Treinamento (Recompensa: 200 EXP | +2 ATK Bônus!)
+                            </button>
+                        </div>
+
+                        <div id="unique-missions">
+                            <h4>Únicas (Desaparecem após concluir)</h4>
+                            <button id="unique-first-quest" class="mission-button mission-unique" onclick="startUniqueMission('firstQuest')">
+                                Provar o Valor (Recompensa: 500 EXP | +10 HP Bônus!)
+                            </button>
+                            <button id="unique-tutorial-complete" class="mission-button mission-unique" onclick="startUniqueMission('tutorialComplete')">
+                                Finalizar Tutorial Básico (Recompensa: 100 💰 | 100 ⚡)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="resource-missions-panel" class="content-panel" style="text-align: center;">
+                        <h3>Obtenção de Recursos (Cooldowns)</h3>
+                        
+                        <button id="provisions-button" onclick="startMission('provisions')" style="background-color: var(--color-energy); color: black; padding: 10px; margin: 5px;">
+                            Coletar Provisões (30s | Ganho: 50 ⚡)
+                        </button>
+                        
+                        <button id="work-gold-button" onclick="startMission('workGold')" style="background-color: var(--color-accent); color: black; padding: 10px; margin: 5px;">
+                            Trabalhar por Ouro (60s | Ganho: 20 💰)
                         </button>
                     </div>
 
-                    <div id="evolution-panel" class="content-panel" style="text-align: center;">
-                        <h3>Evolução & Reencarnação</h3>
-                        <p>Suba de nível e recomece mais forte!</p>
-                        <p>🌟 Nível de Poder: <span id="power-level-display">1</span></p>
-                        <p>✨ EXP: <span id="exp-count">0</span> / <span id="exp-required">50</span></p>
+                    <div id="hero-training-panel" class="content-panel" style="text-align: center;">
+                        <h3>Treinamento & Progresso</h3>
+                        <p>Gaste Energia para aumentar sua EXP e preparo.</p>
+
+                        <button onclick="trainForStats('attack')" style="background-color: var(--color-combat); color: white; padding: 10px; margin: 5px;">
+                            Estudar Táticas (Custo: 25 ⚡ | Ganho: 10 EXP)
+                        </button>
                         
-                        <button id="level-up-button" onclick="levelUp()" disabled>
-                            SUBIR DE NÍVEL (Falta: 50 EXP)
+                        <button onclick="trainForStats('defense')" style="background-color: var(--color-hp); color: white; padding: 10px; margin: 5px;">
+                            Preparar Defesas (Custo: 25 ⚡ | Ganho: 10 EXP)
                         </button>
-                        <button id="evolve-button" onclick="evolveHero()" disabled style="background-color: var(--color-soul);">
-                            EVOLUIR (Custo: <span id="evolve-cost">100</span> ⚡)
-                        </button>
-                        <button onclick="alert('Reencarnar: Funcionalidade futura para resetar o jogo com bônus de Alma.')" style="background-color: #555; color: white;">
-                            REENCARNAR (Custo: 500 💀)
-                        </button>
+
+                        <div style="margin-top: 20px;">
+                            <p>🌟 Nível de Poder: <span id="power-level-display">1</span></p>
+                            <p>✨ EXP: <span id="exp-count">0</span> / <span id="exp-required">50</span></p>
+                            <button id="level-up-button" onclick="levelUp()" disabled style="background-color: var(--color-evolve); color: white;">
+                                SUBIR DE NÍVEL (Falta: 50 EXP)
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -308,31 +344,16 @@
                 </div>
 
                 <div id="equipment-panel" style="display: none;">
-                    <div class="content-panel">
-                        <h2>🛡️ Equipamento</h2>
-                        <p>Gerencie seus itens equipados.</p>
-                    </div>
+                    <div class="content-panel"><h2>🛡️ Equipamento</h2><p>Gerencie seus itens equipados.</p></div>
                 </div>
-
                 <div id="inventory-panel" style="display: none;">
-                    <div class="content-panel">
-                        <h2>🎒 Inventário</h2>
-                        <p>Seus itens e recursos.</p>
-                    </div>
+                    <div class="content-panel"><h2>🎒 Inventário</h2><p>Seus itens e recursos.</p></div>
                 </div>
-
                 <div id="status-panel" style="display: none;">
-                    <div class="content-panel">
-                        <h2>📊 Status do Herói</h2>
-                        <p>Estatísticas detalhadas.</p>
-                    </div>
+                    <div class="content-panel"><h2>📊 Status do Herói</h2><p>Estatísticas detalhadas.</p></div>
                 </div>
-
                 <div id="expedition-panel" style="display: none;">
-                    <div class="content-panel">
-                        <h2>🚀 Expedição</h2>
-                        <p>Missões de longa duração.</p>
-                    </div>
+                    <div class="content-panel"><h2>🚀 Expedição</h2><p>Missões de longa duração.</p></div>
                 </div>
 
             </div>
@@ -352,11 +373,9 @@
         let expToNextLevel = 50; 
         let energy = 0; 
         let soul = 0;
-        let evolveCost = 100;
-        let energyPerClick = 1; // Mantida, mas não usada nas missões
-        let clickMultiplier = 1; 
+        let energyPerClick = 1; // Mantida, mas apenas como multiplicador de ganho
         
-        // NOVAS VARIÁVEIS DE UPGRADE
+        // Variáveis de UPGRADE
         let heroBaseATK = 1;
         let heroBaseHP = 10;
         let atkUpgradeCost = 50;
@@ -364,16 +383,27 @@
 
         // Variáveis de Missão (para Cooldown)
         let missionCooldowns = {
-            magic: 0, 
-            blacksmith: 0
+            provisions: 0, 
+            workGold: 0
+        };
+
+        // Variáveis de Missões Diárias/Únicas
+        const DAILY_COOLDOWN_MS = 24 * 60 * 60 * 1000; // 24 horas em milissegundos
+        let dailyMissionStatus = {
+            scouting: { completedAt: 0 },
+            drills: { completedAt: 0 }
+        };
+
+        let uniqueMissionStatus = {
+            firstQuest: { completed: false },
+            tutorialComplete: { completed: false }
         };
 
         // Referências do DOM
         const startMenu = document.getElementById('start-menu');
         const sidebar = document.getElementById('sidebar');
-        const mainContent = document.getElementById('main-content');
         
-        // Display de Recursos
+        // Display de Recursos e Nível
         const powerLevelDisplay = document.getElementById('power-level-display');
         const energyCount = document.getElementById('energy-count');
         const goldCount = document.getElementById('gold-count');
@@ -381,8 +411,6 @@
         const expCount = document.getElementById('exp-count');
         const expRequired = document.getElementById('exp-required');
         const levelUpButton = document.getElementById('level-up-button');
-        const evolveCostDisplay = document.getElementById('evolve-cost');
-        const evolveButton = document.getElementById('evolve-button');
 
         // Referências do Painel de Upgrades
         const upgradeAtkDisplay = document.getElementById('upgrade-atk-display');
@@ -391,7 +419,7 @@
         const hpCostDisplay = document.getElementById('hp-cost');
         const buyAtkUpgradeButton = document.getElementById('buy-atk-upgrade');
         const buyHpUpgradeButton = document.getElementById('buy-hp-upgrade');
-
+        
         // ====================================================================
         // II. FUNÇÕES DE DISPLAY E NAVEGAÇÃO
         // ====================================================================
@@ -406,14 +434,6 @@
             soulCount.textContent = soul;
             expCount.textContent = currentExp;
             expRequired.textContent = expToNextLevel;
-
-            // Evolução
-            evolveCostDisplay.textContent = evolveCost;
-            if (energy >= evolveCost) {
-                evolveButton.disabled = false;
-            } else {
-                evolveButton.disabled = true;
-            }
 
             // Level Up
             if (currentExp >= expToNextLevel) {
@@ -432,7 +452,48 @@
 
             buyAtkUpgradeButton.disabled = gold < atkUpgradeCost;
             buyHpUpgradeButton.disabled = gold < hpUpgradeCost;
+
+            // Missões
+            updateMissionButtons();
+        }
+
+        // Atualiza o estado dos botões de Missões Diárias e Únicas
+        function updateMissionButtons() {
+            const now = Date.now();
             
+            // Missões Diárias
+            for (const key in dailyMissionStatus) {
+                const btn = document.getElementById(`daily-${key}`);
+                const status = dailyMissionStatus[key];
+                
+                if (!btn) continue;
+
+                if (now < status.completedAt + DAILY_COOLDOWN_MS) {
+                    const remainingTimeMs = status.completedAt + DAILY_COOLDOWN_MS - now;
+                    const remainingHours = Math.ceil(remainingTimeMs / 3600000); // 1 hora = 3.6 milhão ms
+                    btn.disabled = true;
+                    btn.textContent = `Em Cooldown (${remainingHours}h restantes)`;
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = key === 'scouting' 
+                        ? 'Fazer Patrulha (Recompensa: 100 EXP | 50 💰)' 
+                        : 'Exercícios de Treinamento (Recompensa: 200 EXP | +2 ATK Bônus!)';
+                }
+            }
+
+            // Missões Únicas
+            for (const key in uniqueMissionStatus) {
+                const btn = document.getElementById(`unique-${key}`);
+                const status = uniqueMissionStatus[key];
+                
+                if (!btn) continue;
+
+                if (status.completed) {
+                    btn.style.display = 'none'; // Desaparece
+                } else {
+                    btn.style.display = 'inline-block';
+                }
+            }
         }
 
         // Esconde o menu inicial e mostra o jogo
@@ -472,14 +533,14 @@
                 energy: energy,
                 gold: gold,
                 soul: soul,
-                // Variáveis de Upgrades e Evolução
                 energyPerClick: energyPerClick, 
                 heroHP: heroBaseHP,
                 heroATK: heroBaseATK,
                 atkCost: atkUpgradeCost,
                 hpCost: hpUpgradeCost,
-                // Cooldowns de Missão
-                missionCooldowns: missionCooldowns 
+                missionCooldowns: missionCooldowns,
+                dailyStatus: dailyMissionStatus, // Salva status diário
+                uniqueStatus: uniqueMissionStatus // Salva status único
             };
             localStorage.setItem('blazeAndSteelSave', JSON.stringify(gameData));
             alert('Jogo Salvo com Sucesso!');
@@ -500,16 +561,19 @@
                 gold = gameData.gold || 0;
                 soul = gameData.soul || 0;
                 
-                // Carrega Upgrades e Evolução
+                // Carrega Upgrades
                 energyPerClick = gameData.energyPerClick || 1;
                 heroBaseHP = gameData.heroHP || 10;
                 heroBaseATK = gameData.heroATK || 1;
                 atkUpgradeCost = gameData.atkCost || 50;
                 hpUpgradeCost = gameData.hpCost || 50;
 
-                // Carrega Cooldowns (apenas se for maior que zero, para evitar bugs de tempo)
-                missionCooldowns = gameData.missionCooldowns || { magic: 0, blacksmith: 0 };
-                // Reinicia a contagem dos Cooldowns ativos
+                // Carrega Status de Missões
+                dailyMissionStatus = gameData.dailyStatus || dailyMissionStatus;
+                uniqueMissionStatus = gameData.uniqueStatus || uniqueMissionStatus;
+
+                // Carrega Cooldowns (reinicia a contagem dos Cooldowns ativos)
+                missionCooldowns = gameData.missionCooldowns || { provisions: 0, workGold: 0 };
                 for (const key in missionCooldowns) {
                     if (missionCooldowns[key] > 0) {
                         startMission(key, missionCooldowns[key]); 
@@ -525,7 +589,7 @@
         }
 
         // ====================================================================
-        // IV. FUNÇÕES DE PROGRESSÃO E RECURSOS
+        // IV. FUNÇÕES DE PROGRESSÃO E MISSÕES
         // ====================================================================
         
         // 1. Level Up
@@ -533,27 +597,14 @@
             if (currentExp >= expToNextLevel) {
                 currentExp -= expToNextLevel;
                 powerLevel++;
-                expToNextLevel = Math.round(expToNextLevel * 1.5); // Aumenta o custo exponencialmente
+                expToNextLevel = Math.round(expToNextLevel * 1.5); 
                 
                 alert(`Parabéns! Você alcançou o Nível ${powerLevel}!`);
                 updateDisplay();
             }
         }
         
-        // 2. Evoluir Herói (Gasta Energia, Aumenta base de clique/ganho futuro)
-        function evolveHero() {
-            if (energy >= evolveCost) {
-                energy -= evolveCost;
-                energyPerClick += 1; // Aumenta o ganho básico de energia para futuras missões/cliques
-                evolveCost = Math.round(evolveCost * 1.5); // Aumenta o custo
-                
-                alert(`⚡ Seu Herói evoluiu! O ganho de energia aumentou.`);
-                
-                updateDisplay();
-            }
-        }
-        
-        // 3. Compra de Upgrades (ATK/HP)
+        // 2. Compra de Upgrades (ATK/HP)
         function buyUpgrade(type) {
             if (type === 'atk' && gold >= atkUpgradeCost) {
                 gold -= atkUpgradeCost;
@@ -575,28 +626,28 @@
             updateDisplay();
         }
 
-        // 4. Início de Missões Baseadas em Tempo
+        // 3. Início de Missões Recorrentes (Cooldowns de Tempo)
         function startMission(missionType, initialDuration = 0) {
             if (missionCooldowns[missionType] > 0 && initialDuration === 0) {
-                alert(`Espere! A missão ${missionType} ainda está em cooldown.`);
+                alert(`Espere! A missão ainda está em cooldown.`);
                 return;
             }
 
-            let cost = 0;
-            let duration = initialDuration > 0 ? initialDuration : 30; // 30s padrão
+            let duration = initialDuration > 0 ? initialDuration : 0; 
             let rewards = {};
-            const button = document.getElementById(`${missionType}-button`);
+            let button = null;
+            let buttonText = '';
 
-            if (missionType === 'magic') {
-                cost = 5;
+            if (missionType === 'provisions') {
+                duration = 30; // 30 segundos
                 rewards = { energy: 50 };
-                if (gold < cost) {
-                    alert("Ouro insuficiente para estudar magia.");
-                    return;
-                }
-                if (initialDuration === 0) gold -= cost; // Só subtrai o custo se for o início de uma nova missão
-            } else if (missionType === 'blacksmith') {
-                rewards = { gold: 10 };
+                button = document.getElementById('provisions-button');
+                buttonText = `Coletar Provisões (30s | Ganho: ${50 * energyPerClick} ⚡)`;
+            } else if (missionType === 'workGold') {
+                duration = 60; // 60 segundos
+                rewards = { gold: 20 };
+                button = document.getElementById('work-gold-button');
+                buttonText = `Trabalhar por Ouro (60s | Ganho: 20 💰)`;
             }
 
             // Inicia o Cooldown e Atualiza o Botão
@@ -610,7 +661,7 @@
                 if (missionCooldowns[missionType] <= 0) {
                     clearInterval(interval);
                     
-                    // Concede Recompensas (Aplica o multiplicador de Evolução no ganho de energia)
+                    // Concede Recompensas
                     if (rewards.energy) energy += rewards.energy * energyPerClick;
                     if (rewards.gold) gold += rewards.gold;
 
@@ -618,8 +669,7 @@
                     
                     // Reseta o texto do botão após 5s e o habilita
                     setTimeout(() => {
-                        if (missionType === 'magic') button.textContent = `Estudo de Magia (Custo: 5 💰 | Ganho: ${50 * energyPerClick} ⚡)`;
-                        if (missionType === 'blacksmith') button.textContent = `Trabalho no Ferreiro (+10 💰)`;
+                        button.textContent = buttonText;
                         button.disabled = false;
                     }, 5000);
 
@@ -629,24 +679,95 @@
             updateDisplay();
         }
 
-        // 5. Função de Troca de Recursos (Vender)
-        function tradeResource(tradeType) {
-            if (tradeType === 'energyToGold') {
-                const costEnergy = 50;
-                const gainGold = 15;
+        // 4. Treinamento para EXP e Chance de Bônus de Status
+        function trainForStats(type) {
+            const costEnergy = 25;
+            const expGain = 10;
+
+            if (energy >= costEnergy) {
+                energy -= costEnergy;
+                currentExp += expGain;
                 
-                if (energy >= costEnergy) {
-                    energy -= costEnergy;
-                    gold += gainGold;
-                    alert(`Você vendeu 50 ⚡ por 15 💰!`);
-                    updateDisplay();
-                } else {
-                    alert("Energia insuficiente para vender recursos.");
+                let message = `Você treinou. Ganhou ${expGain} EXP.`;
+
+                if (Math.random() < 0.15) { // 15% de chance
+                    if (type === 'attack') {
+                        heroBaseATK += 1;
+                        message += " E descobriu um novo golpe (+1 ATK Bônus)!";
+                    } else if (type === 'defense') {
+                        heroBaseHP += 5;
+                        message += " E fortificou sua armadura (+5 HP Bônus)!";
+                    }
                 }
+                
+                alert(message);
+                
+                updateDisplay();
+                levelUp(); // Verifica se subiu de nível após ganhar EXP
+            } else {
+                alert("Energia insuficiente. Complete missões para obter mais ⚡.");
             }
         }
-        
-        // 6. Placeholder para Iniciar Batalha
+
+        // 5. Início de Missões Diárias (24h de Cooldown)
+        function startDailyMission(key) {
+            const status = dailyMissionStatus[key];
+            const now = Date.now();
+
+            if (now < status.completedAt + DAILY_COOLDOWN_MS) {
+                alert("Essa missão só pode ser feita uma vez por dia!");
+                return;
+            }
+
+            status.completedAt = now; // Marca como completada agora
+            let message = "Missão Diária completa!";
+
+            // Recompensas
+            if (key === 'scouting') {
+                currentExp += 100;
+                gold += 50;
+                message += " Recompensa: 100 EXP e 50 💰!";
+            } else if (key === 'drills') {
+                currentExp += 200;
+                heroBaseATK += 2;
+                message += " Recompensa: 200 EXP e +2 ATK base!";
+            }
+
+            alert(message);
+            updateDisplay();
+            levelUp();
+            saveGame(); // Salva imediatamente para preservar o cooldown
+        }
+
+        // 6. Início de Missões Únicas (Desaparecem após completar)
+        function startUniqueMission(key) {
+            const status = uniqueMissionStatus[key];
+
+            if (status.completed) {
+                return; // Já completada
+            }
+
+            status.completed = true; // Marca como completada
+            let message = "Missão Única concluída!";
+
+            // Recompensas
+            if (key === 'firstQuest') {
+                currentExp += 500;
+                heroBaseHP += 10;
+                message += " Recompensa: 500 EXP e +10 HP base!";
+            } else if (key === 'tutorialComplete') {
+                gold += 100;
+                energy += 100;
+                message += " Recompensa: 100 💰 e 100 ⚡!";
+            }
+
+            alert(message);
+            updateDisplay();
+            levelUp();
+            saveGame(); // Salva imediatamente para que o botão desapareça
+        }
+
+        // 7. Placeholder para Iniciar Batalha
         function startBattle() {
             alert('A Batalha ainda não foi implementada! Próximo passo!');
         }
@@ -658,8 +779,6 @@
         // Tenta carregar o jogo salvo ao iniciar a página (caso o jogador retorne)
         loadGame();
         
-        // Se o jogo for carregado, o startGame() é chamado dentro de loadGame().
-        // Caso contrário, o menu inicial permanece visível.
     </script>
 
 </body>
