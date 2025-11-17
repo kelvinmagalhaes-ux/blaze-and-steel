@@ -3,38 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚔️ Anime RPG de Aventura ⚔️</title>
+    <title>Herói CLT - Anime RPG</title>
     <style>
-        /* Estilos Base - Seu Design Original */
+        /* Paleta de Cores da Imagem */
+        :root {
+            --color-bg-dark: #1a1a2e; /* Fundo Principal */
+            --color-bg-light: #2e2e4a; /* Containers / Sidebar */
+            --color-text-light: #e0e0e0;
+            --color-accent: #f9c74f; /* Amarelo/Dourado */
+            --color-energy: #f9c74f; /* Amarelo/Energia */
+            --color-soul: #6a0572; /* Roxo/Alma */
+            --color-evolve: #5d3591; /* Roxo do botão Evoluir */
+        }
+
+        /* 1. ESTILOS GERAIS E LAYOUT PRINCIPAL */
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #111d40; /* Fundo mais escuro (Noite) */
-            color: #e0e0e0;
+            background-color: var(--color-bg-dark); 
+            color: var(--color-text-light);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow-y: scroll; /* Permite scroll se o conteúdo for grande */
+        }
+        
+        #app-wrapper {
+            width: 100%;
+            max-width: 1200px; /* Limite máximo para a interface */
             min-height: 100vh;
-            margin: 0;
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
         }
-        
-        /* NOVO: Estilo para o Container do Menu Inicial */
+
+        /* 2. MENU INICIAL (Pixel-Art - Mantido, mas centralizado) */
         #start-menu {
-            /* Remove o fundo e bordas do menu para que ele flutue no fundo noturno */
-            background-color: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            max-width: 400px; /* Torna o menu mais estreito */
-            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-bg-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 100;
         }
-        
-        /* NOVO: Estilos para os Botões do Menu (Simulando Pixel-Art Grande) */
+
         .menu-button-stack {
             display: flex;
             flex-direction: column;
-            gap: 15px; /* Espaçamento entre botões */
+            gap: 15px;
             margin-top: 30px;
-            width: 100%;
+            width: 90%;
+            max-width: 280px;
         }
 
         .menu-button-stack button {
@@ -42,12 +67,13 @@
             padding: 15px 30px;
             font-size: 20px;
             font-weight: bold;
-            color: white; /* Texto Branco */
-            background-color: #e74c3c; /* Vermelho/Laranja da Imagem */
-            border: 3px solid #f9c74f; /* Borda Amarela */
+            color: white;
+            background-color: #e74c3c;
+            border: 3px solid var(--color-accent);
             border-radius: 8px;
-            box-shadow: 0 6px 0 #8b0000; /* Sombra escura para efeito 3D */
+            box-shadow: 0 6px 0 #8b0000;
             letter-spacing: 2px;
+            cursor: pointer;
         }
 
         .menu-button-stack button:hover {
@@ -56,76 +82,167 @@
             transform: translateY(2px);
         }
         
-        /* Estilos do Jogo (Mantidos para o painel principal) */
-        .game-container {
-            width: 90%;
-            max-width: 800px;
-            background-color: #2e2e4a; /* Container do jogo */
-            border: 4px solid #f9c74f; /* Borda estilo anime/jogo */
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 0 20px rgba(249, 199, 79, 0.5);
-            text-align: center;
-        }
-
-        .pixel-art {
-            image-rendering: pixelated;
-            width: 150px; 
-            height: 150px;
-            background-color: #6a0572; 
-            border: 2px solid #fff;
-            margin: 10px auto;
-        }
-
-        /* Estilização para o placar */
-        .stats-panel {
-            margin-top: 15px;
-            padding: 10px;
-            border: 2px dashed #a0a0ff;
-            background-color: #3a3a5a;
-        }
-        
+        /* 3. ESTRUTURA DO JOGO (Após o clique em "JOGAR") */
         #game-content {
             display: none;
+            padding-top: 60px; /* Espaço para o cabeçalho fixo */
+            flex-grow: 1;
+        }
+
+        /* 4. CABEÇALHO FIXO (Herói CLT, Moedas) */
+        #header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--color-bg-light); 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 50;
+        }
+
+        .resource-display {
+            display: flex;
+            gap: 15px;
+        }
+        .resource-item {
+            font-weight: bold;
+        }
+
+        /* 5. SIDEBAR E CONTEÚDO (LAYOUT DE DUAS COLUNAS) */
+        #main-layout {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        #sidebar {
+            width: 250px;
+            background-color: var(--color-bg-light);
+            padding: 20px 0;
+            border-right: 1px solid #3c3c5c;
+        }
+        
+        .nav-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-left: 5px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background-color 0.2s, border-left-color 0.2s;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background-color: #3c3c5c;
+            border-left-color: var(--color-accent);
+        }
+
+        #content-area {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        /* 6. ESTILOS DE PAINEL (Os cards escuros no centro) */
+        .content-panel {
+            background-color: var(--color-bg-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+        
+        /* 7. ESTILOS DOS BOTÕES GERAIS (para os painéis) */
+        .content-panel button {
+            padding: 10px 20px;
+            margin: 10px 5px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            transition: opacity 0.2s;
+        }
+        
+        .content-panel button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Estilo do Botão Evoluir */
+        #evolution-panel button {
+            background-color: var(--color-evolve);
+        }
+        
+        #evolution-panel button:hover:not(:disabled) {
+            background-color: #7b4eb2;
         }
     </style>
 </head>
 <body>
 
-<div id="start-menu">
-    <div class="menu-button-stack">
-        <button onclick="startGame()">JOGAR</button>
-        <button onclick="alert('Salvar: Funcionalidade em desenvolvimento!')">SALVAR</button>
-        <button onclick="alert('Carregar: Funcionalidade em desenvolvimento!')">CARREGAR</button>
-        <button onclick="alert('Sair: Por enquanto, feche a aba.')">SAIR</button>
-    </div>
-</div>
-
-<div class="game-container" id="game-content">
-    <h1>⚔️ Anime RPG de Aventura ⚔️</h1>
-    <p>Complete aventuras para ganhar EXP e subir de nível!</p>
-
-    <div class="stats-panel">
-        <p>🌟 **Nível de Poder:** <span id="power-level">1</span></p>
-        <p>💰 **Ouro:** <span id="gold-count">0</span></p>
-        <p>✨ **EXP:** <span id="exp-count">0</span> / <span id="exp-required">50</span></p>
-    </div>
-    
-    <div class="pixel-art" id="character-art">
-        <p style="color:white; line-height: 130px;">[Herói]</p> 
+<div id="app-wrapper">
+    <div id="start-menu">
+        <div class="menu-button-stack">
+            <button onclick="startGame()">JOGAR</button>
+            <button onclick="alert('Salvar: Funcionalidade em desenvolvimento!')">SALVAR</button>
+            <button onclick="alert('Carregar: Funcionalidade em desenvolvimento!')">CARREGAR</button>
+            <button onclick="alert('Sair: Por enquanto, feche a aba.')">SAIR</button>
+        </div>
     </div>
 
-    <hr>
-    
-    <h2>⚔️ Aventura e Treinamento ⚔️</h2>
-    <button onclick="startAdventure()">Explorar a Masmorra (Batalhar)</button>
+    <div id="header">
+        <h2>Herói CLT</h2>
+        <div class="resource-display">
+            <div class="resource-item">⚡ Energia: <span id="energy-count">0</span></div>
+            <div class="resource-item">💰 Ouro: <span id="gold-count">0</span></div>
+            <div class="resource-item" style="color: var(--color-soul);">💀 Alma: <span id="soul-count">0</span></div>
+        </div>
+    </div>
 
-    <hr>
+    <div id="game-content">
+        <div id="main-layout">
+            
+            <div id="sidebar">
+                <div class="nav-item active" data-panel="training">⚔️ Treinamento</div>
+                <div class="nav-item" data-panel="adventure">🗺️ Aventura</div>
+                <div class="nav-item" data-panel="upgrades">✨ Upgrades</div>
+                <div class="nav-item" data-panel="equipment">🛡️ Equipamento</div>
+                <div class="nav-item" data-panel="inventory">📦 Inventário</div>
+                <div class="nav-item" data-panel="status">📊 Status</div>
+                <div class="nav-item" data-panel="expedition">🚀 Expedição</div>
+            </div>
 
-    <h2>Evolução</h2>
-    <button id="level-up-button" onclick="levelUp()" disabled>
-        SUBIR DE NÍVEL (Requer EXP Máxima)
-    </button>
+            <div id="content-area">
+
+                <div id="training-panel" class="content-panel">
+                    <h3>Treinamento (Seu Nível Atual)</h3>
+                    <p>🌟 Nível de Poder: <span id="power-level">1</span></p>
+                    <p>✨ EXP: <span id="exp-count">0</span> / <span id="exp-required">50</span></p>
+                    
+                    <button onclick="startAdventure()">Explorar a Masmorra (Batalhar)</button>
+                </div>
+                
+                <div id="evolution-panel" class="content-panel">
+                    <h3>Evolução & Reencarnação</h3>
+                    <p>Suba de nível para ficar mais forte e liberar mais conteúdo.</p>
+                    
+                    <button id="level-up-button" onclick="levelUp()" disabled>
+                        SUBIR DE NÍVEL (Falta: 50 EXP)
+                    </button>
+                    <button onclick="alert('Reencarnar: Funcionalidade para o futuro!')" style="background-color: var(--color-soul);">
+                        REENCARNAR (Custo: 500 💀)
+                    </button>
+                </div>
+
+                <div id="adventure-panel" class="content-panel" style="display: none;">Aventura: Conteúdo Futuro.</div>
+                <div id="upgrades-panel" class="content-panel" style="display: none;">Upgrades: Use Ouro para comprar melhorias!</div>
+                </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -133,34 +250,48 @@
     let powerLevel = 1;
     let gold = 0;
     let currentExp = 0;
-    let expToNextLevel = 50; 
+    let expToNextLevel = 50;
+    let energy = 0; // Novo, para fidelidade
+    let soul = 0;   // Novo, para fidelidade
 
     // Referências do DOM
     const startMenu = document.getElementById('start-menu');
     const gameContent = document.getElementById('game-content');
-    const powerLevelDisplay = document.getElementById('power-level');
+    
+    // Recursos
+    const energyCount = document.getElementById('energy-count');
     const goldCount = document.getElementById('gold-count');
+    const soulCount = document.getElementById('soul-count');
+    
+    // Painel de Status
+    const powerLevelDisplay = document.getElementById('power-level');
     const expCount = document.getElementById('exp-count');
     const expRequiredDisplay = document.getElementById('exp-required');
     const levelUpButton = document.getElementById('level-up-button');
-    const characterArt = document.getElementById('character-art');
     
     // --- Funções do Menu ---
 
     function startGame() {
-        startMenu.style.display = 'none'; // Esconde o menu inicial
-        gameContent.style.display = 'block'; // Mostra o jogo principal
-        updateDisplay(); // Atualiza a exibição inicial
+        startMenu.style.display = 'none';
+        gameContent.style.display = 'block';
+        updateDisplay();
     }
 
-    // ... (O restante das funções do jogo - updateDisplay, startAdventure, levelUp, updateCharacterAppearance - é mantido)
+
+    // --- Funções Principais do Jogo (Lógica RPG) ---
 
     function updateDisplay() {
-        powerLevelDisplay.textContent = powerLevel;
+        // Atualiza Recursos no Cabeçalho
+        energyCount.textContent = energy;
         goldCount.textContent = gold;
+        soulCount.textContent = soul;
+
+        // Atualiza o Painel de Status
+        powerLevelDisplay.textContent = powerLevel;
         expCount.textContent = currentExp;
         expRequiredDisplay.textContent = expToNextLevel;
 
+        // Lógica para habilitar o botão de subir de nível
         if (currentExp >= expToNextLevel) {
             levelUpButton.disabled = false;
             levelUpButton.textContent = `SUBIR DE NÍVEL (Pronto!)`;
@@ -194,28 +325,33 @@
             
             alert(`🎉 Seu Herói alcançou o Nível ${powerLevel}! Próxima meta: ${expToNextLevel} EXP.`);
             
-            updateCharacterAppearance(powerLevel);
             updateDisplay();
         }
     }
     
-    function updateCharacterAppearance(level) {
-        let backgroundColor = '';
-        switch(level) {
-            case 2:
-                backgroundColor = '#e74c3c'; 
-                characterArt.querySelector('p').textContent = "[Forma 2]";
-                break;
-            case 3:
-                backgroundColor = '#f1c40f'; 
-                characterArt.querySelector('p').textContent = "[Forma 3]";
-                break;
-            default:
-                backgroundColor = '#6a0572'; 
-                characterArt.querySelector('p').textContent = `[Herói Lv.${level}]`;
-        }
-        characterArt.style.backgroundColor = backgroundColor;
-    }
+    // --- Lógica de Navegação (Para Sidebar) ---
+    const navItems = document.querySelectorAll('.nav-item');
+    const contentPanels = document.querySelectorAll('.content-panel');
+
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const targetPanelId = item.getAttribute('data-panel') + '-panel';
+            
+            // 1. Remove 'active' de todos e adiciona no item clicado
+            navItems.forEach(nav => nav.classList.remove('active'));
+            item.classList.add('active');
+            
+            // 2. Esconde todos os painéis de conteúdo
+            contentPanels.forEach(panel => panel.style.display = 'none');
+            
+            // 3. Mostra o painel alvo
+            const targetPanel = document.getElementById(targetPanelId);
+            if (targetPanel) {
+                targetPanel.style.display = 'block';
+            }
+        });
+    });
+
 </script>
 
 </body>
