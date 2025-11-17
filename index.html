@@ -301,7 +301,7 @@
             border-color: var(--color-energy);
         }
 
-        /* Estilos para o Inventário e Equipamento */
+        /* Estilos para o Inventário */
         .item-card {
             background-color: #2c3e50;
             border: 2px solid var(--color-secondary);
@@ -327,32 +327,89 @@
             font-size: 0.9em;
         }
 
-        .slot-container {
+        /* -------------------------------------- */
+        /* NOVO CSS: PAINEL DE EQUIPAMENTO VISUAL */
+        /* -------------------------------------- */
+        
+        #equipment-layout {
             display: flex;
-            align-items: center;
-            padding: 10px;
-            border: 1px dashed var(--color-accent);
-            border-radius: 5px;
-            background-color: #1a1a25; 
+            gap: 20px;
+            align-items: flex-start;
+        }
+        
+        #hero-display-container {
+            position: relative; 
+            width: 300px; 
+            min-width: 300px;
+            height: 450px; 
+            background-color: #2c3e50; /* Fundo escuro para a área */
+            border-radius: 8px;
+            margin: 0 auto;
         }
 
-        .slot-label {
-            width: 100px;
+        #hero-image-display {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Ajusta a imagem sem distorcer */
+            image-rendering: pixelated; 
+            opacity: 0.8; /* Leve transparência para focar no equipamento */
+        }
+        
+        /* Estilo Base dos Slots Flutuantes */
+        .equipment-slot-floating {
+            position: absolute;
+            width: 90px;
+            height: 90px; 
+            padding: 5px;
+            background-color: rgba(52, 73, 94, 0.8); /* Azul escuro semi-transparente */
+            border: 2px dashed var(--color-accent);
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 0.8em;
+            overflow: hidden;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        
+        .equipment-slot-floating:hover {
+            background-color: rgba(52, 73, 94, 1.0);
+            transform: scale(1.05);
+        }
+        
+        .slot-name {
+            display: block;
             font-weight: bold;
             color: var(--color-energy);
+            margin-bottom: 2px;
         }
 
-        .equipped-item-display {
-            flex-grow: 1;
-            padding: 5px;
-            background-color: #2c3e50;
-            border-radius: 3px;
+        .slot-item-name {
+            color: var(--color-text);
+            font-size: 0.9em;
         }
 
-        .empty-slot {
-            font-style: italic;
+        .slot-empty {
             color: #7f8c8d;
+            font-style: italic;
         }
+
+        /* Posicionamento dos Slots */
+        /* Lado Esquerdo do Herói */
+        #slot-helmet { top: 10px; left: 10px; }
+        #slot-weapon { top: 100px; left: 10px; }
+        #slot-gloves { top: 190px; left: 10px; }
+        #slot-boots { top: 380px; left: 10px; }
+
+        /* Lado Direito do Herói */
+        #slot-armor { top: 10px; right: 10px; }
+        #slot-accessory { top: 100px; right: 10px; }
+        #slot-ring { top: 190px; right: 10px; }
+        #slot-amulet { top: 280px; right: 10px; }
+
+        /* O slot de armadura é o maior na silhueta, mas o item de "armor" (peito) geralmente fica no lado direito na interface clássica */
         
         /* -------------------------------------- */
         /* RESPONSIVIDADE (MOBILE / TELAS PEQUENAS) */
@@ -421,33 +478,36 @@
                 max-width: 100%;
             }
             
-            /* Botões do Menu Inicial */
-            .menu-button-stack button {
-                width: 250px; 
-            }
-            
-            /* Criação de Personagem Mobile */
-            #character-creation-panel .content-panel {
-                margin: 20px 10px;
-                padding: 20px;
-            }
-            
-            #class-selection-container {
+            /* Equipamento Mobile: Layout em coluna, o display do herói vem primeiro */
+            #equipment-layout {
                 flex-direction: column;
                 align-items: center;
             }
-
-            #class-selection-container button {
-                width: 80%;
-                height: auto;
-                padding: 10px;
+            
+            #hero-display-container {
+                width: 100%;
+                max-width: 400px;
+                height: 400px;
+                margin-bottom: 20px;
+            }
+            
+            /* Ajuste o posicionamento dos slots para o Mobile (mantendo as proporções) */
+            .equipment-slot-floating {
+                width: 80px;
+                height: 80px;
             }
 
-            /* Áudio Control - Ajuste para mobile */
-            #audio-control-button {
-                top: 10px;
-                right: 10px;
-            }
+            /* Lado Esquerdo do Herói */
+            #slot-helmet { top: 10px; left: 10px; }
+            #slot-weapon { top: 100px; left: 10px; }
+            #slot-gloves { top: 190px; left: 10px; }
+            #slot-boots { top: 310px; left: 10px; } /* Ajustado para caber */
+
+            /* Lado Direito do Herói */
+            #slot-armor { top: 10px; right: 10px; }
+            #slot-accessory { top: 100px; right: 10px; }
+            #slot-ring { top: 190px; right: 10px; }
+            #slot-amulet { top: 280px; right: 10px; }
         }
     </style>
 </head>
@@ -684,12 +744,20 @@
                 <div id="equipment-panel" style="display: none;">
                     <h2>🛡️ Equipamento & Estatísticas</h2>
                     
-                    <div style="display: flex; gap: 20px; margin-top: 20px;">
+                    <div id="equipment-layout" class="content-panel">
                         
-                        <div class="content-panel" style="flex: 1; min-width: 300px;">
-                            <h3>Slots de Equipamento</h3>
-                            <div id="equipment-list" style="display: flex; flex-direction: column; gap: 10px;">
-                                </div>
+                        <div id="hero-display-container">
+                            <img id="hero-image-display" src="" alt="Hero Class Image">
+                            
+                            <div id="slot-helmet" class="equipment-slot-floating" onclick="handleSlotClick('helmet')"></div>
+                            <div id="slot-weapon" class="equipment-slot-floating" onclick="handleSlotClick('weapon')"></div>
+                            <div id="slot-gloves" class="equipment-slot-floating" onclick="handleSlotClick('gloves')"></div>
+                            <div id="slot-boots" class="equipment-slot-floating" onclick="handleSlotClick('boots')"></div>
+                            
+                            <div id="slot-armor" class="equipment-slot-floating" onclick="handleSlotClick('armor')"></div>
+                            <div id="slot-accessory" class="equipment-slot-floating" onclick="handleSlotClick('accessory')"></div>
+                            <div id="slot-ring" class="equipment-slot-floating" onclick="handleSlotClick('ring')"></div>
+                            <div id="slot-amulet" class="equipment-slot-floating" onclick="handleSlotClick('amulet')"></div>
                         </div>
 
                         <div class="content-panel" style="flex: 1;">
@@ -698,6 +766,8 @@
                                 <p>❤️ HP Máximo: <span id="eq-max-hp">0</span> (Base: <span id="eq-base-hp">0</span> + Bônus: <span id="eq-bonus-hp">0</span>)</p>
                                 <p>⚔️ ATK Total: <span id="eq-total-atk">0</span> (Base: <span id="eq-base-atk">0</span> + Bônus: <span id="eq-bonus-atk">0</span>)</p>
                                 <p>⚡ Energia Máxima: <span id="eq-max-energy">0</span> (Base: <span id="eq-base-energy">0</span> + Bônus: <span id="eq-bonus-energy">0</span>)</p>
+                                <hr>
+                                <p style="font-style: italic;">Clique em um slot ou item no Inventário para inspecionar/desequipar.</p>
                             </div>
                         </div>
                     </div>
@@ -751,6 +821,7 @@
         let energy = 0; 
         let soul = 0;
         let energyPerClick = 1; 
+        let heroImage = ""; // Variável para armazenar o caminho da imagem do herói
         
         // Variáveis de UPGRADE (Bases que são melhoradas por upgrades)
         let heroBaseATK = 1;
@@ -768,11 +839,16 @@
         let selectedClass = null; 
         let nextItemId = 1000; // ID para novos itens gerados
 
-        // Estrutura de Equipamento
+        // Estrutura de Equipamento (EXPANDIDA)
         const EQUIPMENT_SLOTS = {
-            weapon: { name: "Arma", currentItem: null },
-            armor: { name: "Armadura", currentItem: null },
-            accessory: { name: "Acessório", currentItem: null }
+            weapon: { name: "Arma", type: "weapon", currentItem: null },
+            armor: { name: "Peitoral", type: "armor", currentItem: null },
+            helmet: { name: "Capacete", type: "helmet", currentItem: null },
+            gloves: { name: "Luvas", type: "gloves", currentItem: null },
+            boots: { name: "Botas", type: "boots", currentItem: null },
+            amulet: { name: "Amuleto", type: "amulet", currentItem: null },
+            ring: { name: "Anel", type: "ring", currentItem: null },
+            accessory: { name: "Acessório", type: "accessory", currentItem: null }
         };
         
         // Estrutura do Inventário (Inicia Vazio para o Novo Jogo)
@@ -782,7 +858,7 @@
         let currentVolume = 1.0; // 0.0 a 1.0
         let hasInteracted = false; // Para controlar o bloqueio de autoplay
 
-        // Estrutura de Classes do Personagem (ATUALIZADA com startingItems)
+        // Estrutura de Classes do Personagem (ATUALIZADA com novos itens e caminho da imagem)
         const CLASSES = {
             warrior: {
                 name: "Guerreiro",
@@ -790,10 +866,13 @@
                 initialHP: 15,
                 initialATK: 2,
                 initialEnergy: 50,
-                imagePath: "assets/guerreiro.png",
+                imagePath: "assets/warrior_display.png", // Imagem de display (sem fundo)
                 startingItems: [
                     { id: 1, name: "Espada Curta", type: "weapon", atk: 2, rarity: "Comum", description: "Uma lâmina básica de treinamento." },
-                    { id: 2, name: "Armadura de Couro", type: "armor", hpBonus: 10, rarity: "Comum", description: "Proteção leve e confiável." }
+                    { id: 2, name: "Armadura de Couro", type: "armor", hpBonus: 10, rarity: "Comum", description: "Proteção leve e confiável." },
+                    { id: 9, name: "Capacete Leve", type: "helmet", hpBonus: 5, rarity: "Comum", description: "Protege a cabeça contra golpes fracos." },
+                    { id: 10, name: "Luvas Simples", type: "gloves", atk: 1, rarity: "Comum", description: "Melhora a pegada." },
+                    { id: 11, name: "Botas de Viagem", type: "boots", hpBonus: 3, rarity: "Comum", description: "Ideal para longas caminhadas." }
                 ]
             },
             mage: {
@@ -802,10 +881,13 @@
                 initialHP: 8,
                 initialATK: 1, 
                 initialEnergy: 150,
-                imagePath: "assets/mago.png",
+                imagePath: "assets/mage_display.png", // Imagem de display (sem fundo)
                 startingItems: [
                     { id: 3, name: "Cajado de Madeira", type: "weapon", atk: 1, energyBonus: 50, rarity: "Comum", description: "Um cajado simples para canalizar magia." },
-                    { id: 4, name: "Manto de Pano", type: "armor", hpBonus: 5, rarity: "Comum", description: "Roupas leves que não atrapalham o movimento." }
+                    { id: 4, name: "Manto de Pano", type: "armor", hpBonus: 5, rarity: "Comum", description: "Roupas leves que não atrapalham o movimento." },
+                    { id: 12, name: "Capuz de Mago", type: "helmet", energyBonus: 10, rarity: "Comum", description: "Concentra o pensamento." },
+                    { id: 13, name: "Luvas de Seda", type: "gloves", energyBonus: 5, rarity: "Comum", description: "Mantém as mãos aquecidas para conjuração." },
+                    { id: 14, name: "Sandálias", type: "boots", hpBonus: 1, rarity: "Comum", description: "Leves e silenciosas." }
                 ]
             },
             archer: {
@@ -814,10 +896,13 @@
                 initialHP: 10,
                 initialATK: 1,
                 initialEnergy: 75,
-                imagePath: "assets/arqueiro.png",
+                imagePath: "assets/archer_display.png", // Imagem de display (sem fundo)
                 startingItems: [
                     { id: 5, name: "Arco Curto", type: "weapon", atk: 3, rarity: "Comum", description: "Um arco simples para caça." },
-                    { id: 6, name: "Malha Leve", type: "armor", hpBonus: 8, rarity: "Comum", description: "Oferece defesa sem restringir a agilidade." }
+                    { id: 6, name: "Malha Leve", type: "armor", hpBonus: 8, rarity: "Comum", description: "Oferece defesa sem restringir a agilidade." },
+                    { id: 15, name: "Bandana", type: "helmet", atk: 1, rarity: "Comum", description: "Melhora o foco." },
+                    { id: 16, name: "Braçadeiras", type: "gloves", atk: 2, rarity: "Comum", description: "Protege o pulso do atrito da corda." },
+                    { id: 17, name: "Botas de Couro Macio", type: "boots", hpBonus: 5, rarity: "Comum", description: "Permite movimentos furtivos." }
                 ]
             },
             fighter: {
@@ -826,10 +911,13 @@
                 initialHP: 20,
                 initialATK: 1,
                 initialEnergy: 75,
-                imagePath: "assets/lutador.png",
+                imagePath: "assets/fighter_display.png", // Imagem de display (sem fundo)
                 startingItems: [
                     { id: 7, name: "Luvas de Couro", type: "weapon", atk: 1, rarity: "Comum", description: "Aumenta o dano dos seus punhos." },
-                    { id: 8, name: "Cota de Malha", type: "armor", hpBonus: 15, rarity: "Comum", description: "Armadura pesada para maior resistência." }
+                    { id: 8, name: "Cota de Malha", type: "armor", hpBonus: 15, rarity: "Comum", description: "Armadura pesada para maior resistência." },
+                    { id: 18, name: "Elmo de Ferro", type: "helmet", hpBonus: 10, rarity: "Comum", description: "Proteção robusta." },
+                    { id: 19, name: "Ataduras", type: "gloves", hpBonus: 2, rarity: "Comum", description: "Protege as mãos durante a luta." },
+                    { id: 20, name: "Grevas de Ferro", type: "boots", hpBonus: 7, rarity: "Comum", description: "Protege as pernas." }
                 ]
             }
         };
@@ -919,7 +1007,7 @@
         const volumeLabelGame = document.getElementById('volume-label-game');
         
         // Referências do Painel de Equipamento/Inventário
-        const equipmentPanel = document.getElementById('equipment-list');
+        const heroImageDisplay = document.getElementById('hero-image-display');
         const inventoryPanel = document.getElementById('inventory-list');
         let inspectedItem = null; // Item atualmente em inspeção
 
@@ -966,6 +1054,9 @@
 
             // === ATUALIZAÇÃO PARA COMBATE (CHAMA updateEquipmentStats) ===
             updateEquipmentStats(); // <-- Garante que o HP/ATK total reflita o equipamento
+            
+            // Define a imagem do herói no painel de equipamento
+            heroImageDisplay.src = heroImage; 
 
             // === ATUALIZAÇÃO DO PAINEL AVENTURA ===
             updateAdventurePanel();
@@ -1110,7 +1201,7 @@
             classDetailsPanel.querySelector('p:last-of-type').textContent = `"${cls.description}"`; 
             
             // NOVO: Exibe o equipamento inicial
-            const startingItemsNames = cls.startingItems.map(item => item.name).join(' e ');
+            const startingItemsNames = cls.startingItems.map(item => item.name).join(', ');
             classInitialEquipmentDisplay.textContent = startingItemsNames || "Nenhum";
             
             classDetailsPanel.style.display = 'block';
@@ -1139,6 +1230,7 @@
             heroCurrentHP = cls.initialHP;
             heroMaxHP = cls.initialHP;
             energy = cls.initialEnergy;
+            heroImage = cls.imagePath; // SALVA O CAMINHO DA IMAGEM
             
             // Reseta EXP, Ouro e Nível para 1 (novo jogo)
             powerLevel = 1;
@@ -1166,7 +1258,6 @@
                 const newItem = { 
                     ...starterItem, 
                     id: nextItemId++, // Usa um ID incremental único para o item
-                    // Adiciona a raridade se não existir (para o display)
                     rarity: starterItem.rarity || "Básico"
                 }; 
                 
@@ -1286,6 +1377,7 @@
             const gameData = {
                 heroName: heroName, 
                 selectedClass: selectedClass, 
+                heroImage: heroImage, // SALVA A IMAGEM DO HERÓI
                 level: powerLevel,
                 exp: currentExp,
                 expRequired: expToNextLevel,
@@ -1304,8 +1396,14 @@
                 
                 // NOVO: Itens e Equipamento
                 inventory: inventory,
-                equipment: EQUIPMENT_SLOTS,
-                nextItemId: nextItemId, // Salva o próximo ID para manter a unicidade
+                // Salva apenas as informações necessárias para recriar a ligação
+                equipment: JSON.parse(JSON.stringify(EQUIPMENT_SLOTS, (key, value) => {
+                    if (key === 'currentItem' && value) {
+                        return { id: value.id }; // Salva apenas o ID do item equipado
+                    }
+                    return value;
+                })),
+                nextItemId: nextItemId, 
                 
                 // Salva o estado do áudio
                 isMuted: gameThemeMusic.muted,
@@ -1340,9 +1438,10 @@
             if (savedData) {
                 const gameData = JSON.parse(savedData); 
 
-                // Carrega Nome e Classe
+                // Carrega Nome, Classe e Imagem
                 heroName = gameData.heroName || "Herói";
                 selectedClass = gameData.selectedClass || null; 
+                heroImage = gameData.heroImage || ""; // CARREGA A IMAGEM DO HERÓI
 
                 // Carrega Variáveis Principais
                 powerLevel = gameData.level || 1;
@@ -1376,10 +1475,10 @@
                 if (gameData.equipment) {
                     for (const slotKey in gameData.equipment) {
                         if (EQUIPMENT_SLOTS[slotKey]) {
-                            // É crucial que o item carregado do save seja uma referência ao objeto no inventário
+                            // Se o item foi carregado, verifica se há ID (o item completo não é salvo, apenas o ID)
                             const equippedItemId = gameData.equipment[slotKey].currentItem ? gameData.equipment[slotKey].currentItem.id : null;
                             if (equippedItemId) {
-                                // Encontra a referência do item no inventário
+                                // Encontra a referência do item COMPLETO no inventário
                                 const itemReference = inventory.find(item => item.id === equippedItemId);
                                 EQUIPMENT_SLOTS[slotKey].currentItem = itemReference || null;
                             } else {
@@ -1574,7 +1673,7 @@
             saveGame(); 
         }
 
-        // 6. Início de Missões Únicas (Desaparecem após completar)
+        // 6. Início de Missões Únicas (Desaparecem após concluir)
         function startUniqueMission(key) {
             const status = uniqueMissionStatus[key];
 
@@ -1763,44 +1862,61 @@
         // VII. FUNÇÕES DE EQUIPAMENTO E INVENTÁRIO
         // ====================================================================
         
-        // 1. Renderiza os slots de equipamento
+        /**
+         * 1. Renderiza o layout do equipamento com a imagem do herói e slots.
+         */
         function renderEquipment() {
-            equipmentPanel.innerHTML = ''; // Limpa o painel
-
+            // Garante que a imagem do herói esteja atualizada
+            heroImageDisplay.src = heroImage;
+            
+            // Renderiza cada slot flutuante
             for (const key in EQUIPMENT_SLOTS) {
                 const slot = EQUIPMENT_SLOTS[key];
                 const item = slot.currentItem;
+                const slotElement = document.getElementById(`slot-${key}`);
 
-                const slotDiv = document.createElement('div');
-                slotDiv.className = 'slot-container';
+                if (!slotElement) continue;
 
-                const labelSpan = document.createElement('span');
-                labelSpan.className = 'slot-label';
-                labelSpan.textContent = slot.name + ':';
-
-                const itemDisplay = document.createElement('div');
-                itemDisplay.className = 'equipped-item-display';
-                
+                let content = '';
                 if (item) {
                     let statText = '';
                     if (item.atk) statText = `+${item.atk} ATK`;
                     else if (item.hpBonus) statText = `+${item.hpBonus} HP`;
                     else if (item.energyBonus) statText = `+${item.energyBonus} EN`;
-
-                    itemDisplay.innerHTML = `<span style="font-weight: bold;">${item.name}</span> <span style="font-size: 0.8em; color: var(--color-hp);">(${statText})</span>`;
-                    itemDisplay.onclick = () => inspectItem(item);
-                    itemDisplay.style.cursor = 'pointer';
+                    
+                    content = `
+                        <span class="slot-name">${slot.name.toUpperCase()}</span>
+                        <span class="slot-item-name" style="color: var(--color-accent);">${item.name}</span>
+                        <span style="font-size: 0.8em; color: var(--color-hp);">${statText}</span>
+                    `;
                 } else {
-                    itemDisplay.innerHTML = `<span class="empty-slot">Vazio</span>`;
+                    content = `
+                        <span class="slot-name">${slot.name.toUpperCase()}</span>
+                        <span class="slot-empty">Vazio</span>
+                    `;
                 }
 
-                slotDiv.appendChild(labelSpan);
-                slotDiv.appendChild(itemDisplay);
-                equipmentPanel.appendChild(slotDiv);
+                slotElement.innerHTML = content;
+                slotElement.onclick = () => handleSlotClick(key);
             }
             
             updateEquipmentStats();
         }
+
+        // Função chamada ao clicar em um slot flutuante
+        function handleSlotClick(slotKey) {
+            const equippedItem = EQUIPMENT_SLOTS[slotKey].currentItem;
+            if (equippedItem) {
+                // Se houver um item, inspeciona ele para mostrar Desequipar
+                showPanel('inventory-panel');
+                inspectItem(equippedItem);
+            } else {
+                // Se o slot estiver vazio, pode-se abrir o inventário filtrado (funcionalidade futura)
+                alert(`Slot de ${EQUIPMENT_SLOTS[slotKey].name} vazio. Selecione um item no Inventário para equipar.`);
+                showPanel('inventory-panel');
+            }
+        }
+
 
         // 2. Calcula e exibe os bônus de equipamento
         function updateEquipmentStats() {
@@ -1828,7 +1944,15 @@
             // Calcula o total (Base + Bônus de Equipamento)
             const totalMaxHP = heroStatsHP + bonusHP;
             const totalMaxATK = heroStatsATK + bonusATK;
-            const totalMaxEnergy = energy + bonusEnergy;
+            const totalMaxEnergy = CLASSES[selectedClass] ? CLASSES[selectedClass].initialEnergy + bonusEnergy : 0; 
+            
+            // Se selectedClass for null (pode acontecer no primeiro load), evita o erro
+            if (!selectedClass) {
+                // Reinicializa o display se selectedClass for nulo
+                heroMaxHP = 10;
+                return;
+            }
+
 
             // Atualiza o DOM do Painel de Equipamento
             document.getElementById('eq-max-hp').textContent = totalMaxHP;
@@ -1840,7 +1964,7 @@
             document.getElementById('eq-bonus-atk').textContent = bonusATK;
 
             document.getElementById('eq-max-energy').textContent = totalMaxEnergy;
-            document.getElementById('eq-base-energy').textContent = energy;
+            document.getElementById('eq-base-energy').textContent = CLASSES[selectedClass].initialEnergy;
             document.getElementById('eq-bonus-energy').textContent = bonusEnergy;
 
             // Define o novo HP/ATK do herói para o resto do jogo
@@ -1871,13 +1995,16 @@
 
             inventory.forEach(item => {
                 const card = document.createElement('div');
-                card.className = `item-card ${equippedIds.includes(item.id) ? 'equipped' : ''}`;
+                // O tipo do item precisa ser um slot válido para ser considerado "equipável"
+                const isEquippable = EQUIPMENT_SLOTS[item.type];
+
+                card.className = `item-card ${isEquippable && equippedIds.includes(item.id) ? 'equipped' : ''}`;
                 card.onclick = () => inspectItem(item);
 
                 card.innerHTML = `
                     <p style="font-weight: bold;">${item.name}</p>
-                    <p style="color: var(--color-energy);">${item.type.toUpperCase()}</p>
-                    ${equippedIds.includes(item.id) ? '<p style="color: var(--color-hp); font-size: 0.9em;">[E] EQUIPADO</p>' : ''}
+                    <p style="color: var(--color-energy);">${item.type ? item.type.toUpperCase() : 'CONSUMÍVEL'}</p>
+                    ${isEquippable && equippedIds.includes(item.id) ? '<p style="color: var(--color-hp); font-size: 0.9em;">[E] EQUIPADO</p>' : ''}
                 `;
                 inventoryPanel.appendChild(card);
             });
@@ -1897,7 +2024,7 @@
             
             // Atualiza os detalhes
             document.getElementById('detail-item-name').textContent = item.name;
-            document.getElementById('detail-item-type').textContent = item.type.toUpperCase();
+            document.getElementById('detail-item-type').textContent = item.type ? item.type.toUpperCase() : 'CONSUMÍVEL';
             document.getElementById('detail-item-rarity').textContent = item.rarity;
             document.getElementById('detail-item-desc').textContent = item.description;
             
@@ -1908,20 +2035,22 @@
             document.getElementById('detail-item-stats').innerHTML = statsText;
             
             // Determina a ação do botão
-            const isEquipped = EQUIPMENT_SLOTS[item.type] && EQUIPMENT_SLOTS[item.type].currentItem && EQUIPMENT_SLOTS[item.type].currentItem.id === item.id;
             const actionButton = document.getElementById('detail-action-button');
+            const isEquippable = EQUIPMENT_SLOTS[item.type];
+            const isEquipped = isEquippable && EQUIPMENT_SLOTS[item.type].currentItem && EQUIPMENT_SLOTS[item.type].currentItem.id === item.id;
             
             if (isEquipped) {
                 actionButton.textContent = "DESEQUIPAR";
                 actionButton.onclick = () => unequipItem(item);
                 actionButton.disabled = false;
-            } else if (EQUIPMENT_SLOTS[item.type]) {
+            } else if (isEquippable) {
                 actionButton.textContent = "EQUIPAR";
                 actionButton.onclick = () => equipItem(item);
                 actionButton.disabled = false;
             } else {
-                actionButton.textContent = "USAR/VENDER"; // Placeholder para consumíveis
+                actionButton.textContent = "USAR/VENDER"; 
                 actionButton.disabled = true;
+                actionButton.onclick = () => alert('Funcionalidade de Usar/Vender ainda não implementada.');
             }
 
             document.getElementById('item-details-panel').style.display = 'block';
