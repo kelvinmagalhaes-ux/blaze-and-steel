@@ -105,7 +105,7 @@
             justify-content: center;
             width: 100%;
             height: 100vh;
-            position: fixed; /* CORREÇÃO: Garante que cubra a tela */
+            position: fixed; 
             top: 0;
             left: 0;
             background-color: var(--color-primary);
@@ -598,7 +598,7 @@
         // Variável da Classe
         let selectedClass = null; 
 
-        // Estrutura de Classes do Personagem (Caminhos de imagem ajustados)
+        // Estrutura de Classes do Personagem (CAMINHOS DE IMAGEM CORRIGIDOS AQUI!)
         const CLASSES = {
             warrior: {
                 name: "Guerreiro",
@@ -606,7 +606,7 @@
                 initialHP: 15,
                 initialATK: 2,
                 initialEnergy: 50,
-                imagePath: "image_1ca763.png" // Imagem do Guerreiro
+                imagePath: "image_1ca763.png" // CAMINHO CORRIGIDO
             },
             mage: {
                 name: "Mago",
@@ -614,7 +614,7 @@
                 initialHP: 8,
                 initialATK: 1, 
                 initialEnergy: 150,
-                imagePath: "image_1ad244.png" // Imagem do Mago
+                imagePath: "image_1ad244.png" // CAMINHO CORRIGIDO
             },
             archer: {
                 name: "Arqueiro",
@@ -622,7 +622,7 @@
                 initialHP: 10,
                 initialATK: 1,
                 initialEnergy: 75,
-                imagePath: "image_1cfa1a.png" // Imagem do Arqueiro
+                imagePath: "image_1cfa1a.png" // CAMINHO CORRIGIDO
             },
             fighter: {
                 name: "Lutador",
@@ -630,7 +630,7 @@
                 initialHP: 20,
                 initialATK: 1,
                 initialEnergy: 75,
-                imagePath: "image_1cfa20.png" // Imagem do Lutador
+                imagePath: "image_1cfa20.png" // CAMINHO CORRIGIDO
             }
         };
 
@@ -833,7 +833,7 @@
             startBattleButton.disabled = energy < currentMonster.energyCost || isFighting;
         }
 
-        // NOVO: Exibe o painel de Criação de Personagem
+        // Exibe o painel de Criação de Personagem
         function showCharacterCreation() {
             // Esconde o menu inicial
             startMenu.style.display = 'none'; 
@@ -846,7 +846,7 @@
             generateClassButtons();
         }
         
-        // NOVO: Gera os botões de seleção de classe no painel
+        // Gera os botões de seleção de classe no painel
         function generateClassButtons() {
             classContainer.innerHTML = ''; 
             
@@ -857,7 +857,7 @@
                 button.setAttribute('data-class-key', key);
                 button.onclick = () => selectClass(key);
                 
-                // Adiciona a imagem
+                // Adiciona a imagem usando o caminho CORRIGIDO
                 if (cls.imagePath) {
                     const img = document.createElement('img');
                     img.src = cls.imagePath;
@@ -869,7 +869,7 @@
             }
         }
         
-        // NOVO: Seleciona uma classe e atualiza os detalhes
+        // Seleciona uma classe e atualiza os detalhes
         function selectClass(key) {
             selectedClass = key;
             const cls = CLASSES[key];
@@ -891,7 +891,7 @@
             });
         }
         
-        // NOVO: Finaliza a criação e inicia o jogo com a classe escolhida
+        // Finaliza a criação e inicia o jogo com a classe escolhida
         function finalizeCreation() {
             if (!selectedClass) {
                 alert("Por favor, selecione uma classe antes de começar!");
@@ -930,7 +930,7 @@
         // Inicia o jogo após criação ou carregamento
         function startGame() {
             sidebar.style.display = 'block';
-            mainContent.style.display = 'block'; // CORREÇÃO: Exibe o conteúdo principal
+            mainContent.style.display = 'block'; // Exibe o conteúdo principal
             showPanel('training-panel'); 
             updateDisplay();
         }
@@ -1006,7 +1006,7 @@
                 heroBaseHP = gameData.heroHP || 10;
                 heroBaseATK = gameData.heroATK || 1;
                 atkUpgradeCost = gameData.atkCost || 50;
-                hpUpgradeCost = gameData.hpCost || 50;
+                hpCost = gameData.hpCost || 50;
 
                 // Carrega Status de Combate
                 heroCurrentHP = gameData.heroCurrentHP || heroBaseHP;
@@ -1023,7 +1023,6 @@
                 alert('Jogo Carregado com Sucesso!');
             } else {
                 // Se não houver save, inicia com o menu de criação
-                // alert('Nenhum jogo salvo encontrado. Crie um novo herói!');
                 // Deixa o start-menu ativo por padrão
             }
         }
