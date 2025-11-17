@@ -30,11 +30,10 @@
         }
 
         .pixel-art {
-            /* Regra fundamental para deixar imagens com cara de pixel art */
             image-rendering: pixelated;
-            width: 150px; /* Tamanho do seu personagem */
+            width: 150px; 
             height: 150px;
-            background-color: #6a0572; /* Placeholder para o seu personagem pixelado */
+            background-color: #6a0572; 
             border: 2px solid #fff;
             margin: 10px auto;
         }
@@ -65,11 +64,28 @@
             border: 2px dashed #a0a0ff;
             background-color: #3a3a5a;
         }
+        
+        /* NOVO ESTILO: Esconde o conteúdo do jogo inicialmente */
+        #game-content {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
-<div class="game-container">
+<div class="game-container" id="start-menu">
+    <h1>⚔️ O Despertar do Herói RPG ⚔️</h1>
+    <p>A aventura aguarda. Você está pronto para treinar e evoluir?</p>
+    
+    <div class="pixel-art" style="background-color: #2ecc71;">
+        <p style="color:white; line-height: 130px;">[INÍCIO]</p>
+    </div>
+    
+    <button onclick="startGame()">▶️ INICIAR JOGO</button>
+    <button onclick="alert('Funcionalidade não implementada.')">⚙️ OPÇÕES</button>
+</div>
+
+<div class="game-container" id="game-content">
     <h1>⚔️ Anime RPG de Aventura ⚔️</h1>
     <p>Complete aventuras para ganhar EXP e subir de nível!</p>
 
@@ -101,9 +117,11 @@
     let powerLevel = 1;
     let gold = 0;
     let currentExp = 0;
-    let expToNextLevel = 50; // Requisito de EXP para Nível 2
+    let expToNextLevel = 50; 
 
     // Referências do DOM
+    const startMenu = document.getElementById('start-menu'); // NOVO
+    const gameContent = document.getElementById('game-content'); // NOVO
     const powerLevelDisplay = document.getElementById('power-level');
     const goldCount = document.getElementById('gold-count');
     const expCount = document.getElementById('exp-count');
@@ -111,6 +129,15 @@
     const levelUpButton = document.getElementById('level-up-button');
     const characterArt = document.getElementById('character-art');
     
+    // --- Funções do Menu ---
+
+    function startGame() {
+        startMenu.style.display = 'none'; // Esconde o menu
+        gameContent.style.display = 'block'; // Mostra o conteúdo do jogo
+        updateDisplay(); // Inicia a exibição dos dados
+    }
+
+
     // --- Funções Principais do Jogo ---
 
     // 1. Atualiza a exibição na tela
@@ -132,7 +159,6 @@
 
     // 2. Ação de Aventura (Ganha EXP e Ouro)
     function startAdventure() {
-        // Ganhos aleatórios baseados no nível atual para manter o desafio
         const expGain = Math.floor(Math.random() * (powerLevel * 5) + 5); 
         const goldGain = Math.floor(Math.random() * (powerLevel * 2) + 1); 
 
@@ -141,7 +167,6 @@
 
         alert(`⚔️ Batalha Vencida! Você ganhou ${expGain} EXP e ${goldGain} Ouro.`);
 
-        // Se a EXP ultrapassar o necessário para o próximo nível, ela é limitada para forçar o level up
         if (currentExp > expToNextLevel) {
             currentExp = expToNextLevel;
         }
@@ -153,9 +178,7 @@
     function levelUp() {
         if (currentExp >= expToNextLevel) {
             powerLevel++; 
-            currentExp = 0; // Zera a EXP
-            
-            // Lógica RPG: Aumenta o custo de EXP para o próximo nível em 50%
+            currentExp = 0;
             expToNextLevel = Math.round(expToNextLevel * 1.5); 
             
             alert(`🎉 Seu Herói alcançou o Nível ${powerLevel}! Próxima meta: ${expToNextLevel} EXP.`);
@@ -170,23 +193,22 @@
         let backgroundColor = '';
         switch(level) {
             case 2:
-                backgroundColor = '#e74c3c'; // Forma 2
+                backgroundColor = '#e74c3c'; 
                 characterArt.querySelector('p').textContent = "[Forma 2]";
                 break;
             case 3:
-                backgroundColor = '#f1c40f'; // Forma 3
+                backgroundColor = '#f1c40f'; 
                 characterArt.querySelector('p').textContent = "[Forma 3]";
                 break;
             default:
-                // Exibe o nível no placeholder quando o nível for maior que 3
                 backgroundColor = '#6a0572'; 
                 characterArt.querySelector('p').textContent = `[Herói Lv.${level}]`;
         }
         characterArt.style.backgroundColor = backgroundColor;
     }
 
-    // Inicia o jogo
-    updateDisplay();
+    // Nota: A função updateDisplay não é chamada aqui no final, 
+    // pois ela é chamada apenas depois que o jogador clica em "INICIAR JOGO".
 </script>
 
 </body>
