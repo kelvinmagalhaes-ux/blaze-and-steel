@@ -685,7 +685,7 @@
         const headerTitle = document.querySelector('#header h2');
         
         // Referências do Painel de Criação
-        const characterCreationPanel = document.getElementById('character-creation-panel'); // NOVA REFERÊNCIA
+        const characterCreationPanel = document.getElementById('character-creation-panel');
         const classContainer = document.getElementById('class-selection-container');
         const classDetailsPanel = document.getElementById('class-details');
         const confirmCreationButton = document.getElementById('confirm-creation-button');
@@ -1023,8 +1023,10 @@
                 startGame(); 
                 alert('Jogo Carregado com Sucesso!');
             } else {
-                alert("Nenhum jogo salvo encontrado. Inicie um Novo Jogo!");
-                // Não faz nada, o start-menu permanece visível
+                // Se não tiver jogo salvo, exibe a tela inicial/criação
+                startMenu.style.display = 'flex';
+                sidebar.style.display = 'none';
+                mainContent.style.display = 'none';
             }
         }
 
@@ -1142,6 +1144,7 @@
                         message += " E descobriu um novo golpe (+1 ATK Bônus)!";
                     } else if (type === 'defense') {
                         heroBaseHP += 5;
+                        heroCurrentHP += 5; // Aumenta o HP atual também
                         message += " E fortificou sua armadura (+5 HP Bônus)!";
                     }
                 }
@@ -1198,6 +1201,7 @@
             if (key === 'firstQuest') {
                 currentExp += 500;
                 heroBaseHP += 10;
+                heroCurrentHP += 10; // Aumenta o HP atual também
                 message += " Recompensa: 500 EXP e +10 HP base!";
             } else if (key === 'tutorialComplete') {
                 gold += 100;
@@ -1212,19 +1216,24 @@
         }
         
         // ====================================================================
-        // V. FUNÇÕES DE COMBATE E MONSTROS
+        // V. FUNÇÕES DE COMBATE E MONSTROS (LÓGICA ATUALIZADA)
         // ====================================================================
 
         // Função para selecionar um monstro aleatório baseado no Nível do Herói
         function selectMonsterByLevel() {
+            // Determina a região de nível do monstro com base no Nível do Herói
             const level = powerLevel;
             
             const availableLevels = Object.keys(MONSTERS_BY_LEVEL).map(Number).sort((a, b) => a - b);
-            let targetLevel = level;
             
+            // Pega o nível mais alto disponível para evitar erros se o herói estiver muito forte
+            let targetLevel = level;
             if (level > availableLevels[availableLevels.length - 1]) {
                 targetLevel = availableLevels[availableLevels.length - 1];
             }
+            
+            // Garante que o nível de destino seja pelo menos 1
+            if (targetLevel < 1) targetLevel = 1;
 
             const availableMonsters = MONSTERS_BY_LEVEL[targetLevel];
 
@@ -1240,9 +1249,13 @@
             
             currentMonster = {
                 ...selectedMonster,
-                currentHP: selectedMonster.baseHP 
+                currentHP: selectedMonster.baseHP,
+                level: targetLevel 
             };
             
+            // Alerta o jogador sobre a área de combate
+            logToCombat(`<p style="color: var(--color-accent);">Você entrou na região de Nível ${targetLevel}. Encontrado: ${currentMonster.name}.</p>`);
+
             updateAdventurePanel();
             
             return currentMonster;
@@ -1273,50 +1286,50 @@
             startBattleButton.textContent = 'Em Combate...';
             startBattleButton.disabled = true;
 
+            // Restaura HP do monstro para a base a cada nova luta
             currentMonster.currentHP = currentMonster.baseHP; 
 
             // Calcula ATK Total do Herói
             const heroATK = heroBaseATK + (powerLevel * 1); 
 
             // Limpa Log
-            combatLog.innerHTML = `<p style="font-weight: bold;">[Batalha Iniciada]</p>`;
+            combatLog.innerHTML = `<p style="font-weight: bold;">[Batalha Iniciada contra ${currentMonster.name}]</p>`;
             logToCombat(`<p style="color: var(--color-energy);">Herói consome ${energyCost} ⚡ e se prepara para lutar!</p>`);
             
             // 2. Loop de Turnos (Simulação)
             let turn = 1;
             const battleInterval = setInterval(() => {
                 
-                // Fim da Batalha
+                // Fim da Batalha (Verificado no início de cada turno)
                 if (currentMonster.currentHP <= 0 || heroCurrentHP <= 0) {
                     clearInterval(battleInterval);
                     endBattle(currentMonster.currentHP <= 0);
-                    
-                    if (heroCurrentHP > 0) { 
-                        selectMonsterByLevel();
-                    }
                     return;
                 }
 
                 // --- Turno do Herói ---
+                // O dano base é multiplicado pelo Nível (o multiplicador xNível é o nosso 'power curve')
                 const heroDamage = heroATK * powerLevel;
                 currentMonster.currentHP -= heroDamage;
                 currentMonster.currentHP = Math.max(0, currentMonster.currentHP); 
-                logToCombat(`Turno ${turn}: Seu herói acerta o ${currentMonster.name}, causando ${heroDamage} de dano!`);
+                
+                logToCombat(`Turno ${turn}: <span style="color: var(--color-hp);">Seu herói (ATK: ${heroATK}) causa ${heroDamage} de dano!</span>`);
                 
                 updateDisplay();
 
-                if (currentMonster.currentHP <= 0) return;
+                if (currentMonster.currentHP <= 0) return; // Monstro morreu
 
                 // --- Turno do Monstro ---
                 const monsterDamage = currentMonster.atk;
                 heroCurrentHP -= monsterDamage;
                 heroCurrentHP = Math.max(0, heroCurrentHP);
+                
                 logToCombat(`<span style="color: var(--color-combat);">Turno ${turn}: O ${currentMonster.name} revida, causando ${monsterDamage} de dano.</span>`);
 
                 updateDisplay();
                 
                 turn++;
-            }, 1500);
+            }, 1000); // Reduzi o tempo para 1 segundo para acelerar a simulação
         }
 
         // 8. Log de Combate
@@ -1340,11 +1353,17 @@
             } else {
                 const goldLoss = 10;
                 gold = Math.max(0, gold - goldLoss);
-                heroCurrentHP = heroMaxHP; 
+                heroCurrentHP = heroMaxHP; // Restaura HP do herói após derrota
                 logToCombat(`<p style="color: var(--color-combat); font-weight: bold;">[DERROTA!] Seu herói foi derrotado e perdeu ${goldLoss} 💰.</p>`);
                 logToCombat(`Herói se recupera. HP restaurado para ${heroMaxHP}.`);
             }
 
+            // Garante que o herói tenha vida máxima para a próxima luta
+            heroCurrentHP = heroMaxHP; 
+            
+            // Seleciona o próximo monstro imediatamente após a batalha
+            selectMonsterByLevel();
+            
             updateDisplay();
             saveGame();
         }
