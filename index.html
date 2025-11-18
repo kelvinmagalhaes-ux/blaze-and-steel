@@ -771,13 +771,14 @@
         // ====================================================================
         
         // Definição de Classes - CONTÉM AS CLASSES QUE VOCÊ SOLICITOU!
+        // CORREÇÃO: As imagens devem estar na pasta 'assets' com estes nomes
         const CLASSES = {
             warrior: {
                 name: "Guerreiro",
                 description: "Foco em ataque, equilibrado em vida.",
                 initialHP: 100,
                 initialATK: 2,
-                imagePath: "assets/warrior.png", // IMAGEM DO GUERREIRO AQUI
+                imagePath: "assets/warrior.png", // Imagem do Guerreiro
                 startingItems: [
                     { id: 1, name: "Espada Curta", type: "weapon", atk: 2, rarity: "Comum", description: "Uma lâmina de treino básica." },
                     { id: 2, name: "Armadura de Couro", type: "armor", hpBonus: 10, rarity: "Comum", description: "Proteção leve e confortável." }
@@ -788,7 +789,7 @@
                 description: "Ataque mágico (a ser implementado), baixa vida.",
                 initialHP: 80,
                 initialATK: 3,
-                imagePath: "assets/mage.png", // IMAGEM DO MAGO AQUI
+                imagePath: "assets/mage.png", // Imagem do Mago
                 startingItems: [
                     { id: 3, name: "Cajado Simples", type: "weapon", atk: 3, rarity: "Comum", description: "Um pedaço de madeira com uma pedra na ponta." },
                     { id: 4, name: "Robes de Pano", type: "armor", hpBonus: 5, rarity: "Comum", description: "Túnica de mago, não muito resistente." }
@@ -799,7 +800,7 @@
                 description: "Ataque de longo alcance, foco em agilidade.",
                 initialHP: 90,
                 initialATK: 2,
-                imagePath: "assets/archer.png", // IMAGEM DO ARQUEIRO AQUI
+                imagePath: "assets/archer.png", // Imagem do Arqueiro
                 startingItems: [
                     { id: 5, name: "Arco Simples", type: "weapon", atk: 3, rarity: "Comum", description: "Um arco de caça padrão." },
                     { id: 6, name: "Veste Leve", type: "armor", hpBonus: 8, rarity: "Comum", description: "Vestimentas que favorecem a agilidade." }
@@ -810,7 +811,7 @@
                 description: "Mestre da furtividade e do dano crítico. Pouca vida, alto ataque.",
                 initialHP: 85,
                 initialATK: 4,
-                imagePath: "assets/assassino.png", // IMAGEM DO ASSASSINO AQUI
+                imagePath: "assets/assassino.png", // Imagem do Assassino
                 startingItems: [
                     { id: 7, name: "Adaga de Aço", type: "weapon", atk: 4, rarity: "Incomum", description: "Uma lâmina afiada, ideal para golpes rápidos." },
                     { id: 8, name: "Veste de Sombra", type: "armor", hpBonus: 5, rarity: "Comum", description: "Roupas escuras que favorecem a discrição." }
@@ -1019,7 +1020,7 @@
                 button.setAttribute('data-class', key);
                 // Usa onerror para tratar casos onde as imagens não existam (substitui por placeholder)
                 button.innerHTML = `
-                    <img src="${cls.imagePath}" alt="${cls.name} Icon" onerror="this.onerror=null; this.src='https://via.placeholder.com/80?text=ICON';">
+                    <img src="${cls.imagePath}" alt="${cls.name} Icon" onerror="this.onerror=null; this.src='https://via.placeholder.com/80?text=ICON'; this.style.opacity='0.5';">
                     <span>${cls.name}</span>
                 `;
                 button.onclick = () => selectClass(key);
@@ -1083,7 +1084,8 @@
             const cls = CLASSES[selectedClass];
             heroBaseHP = cls.initialHP;
             heroBaseATK = cls.initialATK;
-            heroCurrentHP = heroBaseHP; // Define o HP atual com o HP base
+            // O HP ATUAL DEVE SER DEFINIDO APÓS O CÁLCULO DE HP MÁXIMO
+            
 
             // 2. Limpa inventário e equipamento (para garantir um começo limpo)
             inventory = [];
@@ -1102,6 +1104,9 @@
                 inventory.push(newItem); // Adiciona ao inventário
                 equipItem(newItem, false); // Equipa o item (sem alerta, para não floodar)
             });
+            
+            // CORREÇÃO ESSENCIAL: Define o HP atual com base no máximo (base + equipamento inicial)
+            heroCurrentHP = calculateMaxHP(); 
 
             // 4. Inicia o jogo
             characterCreationPanel.style.display = 'none'; // Esconde a tela de criação
@@ -1222,7 +1227,6 @@
                 heroBaseATK = gameData.heroATK || heroBaseATK;
                 atkUpgradeCost = gameData.atkCost || atkUpgradeCost;
                 hpUpgradeCost = gameData.hpCost || hpUpgradeCost;
-                heroCurrentHP = gameData.heroCurrentHP || heroBaseHP;
                 dailyMissionStatus = gameData.dailyStatus || dailyMissionStatus;
                 uniqueMissionStatus = gameData.uniqueStatus || uniqueMissionStatus;
                 missionCooldowns = gameData.missionCooldowns || missionCooldowns;
@@ -1259,6 +1263,9 @@
                     }
                 }
                 
+                // CORREÇÃO ESSENCIAL: Define o HP atual (garantindo que o máximo já foi calculado com base no equipamento)
+                heroCurrentHP = gameData.heroCurrentHP || calculateMaxHP(); 
+
                 // Tenta tocar a música (o navegador pode bloquear até a interação)
                 hasInteracted = true;
                 checkAndPlayMusic();
@@ -1351,7 +1358,7 @@
             } else if (type === 'hp' && gold >= hpUpgradeCost) {
                 gold -= hpUpgradeCost;
                 heroBaseHP += 10;
-                heroCurrentHP += 10;
+                heroCurrentHP = calculateMaxHP(); // Atualiza HP atual para refletir o máximo
                 hpUpgradeCost = Math.round(hpUpgradeCost * 1.5);
                 alert(`❤️ HP Base (Upgrade) aumentado para ${heroBaseHP}!`);
             } else {
