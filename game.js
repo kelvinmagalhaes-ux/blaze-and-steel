@@ -113,10 +113,10 @@ function finalizeCharacter() {
     }
     
     // Configura HP inicial (Base + Bônus de classe)
-    hero.currentHp = hero.baseHp; 
+    hero.currentHp = getStatValue('baseHp'); // Usa getStatValue para pegar o HP base + classe
     
     // Adicionar equipamento inicial (exemplo simples)
-    addItem({ id: 100, name: "Arma Inicial", type: "weapon", stat: { attack: 2 }, icon: '⚔️', count: 1 });
+    addItem({ id: 100, name: "Arma Curta", type: "weapon", stat: { attack: 2 }, icon: '⚔️', count: 1 });
     equipItem(inventory[0], false);
     
     // Inicia o jogo principal
@@ -178,7 +178,7 @@ function updateEquipmentStats() {
 
 // 2. Retorna o valor total da estatística (base + equipamento)
 function getStatValue(statKey) {
-    let baseValue = hero[statKey];
+    let baseValue = hero[statKey.replace('base', '')] !== undefined ? hero[statKey.replace('base', '')] : hero[statKey]; // Lida com chaves 'baseHp' e 'critChance'
     let equipmentBonus = 0;
 
     if (statKey.includes('Attack')) equipmentBonus = heroEquipmentStats.attack;
@@ -272,7 +272,13 @@ function renderStats() {
         <tr><td>Alma (Evolução)</td><td>${hero.baseSoul}</td></tr>
     `;
     document.getElementById('stats-table').innerHTML = statsHtml;
-    updateHpBar(hero, 'hero-hp-bar'); // Atualiza a barra de HP do herói
+    
+    // Atualiza a barra de HP do herói
+    // Nota: O HTML tem uma div vazia no #hero-hp-bar, vamos usar a barra interna.
+    const heroHpBarInner = document.querySelector('#hero-hp-bar .progress-bar');
+    if (heroHpBarInner) {
+         updateHpBar(hero, 'hero-hp-bar');
+    }
 
     // Atualiza o display de pontos de atributo
     const attrPointsDisplay = document.getElementById('attribute-points-display');
@@ -297,18 +303,21 @@ function updateHpBar(character, hpElementId) {
     const currentHp = character.currentHp;
     const percentage = (currentHp / maxHp) * 100;
     const hpBar = document.getElementById(hpElementId);
+    
+    // Procura o elemento progress-bar DENTRO do container
+    const progressBarInner = hpBar ? hpBar.querySelector('.progress-bar') : null;
 
-    if (hpBar) {
-        hpBar.style.width = `${percentage}%`;
-        hpBar.textContent = `${currentHp}/${maxHp}`;
+    if (progressBarInner) {
+        progressBarInner.style.width = `${percentage}%`;
+        progressBarInner.textContent = `${currentHp}/${maxHp}`;
         
         // Mudar cor da barra de HP
         if (percentage < 30) {
-            hpBar.style.backgroundColor = '#e74c3c'; // Vermelho
+            progressBarInner.style.backgroundColor = '#e74c3c'; // Vermelho
         } else if (percentage < 60) {
-            hpBar.style.backgroundColor = '#f1c40f'; // Amarelo
+            progressBarInner.style.backgroundColor = '#f1c40f'; // Amarelo
         } else {
-            hpBar.style.backgroundColor = 'var(--color-hp)'; // Verde padrão
+            progressBarInner.style.backgroundColor = 'var(--color-hp)'; // Verde padrão
         }
     }
 }
@@ -324,7 +333,8 @@ function renderEquipment() {
         const icon = item ? item.icon : slot.icon;
         const className = item ? 'filled' : '';
         // Passa o item ou o slot vazio (para desequipar/inspecionar)
-        const onclickAction = item ? `inspectItem(${JSON.stringify(item).replace(/"/g, '&quot;')}, 1, true)` : `logMessage('Slot vazio', 'border')`;
+        const itemForInspect = item ? JSON.stringify(item).replace(/"/g, '&quot;') : null;
+        const onclickAction = item ? `inspectItem(${itemForInspect}, 1, true)` : `logMessage('Slot vazio', 'border')`;
 
         html += `
             <div class="equipment-slot ${className}" onclick="${onclickAction}">
@@ -355,8 +365,11 @@ function renderInventory() {
         const item = groupedInventory[itemId];
         const selectedClass = inspectedItem && inspectedItem.id === item.id ? 'selected' : '';
 
+        // Corrigido para inspecionar o item de forma segura
+        const itemForInspect = JSON.stringify(item).replace(/"/g, '&quot;');
+        
         html += `
-            <div class="inventory-item ${selectedClass}" onclick="inspectItem(${JSON.stringify(item).replace(/"/g, '&quot;')}, ${item.count})">
+            <div class="inventory-item ${selectedClass}" onclick="inspectItem(${itemForInspect}, ${item.count})">
                 <span class="item-icon">${item.icon}</span>
                 ${item.count > 1 ? `<span class="item-stack-size">${item.count}</span>` : ''}
             </div>
@@ -370,7 +383,7 @@ function inspectItem(item, count = 1, isEquipped = false) {
     inspectedItem = item;
     renderInventory(); // Atualiza a seleção visual
 
-    const detailsDiv = document.getElementById('item-details-content');
+    const detailsDiv = document.getElementById('item-details-panel');
     let detailsHtml = `<h4>${item.name}</h4>`;
 
     if (item.type) {
@@ -394,15 +407,17 @@ function inspectItem(item, count = 1, isEquipped = false) {
     // Ação: Equipar/Desequipar
     let actionButton = '';
     if (item.type && EQUIPMENT_SLOTS[item.type]) {
+        // Passa o item para a função de desequipar
+        const itemForAction = JSON.stringify(item).replace(/"/g, '&quot;');
         if (isEquipped) {
-            actionButton = `<button class="item-action-button" onclick="unequipItem(${JSON.stringify(item).replace(/"/g, '&quot;')})">DESEQUIPAR</button>`;
+            actionButton = `<button class="item-action-button" onclick="unequipItem(${itemForAction})">DESEQUIPAR</button>`;
         } else {
-            actionButton = `<button class="item-action-button" onclick="equipItem(${JSON.stringify(item).replace(/"/g, '&quot;')})">EQUIPAR</button>`;
+            actionButton = `<button class="item-action-button" onclick="equipItem(${itemForAction})">EQUIPAR</button>`;
         }
     }
     
     detailsHtml += actionButton;
-    detailsDiv.innerHTML = detailsHtml;
+    document.getElementById('item-details-content').innerHTML = detailsHtml;
 }
 
 // 7. Renderiza as estatísticas no Sidebar (Mini Stats)
@@ -466,6 +481,7 @@ function saveGame(showAlert = false) {
             equipment: EQUIPMENT_SLOTS,
             inventory: inventory,
             missionCooldowns: missionCooldowns,
+            currentPanel: currentPanel // Salva o painel atual para voltar a ele
             // Adicionar outras variáveis globais que precisam ser salvas
         };
         localStorage.setItem('blazeAndSteelSave', JSON.stringify(gameState));
@@ -476,44 +492,61 @@ function saveGame(showAlert = false) {
     }
 }
 
-// 2. Carregar Jogo
+// 2. Carregar Jogo (CORRIGIDO PARA GARANTIR VISIBILIDADE)
 function loadGame(showAlert = false) {
     const savedState = localStorage.getItem('blazeAndSteelSave');
-    if (savedState) {
-        const gameState = JSON.parse(savedState);
-        hero = gameState.hero;
-        // Restaura EQUIPMENT_SLOTS
-        for (const key in EQUIPMENT_SLOTS) {
-            if (gameState.equipment[key]) {
-                 EQUIPMENT_SLOTS[key].currentItem = gameState.equipment[key].currentItem;
-            }
-        }
-        inventory = gameState.inventory;
-        missionCooldowns = gameState.missionCooldowns || { resource: 0, daily: 0 };
-        
-        // Garante que o HP atual não exceda o HP Máximo recalculado
-        const maxHp = getStatValue('baseHp');
-        if (hero.currentHp > maxHp) {
-            hero.currentHp = maxHp;
-        }
 
-        updateEquipmentStats();
-        // Esconde menu e mostra a interface principal
-        document.getElementById('start-menu').classList.add('hidden');
-        document.getElementById('main-interface').classList.remove('hidden');
-        showPanel(currentPanel); // Volta para o último painel
-        
-        initAudio(); // Inicia áudio se o usuário já interagiu no passado
-        startMissionTimers(); // Restaura o contador de cooldowns
-        renderAll();
-        
-        if (showAlert) alert("Jogo carregado com sucesso!");
-        
-        return true;
-    } else if (showAlert) {
-        alert("Nenhum jogo salvo encontrado.");
+    // =========================================================
+    // LÓGICA DE VISIBILIDADE EM CASO DE FALHA NO CARREGAMENTO
+    // =========================================================
+    if (!savedState) {
+        if (showAlert) {
+             alert("Nenhum jogo salvo encontrado.");
+        }
+        // FORÇA o Menu Inicial a ser visível, escondendo todo o resto.
+        document.getElementById('start-menu').classList.remove('hidden');
+        document.getElementById('main-interface').classList.add('hidden');
+        document.getElementById('character-creation-panel').classList.add('hidden');
         return false;
+    } 
+    
+    // =========================================================
+    // LÓGICA DE CARREGAMENTO BEM-SUCEDIDO
+    // =========================================================
+    const gameState = JSON.parse(savedState);
+    hero = gameState.hero;
+    
+    // Restaura EQUIPMENT_SLOTS
+    for (const key in EQUIPMENT_SLOTS) {
+        if (gameState.equipment[key]) {
+             EQUIPMENT_SLOTS[key].currentItem = gameState.equipment[key].currentItem;
+        }
     }
+    inventory = gameState.inventory;
+    missionCooldowns = gameState.missionCooldowns || { resource: 0, daily: 0 };
+    currentPanel = gameState.currentPanel || 'stats-panel'; // Restaura o painel
+    
+    // Garante que o HP atual não exceda o HP Máximo recalculado
+    updateEquipmentStats(); // Precisa ser chamado antes de checar o HP máximo
+    const maxHp = getStatValue('baseHp');
+    if (hero.currentHp > maxHp) {
+        hero.currentHp = maxHp;
+    }
+
+    // ESCONDE o menu e MOSTRA a interface principal
+    document.getElementById('start-menu').classList.add('hidden'); 
+    document.getElementById('character-creation-panel').classList.add('hidden'); 
+    document.getElementById('main-interface').classList.remove('hidden'); 
+    
+    showPanel(currentPanel); // Volta para o último painel
+    
+    initAudio(); // Inicia áudio se o usuário já interagiu no passado
+    startMissionTimers(); // Restaura o contador de cooldowns
+    renderAll();
+    
+    if (showAlert) alert("Jogo carregado com sucesso!");
+    
+    return true;
 }
 
 // 3. Resetar Jogo
@@ -536,7 +569,7 @@ function rebirthConfirm() {
         // 2. Limpa o progresso
         localStorage.removeItem('blazeAndSteelSave');
         hero = { ...INITIAL_STATS, baseSoul: hero.baseSoul }; // Mantém apenas a alma
-        hero.currentHp = hero.baseHp;
+        hero.currentHp = getStatValue('baseHp');
         inventory = [];
         
         // 3. Reinicia o jogo
@@ -743,7 +776,13 @@ function startCombat(enemyDef) {
     document.querySelector('#enemy-display img').alt = currentEnemy.name;
     document.querySelector('#enemy-display .progress-bar-container').classList.remove('hidden'); // Mostra barra de HP
     
-    updateHpBar(currentEnemy, 'enemy-hp-bar');
+    // Note: Inimigo usa sua própria HP, não getStatValue('baseHp') do herói
+    const enemyHpBarInner = document.querySelector('#enemy-hp-bar .progress-bar');
+    if (enemyHpBarInner) {
+         enemyHpBarInner.style.width = '100%';
+         enemyHpBarInner.textContent = `${currentEnemy.currentHp}/${currentEnemy.hp}`;
+         enemyHpBarInner.style.backgroundColor = '#e74c3c'; // HP do inimigo
+    }
     
     logMessage(`*** Você encontrou ${currentEnemy.name} (Lv ${currentEnemy.level})! ***`, 'combat');
     
@@ -773,7 +812,15 @@ function performAttack() {
     currentEnemy.currentHp -= heroDamage;
     
     logMessage(`${hero.name} causa ${heroDamage.toFixed(0)} de dano em ${currentEnemy.name}.`, 'hp');
-    updateHpBar(currentEnemy, 'enemy-hp-bar');
+    
+    // Atualiza a barra de HP do inimigo (usando a lógica simples aqui)
+    const enemyHpBarInner = document.querySelector('#enemy-hp-bar .progress-bar');
+    const enemyHpPercent = (currentEnemy.currentHp / currentEnemy.hp) * 100;
+     if (enemyHpBarInner) {
+         enemyHpBarInner.style.width = `${enemyHpPercent}%`;
+         enemyHpBarInner.textContent = `${Math.max(0, currentEnemy.currentHp)}/${currentEnemy.hp}`;
+    }
+
 
     // Checa Vitória
     if (currentEnemy.currentHp <= 0) {
@@ -909,19 +956,15 @@ function logMessage(message, style = 'text') {
 }
 
 // ====================================================================
-// X. INICIALIZAÇÃO AO CARREGAR A PÁGINA
+// X. INICIALIZAÇÃO AO CARREGAR A PÁGINA (SIMPLIFICADO E CORRIGIDO)
 // ====================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Tenta carregar o jogo ao carregar a página. 
-    // Se for carregado, o menu inicial é escondido dentro de loadGame.
-    const loaded = loadGame(false);
-    
-    // Se não houver save (ou seja, 'loaded' é false), garantimos que o menu inicial está visível.
-    if (!loaded) {
-         // Esta linha garante que a tela inicial `#start-menu` seja mostrada
-         document.getElementById('start-menu').classList.remove('hidden'); 
-    }
+    // Tenta carregar o jogo salvo.
+    // A função loadGame agora lida com a visibilidade dos painéis:
+    // - Se há save: mostra main-interface.
+    // - Se NÃO há save: mostra start-menu.
+    loadGame(false);
     
     // Adicionar um listener para a primeira interação do usuário, para iniciar o áudio.
     document.body.addEventListener('click', initAudio, { once: true });
