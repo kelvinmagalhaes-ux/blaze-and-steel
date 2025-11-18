@@ -43,6 +43,16 @@
             flex-direction: column;
             align-items: center;
         }
+        
+        /* NOVO: Estilo da Logo */
+        #game-logo {
+            width: 80%;
+            max-width: 200px;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 2px solid var(--color-accent); 
+        }
 
         #hero-info, #stats-summary {
             width: 100%;
@@ -262,9 +272,16 @@
 </head>
 <body>
 
+<audio id="theme-music" loop autoplay style="display: none;">
+    <source src="theme.mp3" type="audio/mpeg"> 
+    </audio>
+
 <div id="game-container">
     
     <div id="sidebar">
+        
+        <img id="game-logo" src="image_631587.png" alt="Blaze and Steel Logo">
+
         <div id="hero-info">
             <h3 id="hero-name-display">Novo Herói</h3>
             <p>Nível: <span id="power-level-display">1</span></p>
@@ -288,6 +305,7 @@
             <button onclick="showPanel('equipment-panel')">Equipamento</button>
             <button onclick="showPanel('shop-panel')">Loja</button>
             <button onclick="saveGame(true)">Salvar Jogo</button>
+            <button onclick="forceCreationPanel()" style="background-color: var(--color-soul);">Nova História/Criar</button> 
             <button onclick="deleteGame(true)" style="background-color: var(--color-combat);">Reiniciar Jogo</button>
         </div>
     </div>
@@ -597,8 +615,9 @@
         if (!gameInitialized) {
             showPanel('creation-panel');
         } else {
+            // Se o jogo foi inicializado, certifique-se de que estamos no mapa
             const visiblePanel = Array.from(document.querySelectorAll('#content-area > div')).find(p => p.style.display === 'block');
-            if (!visiblePanel) {
+            if (!visiblePanel || visiblePanel.id === 'creation-panel') {
                 showPanel('combat-panel');
             }
         }
@@ -607,6 +626,22 @@
     // ====================================================================
     // IV. CRIAÇÃO DE PERSONAGEM
     // ====================================================================
+    
+    function forceCreationPanel() {
+         if (confirm("ATENÇÃO: Isso irá FORÇAR a volta para a tela de criação. Se você continuar, você pode perder o progresso atual, a menos que o salve. Deseja continuar?")) {
+             // Redefine a flag de inicialização e o estado para forçar a criação
+             gameInitialized = false; 
+             selectedClass = null; 
+             document.getElementById('class-details-panel').style.display = 'none';
+             
+             // Limpa o save se o usuário quiser recomeçar do zero
+             localStorage.removeItem('blazeAndSteelSave'); 
+             
+             // Força a exibição da tela de criação
+             showPanel('creation-panel');
+         }
+    }
+
 
     function selectClass(clsKey) {
         document.querySelectorAll('.class-card').forEach(card => {
@@ -1104,6 +1139,18 @@
             location.reload(); 
         }
     }
+    
+    // NOVO: Função para tentar iniciar a música
+    function startThemeMusic() {
+        const audio = document.getElementById('theme-music');
+        if (audio) {
+            // Tenta dar play na música. Navegadores modernos podem bloquear o autoplay
+            // até que o usuário interaja com a página (um clique, por exemplo).
+            audio.play().catch(error => {
+                console.log("Autoplay bloqueado. O usuário precisa interagir com a página para iniciar a música tema.", error);
+            });
+        }
+    }
 
 
     // ====================================================================
@@ -1111,6 +1158,7 @@
     // ====================================================================
 
     loadGame();
+    startThemeMusic();
     
 </script>
 
