@@ -1305,8 +1305,13 @@
                     rarity: starterItem.rarity || "Básico" // Adiciona a raridade se não existir (para o display)
                 };
                 inventory.push(newItem); // Adiciona ao inventário
-                equipItem(newItem, false); // Equipa o item (sem alerta, para não floodar)
+                
+                // CORREÇÃO: Atribuição direta para evitar múltiplos saves e updates de stats desnecessários no loop de criação.
+                EQUIPMENT_SLOTS[newItem.type].currentItem = newItem; 
             });
+            
+            // NOVO: Garantir que os stats totais sejam calculados antes de iniciar o jogo.
+            updateEquipmentStats(); 
             
             // 4. Inicia o jogo
             characterCreationPanel.style.display = 'none'; // Esconde a tela de criação
@@ -1319,7 +1324,7 @@
             sidebar.style.display = 'block';
             mainContent.style.display = 'block'; // Exibe o conteúdo principal
             showPanel('training-panel');
-            updateEquipmentStats(); // Calcula o total de stats baseado nos itens iniciais
+            updateEquipmentStats(); // Recalcula os stats mais uma vez para garantir
             updateDisplay();
             
             // Configuração do input de nome para o futuro
