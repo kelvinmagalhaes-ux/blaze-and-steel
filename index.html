@@ -152,14 +152,13 @@
             position: fixed; 
             top: 0;
             left: 0;
-            /* MODIFICADO: Plano de Fundo com Imagem */
+            /* CORRIGIDO: O plano de fundo agora é 'fundo.jpg' */
             background-image: url('assets/fundo.jpg'); 
             background-size: cover; 
             background-position: center;
             /* Adiciona uma camada escura para melhorar a legibilidade do texto branco */
             background-color: rgba(30, 30, 45, 0.85); 
             background-blend-mode: multiply; 
-            /* Fim MODIFICADO */
             z-index: 100;
         }
         
@@ -539,8 +538,9 @@
             </div>
             
             <nav class="sidebar-menu">
+                
                 <button id="btn-adventure" onclick="showPanel('adventure-panel')" class="active">Aventura</button>
-                <button id="btn-attributes" onclick="showPanel('attributes-panel')">Atributos</button> 
+                <button id="btn-attributes" onclick="showPanel('attributes-panel')">Atributos</button>
                 <button id="btn-equipment" onclick="showPanel('equipment-panel')">Equipamento</button>
                 <button id="btn-inventory" onclick="showPanel('inventory-panel')">Inventário</button>
                 <button id="btn-status" onclick="showPanel('status-panel')">Status</button>
@@ -897,7 +897,7 @@
             checkCreationRequirements(); 
         }
         
-        // NOVO: Volta para a tela de Menu Inicial
+        // CORRIGIDO: Volta para a tela de Menu Inicial
         function returnToMainMenu() {
             hideAllPanels(); 
             startMenu.style.display = 'flex';
@@ -906,6 +906,7 @@
             isFighting = false;
             currentMonster = null;
             
+            // Re-renderiza o display para atualizar o volume no menu
             updateDisplay();
         }
 
@@ -1156,12 +1157,10 @@
             localStorage.setItem('blazeAndSteelSave', JSON.stringify(gameData));
         }
 
-        // ALTERADO: A função agora é focada em carregar os dados e só inicia o jogo se 'autoStartGame' for true.
+        // CORRIGIDO: A função agora é focada em carregar os dados e só inicia o jogo se 'autoStartGame' for true.
         function loadGame(showAlert = false, autoStartGame = false) {
             const savedState = localStorage.getItem('blazeAndSteelSave');
             
-            // CORREÇÃO: loadGame não é mais responsável por hideAllPanels, exceto quando inicia o jogo.
-
             if (!savedState) {
                 return false;
             }
@@ -1215,7 +1214,7 @@
                 hasInteracted = true;
                 checkAndPlayMusic();
                 
-                // Agora, startGame só é chamado se autoStartGame for true
+                // Agora, startGame só é chamado se autoStartGame for true (ou seja, pelo botão CARREGAR JOGO)
                 if (autoStartGame) {
                     startGame();
                     if (showAlert) {
@@ -1632,18 +1631,17 @@
 
 
         // ====================================================================
-        // X. INICIALIZAÇÃO
+        // X. INICIALIZAÇÃO (Bloco Final)
         // ====================================================================
 
-        // No carregamento da página:
-        // 1. Garantimos que os painéis de jogo estão ocultos, forçando o Menu Inicial a ser o único visível.
+        // 1. Garantimos que os painéis de jogo (sidebar e main-content) estão ocultos.
         hideAllPanels(); 
 
         // 2. Tentamos carregar os dados salvos.
-        // O loadGame() não inicia o jogo, apenas carrega os dados.
+        // loadGame() não inicia o jogo, apenas carrega os dados.
         loadGame();
         
-        // 3. Garante que o Menu Inicial seja exibido (pois o CSS não é suficiente para forçar a exibição).
+        // 3. Garantimos que o Menu Inicial seja exibido, forçando a tela de título.
         startMenu.style.display = 'flex'; 
         
     </script>
