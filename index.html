@@ -47,7 +47,7 @@
             flex-shrink: 0;
         }
 
-        /* NOVO: Informações do Herói e Foto */
+        /* Informações do Herói e Foto */
         #hero-info {
             text-align: center;
             margin-bottom: 20px;
@@ -109,7 +109,7 @@
         #btn-equipment::before { content: '⚔️'; color: var(--color-hp); } 
         #btn-inventory::before { content: '📦'; color: #f1c40f; } 
         #btn-status::before { content: '👤'; color: var(--color-soul); } 
-        #btn-main-menu::before { content: '🏠'; color: #3498db; } /* NOVO: Ícone Home */
+        #btn-main-menu::before { content: '🏠'; color: #3498db; } 
 
 
         /* Área de Conteúdo Principal */
@@ -152,7 +152,14 @@
             position: fixed; 
             top: 0;
             left: 0;
-            background-color: var(--color-primary);
+            /* MODIFICADO: Plano de Fundo com Imagem */
+            background-image: url('assets/fundo.jpg'); 
+            background-size: cover; 
+            background-position: center;
+            /* Adiciona uma camada escura para melhorar a legibilidade do texto branco */
+            background-color: rgba(30, 30, 45, 0.85); 
+            background-blend-mode: multiply; 
+            /* Fim MODIFICADO */
             z-index: 100;
         }
         
@@ -208,6 +215,8 @@
             transform: translateX(-50%);
             width: 90%; 
             max-width: 300px;
+            /* Garante que o painel de volume fique sobre a imagem de fundo */
+            z-index: 10; 
         }
 
 
