@@ -25,7 +25,7 @@
             margin: 0;
             display: flex;
             min-height: 100vh;
-            overflow: hidden; 
+            overflow: hidden;
         }
 
         /* Estrutura Geral */
@@ -41,7 +41,7 @@
             padding: 20px 0;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
             display: none; 
-            flex-shrink: 0; 
+            flex-shrink: 0;
         }
 
         .sidebar-menu button {
@@ -70,7 +70,7 @@
         }
         
         .sidebar-menu button::before {
-            content: ''; 
+            content: '';
             margin-right: 10px;
             font-size: 1.2em;
             width: 25px; 
@@ -94,7 +94,7 @@
             overflow-y: auto;
             max-height: 100vh;
             display: none; 
-            position: relative; 
+            position: relative;
         }
         
         /* Botão de Áudio (Dentro do Jogo) */
@@ -275,7 +275,7 @@
 
         /* Estilo para os botões de seleção de classe */
         #class-selection-container button {
-            background-color: var(--color-secondary); 
+            background-color: var(--color-secondary);
             color: var(--color-text); 
             border: 2px solid var(--color-primary); 
             padding: 10px 15px; 
@@ -291,7 +291,7 @@
         }
         
         #class-selection-container button img {
-            max-width: 80px; 
+            max-width: 80px;
             max-height: 80px; 
             margin-bottom: 5px;
             border-radius: 5px;
@@ -318,7 +318,7 @@
         }
         
         .item-card.equipped {
-            border-color: var(--color-hp); 
+            border-color: var(--color-hp);
             box-shadow: 0 0 5px var(--color-hp);
         }
 
@@ -333,7 +333,7 @@
             padding: 10px;
             border: 1px dashed var(--color-accent);
             border-radius: 5px;
-            background-color: #1a1a25; 
+            background-color: #1a1a25;
         }
 
         .slot-label {
@@ -361,30 +361,30 @@
             
             /* Estrutura Principal */
             body {
-                overflow-y: auto; 
+                overflow-y: auto;
             }
 
             #app-wrapper {
-                flex-direction: column; 
+                flex-direction: column;
             }
             
             /* Sidebar (Menu) */
             #sidebar {
-                width: 100%; 
+                width: 100%;
                 padding: 10px 0;
                 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-                order: -1; 
+                order: -1;
             }
 
             .sidebar-menu {
-                display: flex; 
+                display: flex;
                 flex-wrap: wrap;
                 justify-content: space-around;
                 gap: 5px;
             }
 
             .sidebar-menu button {
-                width: 45%; 
+                width: 45%;
                 text-align: center;
                 padding: 8px 10px;
                 font-size: 0.9em;
@@ -393,7 +393,7 @@
             
             /* Remove o ícone extra para economizar espaço no mobile */
             .sidebar-menu button::before {
-                content: none !important; 
+                content: none !important;
                 margin-right: 0;
                 width: auto;
             }
@@ -423,7 +423,7 @@
             
             /* Botões do Menu Inicial */
             .menu-button-stack button {
-                width: 250px; 
+                width: 250px;
             }
             
             /* Criação de Personagem Mobile */
@@ -479,7 +479,7 @@
             <div class="content-panel" style="text-align: center;">
                 <h2>Crie Seu Herói!</h2>
                 <p>Escolha um nome e uma classe para começar sua aventura.</p>
-                
+               
                 <div style="margin: 20px 0;">
                     <label for="hero-name-input" style="font-weight: bold; display: block; margin-bottom: 5px;">Nome do Herói:</label>
                     <input type="text" id="hero-name-input" placeholder="Ex: Herói Blaze" maxlength="20" style="padding: 10px; font-size: 1.2em; width: 80%; max-width: 300px; border-radius: 5px; border: 1px solid var(--color-accent); background-color: var(--color-primary); color: var(--color-text);">
@@ -588,6 +588,7 @@
                         </button>
                     </div>
 
+                    
                     <div id="hero-training-panel" class="content-panel" style="text-align: center;">
                         <h3>Treinamento & Progresso</h3>
                         <p>Gaste Energia para aumentar sua EXP e preparo.</p>
@@ -613,6 +614,7 @@
                 <div id="adventure-panel" style="display: none;">
                     
                     <img src="assets/adventure.png" alt="ADVENTURE" id="adventure-title-logo">
+            
                     
                     <div class="content-panel" style="display: flex; justify-content: space-between;">
                         
@@ -637,6 +639,7 @@
                         </div>
                     </div>
                     
+                    
                     <div class="content-panel">
                         <h3>Estatísticas de Batalha do Herói</h3>
                         <div id="hero-battle-stats" style="display: flex; justify-content: space-around; text-align: center;">
@@ -650,26 +653,26 @@
                         <h3>Skills Ativas</h3>
                         <p>Use a seu favor em combate! (Funcionalidade futura)</p>
                         <button disabled style="background-color: #3498db;">Ataque Forte (5 ⚡)</button>
-                        <button disabled style="background-color: #2ecc71;">Cura Rápida (10 💰)</button>
+                        <button disabled style="background-color: #2ecc71;">Cura Rápida (10 ⚡)</button>
                     </div>
+                    
                 </div>
-
                 
-                <div id="upgrades-panel" class="content-panel" style="display: none;">
-                    <h2>✨ Upgrades de Batalha</h2>
-                    <p>Gaste seu Ouro para melhorar permanentemente suas estatísticas de combate!</p>
+                <div id="upgrades-panel" style="display: none;">
+                    <h2>⏫ Upgrades & Power-ups</h2>
+                    <p>Invista seus recursos para aumentar suas estatísticas base permanentemente.</p>
                     
                     <div style="display: flex; gap: 20px; margin-top: 20px;">
                         
                         <div class="content-panel" style="flex: 1; text-align: center;">
                             <h3>Aumento de Ataque</h3>
-                            <p>⚔️ Dano Base Atual: <span id="upgrade-atk-display">1</span></p>
+                            <p>⚔️ ATK Base Atual: <span id="upgrade-atk-display">1</span></p>
                             <p>Próximo Nível: +1 ATK</p>
                             <button id="buy-atk-upgrade" onclick="buyUpgrade('atk')" style="background-color: var(--color-combat);">
                                 Comprar (Custo: <span id="atk-cost">50</span> 💰)
                             </button>
                         </div>
-
+                        
                         <div class="content-panel" style="flex: 1; text-align: center;">
                             <h3>Aumento de Vida</h3>
                             <p>❤️ HP Base Atual: <span id="upgrade-hp-display">10</span></p>
@@ -678,12 +681,12 @@
                                 Comprar (Custo: <span id="hp-cost">50</span> 💰)
                             </button>
                         </div>
+                        
                     </div>
                 </div>
 
                 <div id="equipment-panel" style="display: none;">
                     <h2>🛡️ Equipamento & Estatísticas</h2>
-                    
                     <div style="display: flex; gap: 20px; margin-top: 20px;">
                         
                         <div class="content-panel" style="flex: 1; min-width: 300px;">
@@ -691,7 +694,7 @@
                             <div id="equipment-list" style="display: flex; flex-direction: column; gap: 10px;">
                                 </div>
                         </div>
-
+                        
                         <div class="content-panel" style="flex: 1;">
                             <h3>Estatísticas Totais</h3>
                             <div id="hero-stats-equipment">
@@ -702,79 +705,112 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div id="inventory-panel" style="display: none;">
-                    <div class="content-panel">
-                        <h2>🎒 Inventário</h2>
-                        <p>Seus itens e recursos. Clique em um item para inspecionar e equipar/usar.</p>
+                    <h2>📦 Inventário</h2>
+                    
+                    <div style="display: flex; gap: 20px; margin-top: 20px;">
                         
-                        <div id="inventory-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 15px;">
+                        <div class="content-panel" style="flex: 2;">
+                            <h3>Itens Coletados</h3>
+                            <div id="inventory-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;">
+                                </div>
+                        </div>
+                        
+                        <div class="content-panel" style="flex: 1; min-width: 250px;">
+                            <h3>Detalhes do Item</h3>
+                            <div id="item-inspection-area">
+                                <p style="font-style: italic; color: #7f8c8d;">Selecione um item no inventário para ver os detalhes.</p>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="status-panel" style="display: none;">
+                    <h2>👤 Status do Herói</h2>
+                    <div class="content-panel">
+                        <h3>Estatísticas Atuais</h3>
+                        <p>Nome: <span id="status-hero-name"></span></p>
+                        <p>Classe: <span id="status-hero-class"></span></p>
+                        <p>Nível: <span id="status-power-level"></span></p>
+                        <p>EXP: <span id="status-exp"></span></p>
+                        <p style="font-weight: bold;">❤️ HP Máximo: <span id="status-max-hp"></span></p>
+                        <p style="font-weight: bold;">⚔️ ATK Total: <span id="status-total-atk"></span></p>
+                        <p>⚡ Energia Máxima: <span id="status-max-energy"></span></p>
                     </div>
                     
-                    <div id="item-details-panel" class="content-panel" style="margin-top: 20px; display: none;">
-                        <h4>Detalhes do Item: <span id="detail-item-name"></span></h4>
-                        <p>Tipo: <span id="detail-item-type"></span> | Raridade: <span id="detail-item-rarity"></span></p>
-                        <p>Descrição: <span id="detail-item-desc"></span></p>
-                        <p id="detail-item-stats"></p>
-                        
-                        <button id="detail-action-button" onclick="handleItemAction()" style="padding: 10px 20px; margin-top: 10px; background-color: var(--color-evolve); color: white; border: none; border-radius: 5px;">
-                            Equipar/Desequipar
-                        </button>
+                    <div class="content-panel">
+                        <h3>Progresso e Objetivos</h3>
+                        <p>Total de Batalhas Vencidas: <span id="status-battles-won">0</span> (Funcionalidade Futura)</p>
+                        <p>Total de Ouro Coletado: <span id="status-gold-collected">0</span> (Funcionalidade Futura)</p>
                     </div>
                 </div>
-
-
-                <div id="status-panel" style="display: none;">
-                    <div class="content-panel"><h2>👤 Status do Herói</h2><p>Estatísticas detalhadas. (Em breve!)</p></div>
-                </div>
+                
                 <div id="expedition-panel" style="display: none;">
-                    <div class="content-panel"><h2>🧭 Expedição</h2><p>Missões de longa duração.</p></div>
+                    <h2>🧭 Expedição (Funcionalidade Futura)</h2>
+                    <div class="content-panel">
+                        <p>Em Expedição, você envia seu herói para uma longa jornada (horas ou dias) para buscar recursos raros e novos desafios.</p>
+                        <button disabled style="background-color: var(--color-soul); color: white; padding: 15px;">Iniciar Expedição de 4 Horas (Custo: 100 ⚡)</button>
+                    </div>
                 </div>
-
-            </div>
-        </div>
-
-    </div>
-
-    <script>
+                
+            </div> </div> </div> <script>
         // ====================================================================
-        // I. VARIÁVEIS E DOM
+        // I. VARIÁVEIS DO ESTADO DO JOGO (GAME STATE)
         // ====================================================================
-
-        // Variáveis do Jogo
-        let heroName = "Novo Herói";
-        let powerLevel = 1;
-        let gold = 0;
-        let currentExp = 0;
-        let expToNextLevel = 50; 
-        let energy = 0; 
-        let soul = 0;
-        let energyPerClick = 1; 
         
-        // Variáveis de UPGRADE (Bases que são melhoradas por upgrades)
-        let heroBaseATK = 1;
-        let heroBaseHP = 10;
-        let atkUpgradeCost = 50;
-        let hpUpgradeCost = 50;
+        let heroName = "Herói Desconhecido"; // Nome do Herói
+        let selectedClass = null; // Classe do Herói (warrior, mage, archer)
+        let powerLevel = 1; // Nível de Poder
+        let currentExp = 0; // Experiência Atual
+        let expToNextLevel = 50; // EXP Necessária para o Próximo Nível
 
-        // Variáveis de Combate
-        let isFighting = false;
-        let heroCurrentHP = 10;
-        let heroMaxHP = 10; 
-        let currentMonster = null; 
+        // Recursos
+        let energy = 0; // Recurso principal (para treinamento/batalha)
+        let gold = 0; // Moeda principal
+        let soul = 0; // Recurso de Reencarnação (funcionalidade futura)
+
+        // Estatísticas Base (Aumentam com Level Up ou Upgrades)
+        let heroBaseHP = 10; // HP base do herói
+        let heroBaseATK = 1; // ATK base do herói
+        let heroCurrentHP = heroBaseHP; // HP atual do herói (deve ser heroBaseHP ao iniciar/curar)
+        let heroMaxHP = heroBaseHP; // <<-- CORREÇÃO: Variável que estava faltando!
         
-        // Variável da Classe
-        let selectedClass = null; 
-        let nextItemId = 1000; // ID para novos itens gerados
+        // Upgrades
+        let atkUpgradeCost = 50; // Custo inicial do upgrade de ATK
+        let hpUpgradeCost = 50; // Custo inicial do upgrade de HP
+        let energyPerClick = 1; // Energia por clique (funcionalidade não implementada, mas boa prática)
+
+        // Estado de Combate
+        let currentMonster = null; // Monstro atual
+        let isFighting = false; // Se uma batalha está em andamento
+        
+        // Cooldowns
+        const DAILY_COOLDOWN_MS = 24 * 60 * 60 * 1000; // 24 horas
+        let missionCooldowns = {
+            provisions: 0, // Timestamp do próximo uso
+            workGold: 0,
+        };
+        
+        // Status de Missões
+        let dailyMissionStatus = {
+            scouting: { completedAt: 0 },
+            drills: { completedAt: 0 }
+        };
+        let uniqueMissionStatus = {
+            firstQuest: { completed: false },
+            tutorialComplete: { completed: false }
+        };
 
         // Estrutura de Equipamento
         const EQUIPMENT_SLOTS = {
-            weapon: { name: "Arma", currentItem: null },
-            armor: { name: "Armadura", currentItem: null },
-            accessory: { name: "Acessório", currentItem: null }
+            weapon: { name: "Arma", type: "weapon", currentItem: null },
+            armor: { name: "Armadura", type: "armor", currentItem: null }
         };
-        
+        let inspectedItem = null; // Item sendo inspecionado no inventário
+        let nextItemId = 1000; // ID único para novos itens (começa em 1000 para evitar conflitos com IDs de classes)
+
+
         // Estrutura do Inventário (Inicia Vazio para o Novo Jogo)
         let inventory = [];
 
@@ -790,7 +826,7 @@
                 initialHP: 15,
                 initialATK: 2,
                 initialEnergy: 50,
-                imagePath: "assets/guerreiro.png",
+                imagePath: "assets/guerreiro.png", // Imagem placeholder
                 startingItems: [
                     { id: 1, name: "Espada Curta", type: "weapon", atk: 2, rarity: "Comum", description: "Uma lâmina básica de treinamento." },
                     { id: 2, name: "Armadura de Couro", type: "armor", hpBonus: 10, rarity: "Comum", description: "Proteção leve e confiável." }
@@ -800,9 +836,9 @@
                 name: "Mago",
                 description: "Frágil, mas com alto potencial de dano mágico e grande reserva de energia.",
                 initialHP: 8,
-                initialATK: 1, 
+                initialATK: 1,
                 initialEnergy: 150,
-                imagePath: "assets/mago.png",
+                imagePath: "assets/mago.png", // Imagem placeholder
                 startingItems: [
                     { id: 3, name: "Cajado de Madeira", type: "weapon", atk: 1, energyBonus: 50, rarity: "Comum", description: "Um cajado simples para canalizar magia." },
                     { id: 4, name: "Manto de Pano", type: "armor", hpBonus: 5, rarity: "Comum", description: "Roupas leves que não atrapalham o movimento." }
@@ -810,42 +846,16 @@
             },
             archer: {
                 name: "Arqueiro",
-                description: "Rápido e preciso, com bom equilíbrio entre ataque e defesa.",
+                description: "Focado em velocidade e ataques à distância, com energia e vida moderadas.",
                 initialHP: 10,
-                initialATK: 1,
-                initialEnergy: 75,
-                imagePath: "assets/arqueiro.png",
+                initialATK: 3,
+                initialEnergy: 100,
+                imagePath: "assets/arqueiro.png", // Imagem placeholder
                 startingItems: [
-                    { id: 5, name: "Arco Curto", type: "weapon", atk: 3, rarity: "Comum", description: "Um arco simples para caça." },
-                    { id: 6, name: "Malha Leve", type: "armor", hpBonus: 8, rarity: "Comum", description: "Oferece defesa sem restringir a agilidade." }
-                ]
-            },
-            fighter: {
-                name: "Lutador",
-                description: "Focado em defesa e recuperação, o lutador é difícil de derrubar.",
-                initialHP: 20,
-                initialATK: 1,
-                initialEnergy: 75,
-                imagePath: "assets/lutador.png",
-                startingItems: [
-                    { id: 7, name: "Luvas de Couro", type: "weapon", atk: 1, rarity: "Comum", description: "Aumenta o dano dos seus punhos." },
-                    { id: 8, name: "Cota de Malha", type: "armor", hpBonus: 15, rarity: "Comum", description: "Armadura pesada para maior resistência." }
+                    { id: 5, name: "Arco Simples", type: "weapon", atk: 3, rarity: "Comum", description: "Um arco de caça padrão." },
+                    { id: 6, name: "Veste Leve", type: "armor", hpBonus: 8, rarity: "Comum", description: "Vestimentas que favorecem a agilidade." }
                 ]
             }
-        };
-
-
-        // Variáveis de Missão (para Cooldown)
-        let missionCooldowns = { provisions: 0, workGold: 0 };
-        const DAILY_COOLDOWN_MS = 24 * 60 * 60 * 1000;
-        let dailyMissionStatus = {
-            scouting: { completedAt: 0 },
-            drills: { completedAt: 0 }
-        };
-
-        let uniqueMissionStatus = {
-            firstQuest: { completed: false },
-            tutorialComplete: { completed: false }
         };
 
         // Objeto central para a seleção de monstros por Nível
@@ -864,11 +874,11 @@
             ]
         };
 
-
         // Referências do DOM
         const startMenu = document.getElementById('start-menu');
         const sidebar = document.getElementById('sidebar');
         const mainContent = document.getElementById('main-content');
+        const headerTitle = document.querySelector('#header h2');
         
         // Display de Recursos e Nível
         const powerLevelDisplay = document.getElementById('power-level-display');
@@ -878,50 +888,45 @@
         const expCount = document.getElementById('exp-count');
         const expRequired = document.getElementById('exp-required');
         const levelUpButton = document.getElementById('level-up-button');
-        
+
         // Referências de NOME e TÍTULO
         const heroNameInput = document.getElementById('hero-name-input');
         const heroNameDisplay = document.getElementById('hero-name');
-        const headerTitle = document.querySelector('#header h2');
         
         // Referências do Painel de Criação
         const characterCreationPanel = document.getElementById('character-creation-panel');
         const classContainer = document.getElementById('class-selection-container');
-        const classDetailsPanel = document.getElementById('class-details');
+        const classDetails = document.getElementById('class-details');
         const confirmCreationButton = document.getElementById('confirm-creation-button');
-        const classInitialEquipmentDisplay = document.getElementById('class-initial-equipment');
 
-
-        // Referências do Painel de Upgrades
+        // Referências de Upgrades
         const upgradeAtkDisplay = document.getElementById('upgrade-atk-display');
         const atkCostDisplay = document.getElementById('atk-cost');
         const upgradeHpDisplay = document.getElementById('upgrade-hp-display');
         const hpCostDisplay = document.getElementById('hp-cost');
         const buyAtkUpgradeButton = document.getElementById('buy-atk-upgrade');
         const buyHpUpgradeButton = document.getElementById('buy-hp-upgrade');
-        
-        // Referências do Painel Aventura
+
+        // Referências de Combate
         const combatLog = document.getElementById('combat-log');
         const startBattleButton = document.getElementById('start-battle-button');
         const heroCurrentHPDisplay = document.getElementById('hero-current-hp');
         const heroMaxHPDisplay = document.getElementById('hero-max-hp');
         const heroTotalATKDisplay = document.getElementById('hero-total-atk');
         const heroLevelMultiplierDisplay = document.getElementById('hero-level-multiplier');
-        const monsterHPDisplay = document.getElementById('monster-hp-display');
-        const monsterATKDisplay = document.getElementById('monster-atk-display');
 
-        // Referências de Áudio
+        // Referências de Equipamento e Inventário
+        const inventoryPanel = document.getElementById('inventory-list');
+        const equipmentPanel = document.getElementById('equipment-list');
+        const inspectionArea = document.getElementById('item-inspection-area');
+        
+        // Referências de Volume
         const gameThemeMusic = document.getElementById('game-theme-music');
-        const audioControlButton = document.getElementById('audio-control-button');
         const volumeSliderStart = document.getElementById('volume-slider-start');
         const volumeLabelStart = document.getElementById('volume-label-start');
         const volumeSliderGame = document.getElementById('volume-slider-game');
         const volumeLabelGame = document.getElementById('volume-label-game');
-        
-        // Referências do Painel de Equipamento/Inventário
-        const equipmentPanel = document.getElementById('equipment-list');
-        const inventoryPanel = document.getElementById('inventory-list');
-        let inspectedItem = null; // Item atualmente em inspeção
+        const audioControlButton = document.getElementById('audio-control-button');
 
 
         // ====================================================================
@@ -933,16 +938,16 @@
             // NOME
             heroNameDisplay.textContent = heroName;
             headerTitle.textContent = heroName;
-            
+
             // Recursos
             powerLevelDisplay.textContent = powerLevel;
-            document.getElementById('power-level').textContent = powerLevel; 
+            document.getElementById('power-level').textContent = powerLevel;
             energyCount.textContent = energy;
             goldCount.textContent = gold;
             soulCount.textContent = soul;
             expCount.textContent = currentExp;
             expRequired.textContent = expToNextLevel;
-
+            
             // Level Up
             if (currentExp >= expToNextLevel) {
                 levelUpButton.disabled = false;
@@ -953,11 +958,10 @@
             }
 
             // Upgrades
-            upgradeAtkDisplay.textContent = heroBaseATK;
-            atkCostDisplay.textContent = atkUpgradeCost;
-            upgradeHpDisplay.textContent = heroBaseHP;
-            hpCostDisplay.textContent = hpUpgradeCost;
-
+            document.getElementById('upgrade-atk-display').textContent = heroBaseATK;
+            document.getElementById('atk-cost').textContent = atkUpgradeCost;
+            document.getElementById('upgrade-hp-display').textContent = heroBaseHP;
+            document.getElementById('hp-cost').textContent = hpUpgradeCost;
             buyAtkUpgradeButton.disabled = gold < atkUpgradeCost;
             buyHpUpgradeButton.disabled = gold < hpUpgradeCost;
 
@@ -965,11 +969,12 @@
             updateMissionButtons();
 
             // === ATUALIZAÇÃO PARA COMBATE (CHAMA updateEquipmentStats) ===
-            updateEquipmentStats(); // <-- Garante que o HP/ATK total reflita o equipamento
+            updateEquipmentStats(); 
+            // <-- Garante que o HP/ATK total reflita o equipamento
 
             // === ATUALIZAÇÃO DO PAINEL AVENTURA ===
             updateAdventurePanel();
-            
+
             // === ATUALIZAÇÃO DO VOLUME E MUTE ===
             const volValue = Math.round(currentVolume * 100);
             if (volumeSliderStart) {
@@ -980,184 +985,226 @@
                 volumeSliderGame.value = volValue;
                 volumeLabelGame.textContent = volValue;
             }
-            
             audioControlButton.textContent = gameThemeMusic.muted ? '🔇 Unmute' : '🔊 Mute';
-        }
 
-        // Atualiza o estado dos botões de Missões Diárias e Únicas
+            // === ATUALIZAÇÃO DOS STATUS ===
+            updateStatusPanel();
+
+            // === ATUALIZAÇÃO DE ITENS E EQUIPAMENTO ===
+            renderEquipment();
+            renderInventory();
+            
+            // Re-renderiza o item inspecionado para atualizar o botão Equipar/Desequipar
+            if (inspectedItem) {
+                inspectItem(inspectedItem, false);
+            }
+        }
+        
+        // Atualiza os botões de missão (cooldown e status)
         function updateMissionButtons() {
             const now = Date.now();
-            
-            // Missões Diárias
-            for (const key in dailyMissionStatus) {
-                const btn = document.getElementById(`daily-${key}`);
-                const status = dailyMissionStatus[key];
-                
-                if (!btn) continue;
 
-                if (now < status.completedAt + DAILY_COOLDOWN_MS) {
-                    const remainingTimeMs = status.completedAt + DAILY_COOLDOWN_MS - now;
-                    const remainingHours = Math.ceil(remainingTimeMs / 3600000); 
-                    btn.disabled = true;
-                    btn.textContent = `Em Cooldown (${remainingHours}h restantes)`;
+            // Missões Recorrentes (Cooldowns)
+            ['provisions', 'workGold'].forEach(type => {
+                const button = document.getElementById(`${type}-button`);
+                let cooldown = missionCooldowns[type];
+                let duration = type === 'provisions' ? 30 : 60; 
+                let rewards = type === 'provisions' ? { energy: 50 } : { gold: 20 };
+                let buttonText = type === 'provisions' ? `Coletar Provisões (${duration}s | Ganho: ${rewards.energy} ⚡)` : `Trabalhar por Ouro (${duration}s | Ganho: ${rewards.gold} 💰)`;
+                
+                if (cooldown > now) {
+                    const remainingSeconds = Math.ceil((cooldown - now) / 1000);
+                    button.textContent = `[⏳ ${remainingSeconds}s] ${buttonText}`;
+                    button.disabled = true;
                 } else {
-                    btn.disabled = false;
-                    btn.textContent = key === 'scouting' 
-                        ? 'Fazer Patrulha (Recompensa: 100 EXP | 50 💰)' 
-                        : 'Exercícios de Treinamento (Recompensa: 200 EXP | +2 ATK Bônus!)';
+                    button.textContent = buttonText;
+                    button.disabled = false;
+                }
+            });
+
+            // Missões Diárias (24h)
+            for (const key in dailyMissionStatus) {
+                const button = document.getElementById(`daily-${key}`);
+                const status = dailyMissionStatus[key];
+                if (status.completedAt > 0 && (now < status.completedAt + DAILY_COOLDOWN_MS)) {
+                    const timeRemaining = status.completedAt + DAILY_COOLDOWN_MS - now;
+                    const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                    
+                    button.textContent = `[⏳ ${hours}h ${minutes}m] Já Concluída Hoje`;
+                    button.disabled = true;
+                } else {
+                    // Reset do status para permitir o clique
+                    if (button) {
+                        button.disabled = false;
+                        if (key === 'scouting') button.textContent = `Fazer Patrulha (Recompensa: 100 EXP | 50 💰)`;
+                        if (key === 'drills') button.textContent = `Exercícios de Treinamento (Recompensa: 200 EXP | +2 ATK Bônus!)`;
+                    }
                 }
             }
-
-            // Missões Únicas
+            
+            // Missões Únicas (Desaparecem)
             for (const key in uniqueMissionStatus) {
-                const btn = document.getElementById(`unique-${key}`);
+                const button = document.getElementById(`unique-${key}`);
                 const status = uniqueMissionStatus[key];
-                
-                if (!btn) continue;
-
-                if (status.completed) {
-                    btn.style.display = 'none'; 
-                } else {
-                    btn.style.display = 'inline-block';
+                if (button) {
+                    if (status.completed) {
+                        button.style.display = 'none'; // Esconde se completa
+                    } else {
+                        button.style.display = 'block';
+                    }
                 }
             }
         }
 
-        // Função para atualizar os displays específicos do Painel Aventura
-        function updateAdventurePanel() {
-            // Se não houver monstro selecionado, tenta selecionar um novo (se não estiver lutando)
-            if (!currentMonster && !isFighting) {
+        // Alterna os painéis de conteúdo
+        function showPanel(panelId) {
+            const panels = document.querySelectorAll('#content-area > div');
+            panels.forEach(panel => {
+                panel.style.display = 'none';
+            });
+            document.getElementById(panelId).style.display = 'block';
+
+            // Atualiza o estado ativo na sidebar
+            const buttons = document.querySelectorAll('.sidebar-menu button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            document.getElementById(`btn-${panelId.replace('-panel', '')}`).classList.add('active');
+
+            // Funções de painel específicas
+            if (panelId === 'adventure-panel') {
                 selectMonsterByLevel();
             }
-
-            if (!currentMonster) {
-                // Estado de "Região Segura"
-                document.getElementById('monster-name').textContent = "Região Segura";
-                document.getElementById('monster-hp-display').textContent = "0";
-                document.getElementById('monster-atk-display').textContent = "0";
-                document.getElementById('monster-reward-exp').textContent = "0";
-                document.getElementById('monster-reward-gold').textContent = "0";
-                startBattleButton.textContent = "Nenhum Monstro Aqui";
-                startBattleButton.disabled = true;
-                return;
-            }
             
-            // Atualiza informações do monstro
-            document.getElementById('monster-name').textContent = currentMonster.name;
-            document.getElementById('monster-hp-display').textContent = currentMonster.currentHP;
-            document.getElementById('monster-atk-display').textContent = currentMonster.atk;
-            document.getElementById('monster-reward-exp').textContent = currentMonster.expReward;
-            document.getElementById('monster-reward-gold').textContent = currentMonster.goldReward;
-            startBattleButton.textContent = `Iniciar Batalha! (Custo: ${currentMonster.energyCost} ⚡)`;
-
-            // Garante que o botão de batalha esteja no estado correto
-            startBattleButton.disabled = energy < currentMonster.energyCost || isFighting;
+            updateDisplay();
         }
+
+        // Atualiza o painel de Status
+        function updateStatusPanel() {
+            document.getElementById('status-hero-name').textContent = heroName;
+            document.getElementById('status-hero-class').textContent = selectedClass ? CLASSES[selectedClass].name : 'N/A';
+            document.getElementById('status-power-level').textContent = powerLevel;
+            document.getElementById('status-exp').textContent = `${currentExp} / ${expToNextLevel}`;
+            
+            // Estatísticas obtidas de updateEquipmentStats
+            document.getElementById('status-max-hp').textContent = heroMaxHP;
+            document.getElementById('status-total-atk').textContent = heroTotalATKDisplay.textContent;
+            document.getElementById('status-max-energy').textContent = document.getElementById('eq-max-energy').textContent;
+
+            // Funcionalidades futuras (para evitar erros)
+            document.getElementById('status-battles-won').textContent = '0'; 
+            document.getElementById('status-gold-collected').textContent = '0';
+        }
+
+        // ====================================================================
+        // III. FUNÇÕES DE CRIAÇÃO E INICIALIZAÇÃO
+        // ====================================================================
 
         // Exibe o painel de Criação de Personagem
         function showCharacterCreation() {
             // *** AÇÃO DE CORREÇÃO (Áudio) ***
-            hasInteracted = true; 
+            hasInteracted = true;
             checkAndPlayMusic();
-            
+
             // Esconde o menu inicial
-            startMenu.style.display = 'none'; 
+            startMenu.style.display = 'none';
             // Esconde a sidebar e o conteúdo principal do jogo
             sidebar.style.display = 'none';
             mainContent.style.display = 'none';
-            
+
             // Reseta a variável de classe para forçar a seleção
             selectedClass = null;
 
             // Exibe APENAS a tela de criação
-            characterCreationPanel.style.display = 'flex'; 
+            characterCreationPanel.style.display = 'flex';
             generateClassButtons();
         }
-        
+
         // Gera os botões de seleção de classe no painel
         function generateClassButtons() {
-            classContainer.innerHTML = ''; 
-            
+            classContainer.innerHTML = '';
+
             for (const key in CLASSES) {
                 const cls = CLASSES[key];
                 const button = document.createElement('button');
-                button.textContent = cls.name;
-                button.setAttribute('data-class-key', key);
+                button.setAttribute('data-class', key);
+                button.innerHTML = `
+                    <img src="${cls.imagePath}" alt="${cls.name} Icon" onerror="this.src='assets/placeholder.png';">
+                    <span>${cls.name}</span>
+                `;
                 button.onclick = () => selectClass(key);
-                
-                // Adiciona a imagem
-                if (cls.imagePath) {
-                    const img = document.createElement('img');
-                    img.src = cls.imagePath;
-                    img.alt = cls.name;
-                    button.prepend(img);
-                }
-
                 classContainer.appendChild(button);
             }
         }
         
         // Seleciona uma classe e atualiza os detalhes
-        function selectClass(key) {
-            selectedClass = key;
-            const cls = CLASSES[key];
-            
+        function selectClass(className) {
+            selectedClass = className;
+            const cls = CLASSES[className];
+            const buttons = classContainer.querySelectorAll('button');
+
+            // Marca o botão selecionado
+            buttons.forEach(btn => {
+                if (btn.getAttribute('data-class') === className) {
+                    btn.style.border = `2px solid var(--color-evolve)`;
+                } else {
+                    btn.style.border = `2px solid var(--color-primary)`;
+                }
+            });
+
             // Atualiza o painel de detalhes
             document.getElementById('selected-class-name').textContent = cls.name;
             document.getElementById('class-base-hp').textContent = cls.initialHP;
             document.getElementById('class-base-atk').textContent = cls.initialATK;
             document.getElementById('class-initial-energy').textContent = cls.initialEnergy;
-            classDetailsPanel.querySelector('p:last-of-type').textContent = `"${cls.description}"`; 
             
-            // NOVO: Exibe o equipamento inicial
-            const startingItemsNames = cls.startingItems.map(item => item.name).join(' e ');
-            classInitialEquipmentDisplay.textContent = startingItemsNames || "Nenhum";
+            const startingItemsText = cls.startingItems.map(item => item.name).join(' e ');
+            document.getElementById('class-initial-equipment').textContent = startingItemsText;
             
-            classDetailsPanel.style.display = 'block';
-            
+            // Habilita a confirmação
             confirmCreationButton.disabled = false;
+            classDetails.style.display = 'block';
             
-            // Atualiza o estilo dos botões para indicar a seleção
-            document.querySelectorAll('#class-selection-container button').forEach(btn => {
-                btn.style.borderColor = btn.getAttribute('data-class-key') === key ? 'var(--color-accent)' : 'var(--color-primary)';
-                btn.style.backgroundColor = btn.getAttribute('data-class-key') === key ? '#4f3655' : 'var(--color-secondary)';
+            // Garante que o nome do herói esteja preenchido
+            heroNameInput.addEventListener('input', () => {
+                 confirmCreationButton.disabled = heroNameInput.value.trim() === '';
             });
+            confirmCreationButton.disabled = heroNameInput.value.trim() === '';
         }
-        
-        // Finaliza a criação e inicia o jogo com a classe escolhida (ATUALIZADA)
+
+        // Finaliza a criação e inicia o jogo
         function finalizeCreation() {
-            if (!selectedClass) {
-                alert("Por favor, selecione uma classe antes de começar!");
+            const cls = CLASSES[selectedClass];
+            if (!cls) {
+                alert("Por favor, selecione uma classe!");
                 return;
             }
-            
-            const cls = CLASSES[selectedClass];
-            
-            // 1. Aplica atributos base da classe
+
+            // 1. Inicializa o estado do herói
             heroBaseHP = cls.initialHP;
             heroBaseATK = cls.initialATK;
-            heroCurrentHP = cls.initialHP;
-            heroMaxHP = cls.initialHP;
+            heroCurrentHP = heroBaseHP; // HP Atual = Base
+            heroMaxHP = heroBaseHP; // Inicializa MAX HP corretamente na criação
             energy = cls.initialEnergy;
-            
-            // Reseta EXP, Ouro e Nível para 1 (novo jogo)
+            gold = 0;
+            soul = 0;
             powerLevel = 1;
             currentExp = 0;
             expToNextLevel = 50;
-            gold = 0;
             inventory = []; // Zera o inventário
             
             // Zera slots de equipamento
             for (const slotKey in EQUIPMENT_SLOTS) {
                 EQUIPMENT_SLOTS[slotKey].currentItem = null;
             }
-            
+
             // 2. Define o nome do herói
             const chosenName = heroNameInput.value.trim();
             if (chosenName) {
                 heroName = chosenName;
             } else {
-                heroName = `Herói ${cls.name}`; 
+                heroName = `Herói ${cls.name}`;
             }
 
             // 3. Adiciona e Equipa os Itens Iniciais (NOVA LÓGICA)
@@ -1166,94 +1213,64 @@
                 const newItem = { 
                     ...starterItem, 
                     id: nextItemId++, // Usa um ID incremental único para o item
-                    // Adiciona a raridade se não existir (para o display)
-                    rarity: starterItem.rarity || "Básico"
-                }; 
-                
+                    rarity: starterItem.rarity || "Básico" // Adiciona a raridade se não existir (para o display)
+                };
                 inventory.push(newItem); // Adiciona ao inventário
                 equipItem(newItem, false); // Equipa o item (sem alerta, para não floodar)
             });
-            
+
+
             // 4. Inicia o jogo
             characterCreationPanel.style.display = 'none'; // Esconde a tela de criação
             startGame(); // CHAMA A FUNÇÃO PARA INICIAR O JOGO
             saveGame(); // Salva o novo jogo
         }
-        
+
         // Inicia o jogo após criação ou carregamento
         function startGame() {
             sidebar.style.display = 'block';
             mainContent.style.display = 'block'; // Exibe o conteúdo principal
-            showPanel('training-panel'); 
-            
+            showPanel('training-panel');
             updateDisplay();
+
+            // Configuração do input de nome para o futuro
+            heroNameInput.value = '';
         }
-
-        // Alterna entre os painéis de conteúdo (ATUALIZADO)
-        function showPanel(panelId) {
-            const panels = document.querySelectorAll('#content-area > div');
-            panels.forEach(panel => panel.style.display = 'none');
-            document.getElementById(panelId).style.display = 'block';
-
-            const sidebarButtons = document.querySelectorAll('.sidebar-menu button');
-            sidebarButtons.forEach(btn => btn.classList.remove('active'));
-            document.getElementById('btn-' + panelId.split('-')[0]).classList.add('active');
-            
-            // LÓGICA DE RENDERIZAÇÃO DE EQUIPAMENTO/INVENTÁRIO
-            if (panelId === 'equipment-panel') {
-                renderEquipment();
-            } else if (panelId === 'inventory-panel') {
-                renderInventory();
-            }
-            
-            // Seleciona um novo monstro ao entrar no Painel Aventura
-            if (panelId === 'adventure-panel' && !isFighting) {
-                selectMonsterByLevel();
-            }
-
-            updateDisplay();
-        }
-
+        
         // ====================================================================
-        // III. FUNÇÕES DE ÁUDIO
+        // IV. FUNÇÕES DE ÁUDIO
         // ====================================================================
-
-        // Tenta tocar o áudio apenas se o usuário interagiu. (CORRIGIDO)
+        
+        // Verifica se houve interação e toca a música, se não estiver tocando
         function checkAndPlayMusic() {
-            if (hasInteracted) {
-                // Se a música estiver em pausa e não estiver mutada
-                if (gameThemeMusic.paused && !gameThemeMusic.muted) {
-                    gameThemeMusic.play().then(() => {
-                        console.log("Música iniciada com sucesso após interação.");
-                    }).catch(e => {
-                        console.error("Falha ao tocar após interação:", e);
-                    });
-                }
+            if (hasInteracted && gameThemeMusic.paused && !gameThemeMusic.muted) {
+                // Se o navegador bloquear o autoplay, isso pode falhar.
+                gameThemeMusic.play().catch(error => {
+                    // console.log("Autoplay bloqueado. O usuário deve interagir com o botão de Mute.");
+                });
             }
         }
 
-        // Define o volume e atualiza o estado
-        function setVolume(value) {
-            const vol = value / 100;
-            currentVolume = vol;
-            gameThemeMusic.volume = vol;
+        // Define o volume e salva nas variáveis de estado/localStorage
+        function setVolume(vol) {
+            const volumeValue = parseInt(vol) / 100;
+            currentVolume = volumeValue;
+            gameThemeMusic.volume = volumeValue;
             
-            // Se o volume for zero, mute o áudio
+            // Se o volume for 0, mute o áudio
             if (vol === 0) {
                 gameThemeMusic.muted = true;
             } else if (gameThemeMusic.muted && vol > 0) {
                 // Se estava mutado (pelo botão) e aumentou o volume, desmute
                 gameThemeMusic.muted = false;
-                
                 // Se aumentou o volume, tenta tocar
                 hasInteracted = true;
                 checkAndPlayMusic();
             }
-            
+
             // Salva o volume e o estado do mute
-            localStorage.setItem('gameVolume', vol); 
-            localStorage.setItem('isMuted', gameThemeMusic.muted); 
-            
+            localStorage.setItem('gameVolume', vol);
+            localStorage.setItem('isMuted', gameThemeMusic.muted);
             updateDisplay();
         }
 
@@ -1261,22 +1278,20 @@
         function toggleMute() {
             // Se o volume estiver em 0, não faz sentido desmutar
             if (currentVolume === 0 && gameThemeMusic.muted) {
-                 alert("Volume está em 0. Por favor, aumente o volume para ouvir.");
-                 return;
+                alert("Volume está em 0. Por favor, aumente o volume para ouvir.");
+                return;
             }
-
             gameThemeMusic.muted = !gameThemeMusic.muted;
             
             // Se tentar desmutar e a música não estiver tocando, tenta dar play
             if (!gameThemeMusic.muted && gameThemeMusic.paused) {
-                 hasInteracted = true; // Garante que a interação está registrada
-                 checkAndPlayMusic();
+                hasInteracted = true; // Garante que a interação está registrada
+                checkAndPlayMusic();
             }
-            
-            localStorage.setItem('isMuted', gameThemeMusic.muted); 
+            localStorage.setItem('isMuted', gameThemeMusic.muted);
             updateDisplay();
         }
-        
+
         // ====================================================================
         // IV. FUNÇÕES DE SALVAR/CARREGAR (localStorage)
         // ====================================================================
@@ -1284,179 +1299,214 @@
         // Salva o Estado do Jogo no Navegador (ATUALIZADO)
         function saveGame() {
             const gameData = {
-                heroName: heroName, 
-                selectedClass: selectedClass, 
+                heroName: heroName,
+                selectedClass: selectedClass,
                 level: powerLevel,
                 exp: currentExp,
                 expRequired: expToNextLevel,
                 energy: energy,
                 gold: gold,
                 soul: soul,
-                energyPerClick: energyPerClick, 
+
+                // Upgrades/Base Stats
+                energyPerClick: energyPerClick,
                 heroHP: heroBaseHP,
                 heroATK: heroBaseATK,
                 atkCost: atkUpgradeCost,
                 hpCost: hpUpgradeCost,
-                missionCooldowns: missionCooldowns,
-                dailyStatus: dailyMissionStatus, 
-                uniqueStatus: uniqueMissionStatus,
+                
+                // Status de Combate
                 heroCurrentHP: heroCurrentHP,
+                // heroMaxHP não precisa ser salvo, pois é recalculado em updateEquipmentStats
+
+                // Missões
+                dailyStatus: dailyMissionStatus,
+                uniqueStatus: uniqueMissionStatus,
+                missionCooldowns: missionCooldowns,
                 
-                // NOVO: Itens e Equipamento
+                // Inventário
                 inventory: inventory,
-                equipment: EQUIPMENT_SLOTS,
-                nextItemId: nextItemId, // Salva o próximo ID para manter a unicidade
-                
-                // Salva o estado do áudio
-                isMuted: gameThemeMusic.muted,
-                gameVolume: currentVolume
+                nextItemId: nextItemId,
+                equipment: EQUIPMENT_SLOTS // Salva a estrutura de equipamento
             };
-            localStorage.setItem('blazeAndSteelSave', JSON.stringify(gameData));
+            
+            localStorage.setItem('gameData', JSON.stringify(gameData));
         }
 
-        // Carrega o Estado do Jogo Salvo (ATUALIZADO)
-        function loadGame(isFromButton = false) {
-            const savedData = localStorage.getItem('blazeAndSteelSave');
-
-            // 1. Carrega o estado do volume primeiro (independentemente de haver jogo salvo)
+        // Carrega o Estado do Jogo (ATUALIZADO)
+        function loadGame(showAlert = false) {
+            const savedData = localStorage.getItem('gameData');
             const savedVolume = localStorage.getItem('gameVolume');
+            const savedMuteStatus = localStorage.getItem('isMuted');
+
+            // --- Carregamento de Áudio (Sempre tenta carregar) ---
             if (savedVolume !== null) {
-                currentVolume = parseFloat(savedVolume);
-            } else {
-                currentVolume = 1.0; // Padrão
+                const vol = parseInt(savedVolume);
+                currentVolume = vol / 100;
+                gameThemeMusic.volume = currentVolume;
             }
-            gameThemeMusic.volume = currentVolume;
+            if (savedMuteStatus !== null) {
+                 // Converte a string 'true'/'false' em booleano
+                gameThemeMusic.muted = savedMuteStatus === 'true'; 
+            }
             
-            // Carrega o estado de mute (também separado)
-            const isMuted = localStorage.getItem('isMuted') === 'true';
-            gameThemeMusic.muted = isMuted;
-
-            // *** AÇÃO DE CORREÇÃO (Se o botão 'Carregar Jogo' foi clicado) ***
-            if (isFromButton) {
-                hasInteracted = true;
-                checkAndPlayMusic();
-            }
-
+            // Atualiza o display de volume/mute no start menu antes de tudo
+            setVolume(Math.round(currentVolume * 100));
+            
+            // --- Carregamento do Jogo ---
             if (savedData) {
-                const gameData = JSON.parse(savedData); 
+                try {
+                    const gameData = JSON.parse(savedData);
+                    
+                    // Carrega Variáveis de Estado
+                    heroName = gameData.heroName || heroName;
+                    selectedClass = gameData.selectedClass || selectedClass;
+                    powerLevel = gameData.level || 1;
+                    currentExp = gameData.exp || 0;
+                    expToNextLevel = gameData.expRequired || 50;
+                    energy = gameData.energy || 0;
+                    gold = gameData.gold || 0;
+                    soul = gameData.soul || 0;
 
-                // Carrega Nome e Classe
-                heroName = gameData.heroName || "Herói";
-                selectedClass = gameData.selectedClass || null; 
+                    // Carrega Upgrades
+                    energyPerClick = gameData.energyPerClick || 1;
+                    heroBaseHP = gameData.heroHP || 10;
+                    heroBaseATK = gameData.heroATK || 1;
+                    atkUpgradeCost = gameData.atkCost || 50;
+                    hpUpgradeCost = gameData.hpCost || 50;
+                    
+                    // Carrega Status de Combate
+                    heroCurrentHP = gameData.heroCurrentHP || heroBaseHP;
+                    // heroMaxHP será recalculado em updateEquipmentStats/updateDisplay
 
-                // Carrega Variáveis Principais
-                powerLevel = gameData.level || 1;
-                currentExp = gameData.exp || 0;
-                expToNextLevel = gameData.expRequired || 50;
-                energy = gameData.energy || 0;
-                gold = gameData.gold || 0;
-                soul = gameData.soul || 0;
-                
-                // Carrega Upgrades
-                energyPerClick = gameData.energyPerClick || 1;
-                heroBaseHP = gameData.heroHP || 10;
-                heroBaseATK = gameData.heroATK || 1;
-                atkUpgradeCost = gameData.atkCost || 50;
-                hpUpgradeCost = gameData.hpCost || 50;
+                    // Carrega Status de Missões
+                    dailyMissionStatus = gameData.dailyStatus || dailyMissionStatus;
+                    uniqueMissionStatus = gameData.uniqueStatus || uniqueMissionStatus;
 
-                // Carrega Status de Combate
-                heroCurrentHP = gameData.heroCurrentHP || heroBaseHP;
-                
-                // Carrega Status de Missões
-                dailyMissionStatus = gameData.dailyStatus || dailyMissionStatus;
-                uniqueMissionStatus = gameData.uniqueStatus || uniqueMissionStatus;
+                    // Carrega Cooldowns
+                    missionCooldowns = gameData.missionCooldowns || { provisions: 0, workGold: 0 };
 
-                // Carrega Cooldowns
-                missionCooldowns = gameData.missionCooldowns || { provisions: 0, workGold: 0 };
-                
-                // NOVO: Carrega Itens e Equipamento
-                inventory = gameData.inventory || [];
-                nextItemId = gameData.nextItemId || 1000;
-                
-                if (gameData.equipment) {
-                    for (const slotKey in gameData.equipment) {
-                        if (EQUIPMENT_SLOTS[slotKey]) {
-                            // É crucial que o item carregado do save seja uma referência ao objeto no inventário
-                            const equippedItemId = gameData.equipment[slotKey].currentItem ? gameData.equipment[slotKey].currentItem.id : null;
-                            if (equippedItemId) {
-                                // Encontra a referência do item no inventário
-                                const itemReference = inventory.find(item => item.id === equippedItemId);
-                                EQUIPMENT_SLOTS[slotKey].currentItem = itemReference || null;
-                            } else {
-                                EQUIPMENT_SLOTS[slotKey].currentItem = null;
+                    // NOVO: Carrega Itens e Equipamento
+                    inventory = gameData.inventory || [];
+                    nextItemId = gameData.nextItemId || 1000;
+                    
+                    if (gameData.equipment) {
+                        for (const slotKey in gameData.equipment) {
+                            if (EQUIPMENT_SLOTS[slotKey]) {
+                                // É crucial que o item carregado do save seja uma referência ao objeto no inventário
+                                const equippedItemId = gameData.equipment[slotKey].currentItem ? 
+                                    gameData.equipment[slotKey].currentItem.id : null;
+                                    
+                                if (equippedItemId !== null) {
+                                    // Procura a referência real no novo array 'inventory'
+                                    const itemReference = inventory.find(item => item.id === equippedItemId);
+                                    EQUIPMENT_SLOTS[slotKey].currentItem = itemReference || null;
+                                } else {
+                                    EQUIPMENT_SLOTS[slotKey].currentItem = null;
+                                }
                             }
                         }
                     }
+
+                    // Inicia o jogo e esconde o menu
+                    startMenu.style.display = 'none';
+                    startGame(); 
+                    
+                    if (showAlert) alert("Jogo carregado com sucesso!");
+                    
+                    // Tenta tocar a música se não estiver mutada (interação de clique)
+                    hasInteracted = true;
+                    checkAndPlayMusic();
+                    
+                    return true;
+                } catch (e) {
+                    // Se o save estiver corrompido, limpa e inicia o menu
+                    console.error("Erro ao carregar dados salvos:", e);
+                    localStorage.removeItem('gameData');
+                    if (showAlert) alert("Erro ao carregar o jogo salvo. Iniciando novo jogo.");
+                    startMenu.style.display = 'flex';
+                    sidebar.style.display = 'none';
+                    mainContent.style.display = 'none';
+                    return false;
                 }
-                
-                // Carrega Estado do Áudio
-                gameThemeMusic.muted = gameData.isMuted === true; 
-                currentVolume = gameData.gameVolume !== undefined ? gameData.gameVolume : 1.0;
-                gameThemeMusic.volume = currentVolume;
-
-
-                updateDisplay();
-                startGame(); 
-                alert('Jogo Carregado com Sucesso!');
-                
-            } else if (isFromButton) {
-                // Se tentou carregar do botão mas não tinha save
-                alert('Nenhum jogo salvo encontrado. Comece um Novo Jogo!');
-                startMenu.style.display = 'flex';
-                sidebar.style.display = 'none';
-                mainContent.style.display = 'none';
-                updateDisplay();
             } else {
-                 // Inicialização Padrão (carrega áudio e exibe o menu)
+                // Se não houver save, mantém o menu inicial
                 startMenu.style.display = 'flex';
                 sidebar.style.display = 'none';
                 mainContent.style.display = 'none';
-                updateDisplay();
+                if (showAlert) alert("Nenhum jogo salvo encontrado.");
+                return false;
             }
         }
-
-        // ====================================================================
-        // V. FUNÇÕES DE PROGRESSÃO E MISSÕES
-        // ====================================================================
         
-        // 1. Level Up
+        // ====================================================================
+        // V. FUNÇÕES DE PROGRESSO (EXP, LEVEL UP, UPGRADES)
+        // ====================================================================
+
+        // Calcula a EXP necessária para o próximo nível
+        function calculateExpRequired(level) {
+            // Exemplo simples: 50 * 1.5 ^ (level - 1)
+            return Math.floor(50 * Math.pow(1.5, level - 1));
+        }
+
+        // Aumenta o nível do herói
         function levelUp() {
-            let levelGained = 0;
-            while (currentExp >= expToNextLevel) { 
-                currentExp -= expToNextLevel;
-                powerLevel++;
-                expToNextLevel = Math.round(expToNextLevel * 1.5); 
-                levelGained++;
-            }
-            
-            if (levelGained > 0) {
-                alert(`Parabéns! Você alcançou o Nível ${powerLevel}!`);
-                // Garante que HP atual seja o máximo depois de subir de nível
-                heroCurrentHP = heroMaxHP; 
+            while (currentExp >= expToNextLevel) {
+                currentExp -= expToNextLevel; // Gasta a EXP
+                powerLevel++; // Aumenta o nível
+
+                // Aumenta a EXP necessária para o próximo nível
+                expToNextLevel = calculateExpRequired(powerLevel);
+
+                // Aumenta as estatísticas base
+                heroBaseHP += 5; 
+                heroBaseATK += 1;
+                heroCurrentHP = heroMaxHP; // Cura o herói ao subir de nível
+                
+                alert(`🎉 ${heroName} atingiu o Nível ${powerLevel}!`);
             }
             updateDisplay();
-            saveGame(); // Salva após Level Up
+            saveGame();
+        }
+
+        // Treina por stats (gasta energia para ganhar EXP)
+        function trainForStats(type) {
+            const energyCost = 25;
+            const expGain = 10;
+            
+            if (energy < energyCost) {
+                alert("Energia insuficiente! Você precisa de 25 ⚡.");
+                return;
+            }
+
+            energy -= energyCost;
+            currentExp += expGain;
+            
+            let message = `${heroName} treinou e ganhou ${expGain} EXP.`;
+            
+            alert(message);
+            
+            levelUp(); // Tenta subir de nível
+            updateDisplay();
+            saveGame();
         }
         
-        // 2. Compra de Upgrades (ATK/HP)
+        // Compra upgrades de stats permanentes
         function buyUpgrade(type) {
             if (type === 'atk' && gold >= atkUpgradeCost) {
                 gold -= atkUpgradeCost;
                 heroBaseATK += 1;
-                atkUpgradeCost = Math.round(atkUpgradeCost * 1.5); 
+                atkUpgradeCost = Math.round(atkUpgradeCost * 1.5);
                 alert(`⚔️ Ataque Base (Upgrade) aumentado para ${heroBaseATK}!`);
-            
             } else if (type === 'hp' && gold >= hpUpgradeCost) {
                 gold -= hpUpgradeCost;
                 heroBaseHP += 10;
-                hpUpgradeCost = Math.round(hpUpgradeCost * 1.5); 
+                hpUpgradeCost = Math.round(hpUpgradeCost * 1.5);
                 alert(`❤️ HP Base (Upgrade) aumentado para ${heroBaseHP}!`);
-            
             } else {
                 alert("Você não tem Ouro suficiente para este upgrade!");
                 return;
             }
-
             updateDisplay();
             saveGame();
         }
@@ -1468,81 +1518,55 @@
                 return;
             }
 
-            let duration = initialDuration > 0 ? initialDuration : 0; 
+            let duration = initialDuration > 0 ? initialDuration : 0;
             let rewards = {};
             let button = null;
             let buttonText = '';
 
             if (missionType === 'provisions') {
-                duration = 30; 
+                duration = 30;
                 rewards = { energy: 50 };
                 button = document.getElementById('provisions-button');
                 buttonText = `Coletar Provisões (30s | Ganho: 50 ⚡)`;
             } else if (missionType === 'workGold') {
-                duration = 60; 
+                duration = 60;
                 rewards = { gold: 20 };
                 button = document.getElementById('work-gold-button');
                 buttonText = `Trabalhar por Ouro (60s | Ganho: 20 💰)`;
+            } else {
+                return;
             }
 
-            missionCooldowns[missionType] = duration;
+            // Inicia o cooldown
+            const startTime = Date.now();
+            missionCooldowns[missionType] = startTime + (duration * 1000);
+            
             button.disabled = true;
+            updateDisplay();
 
-            const interval = setInterval(() => {
-                missionCooldowns[missionType]--;
-                button.textContent = `Em Progresso... (${missionCooldowns[missionType]}s restantes)`;
+            // Lógica para finalizar a missão
+            const countdown = setInterval(() => {
+                const now = Date.now();
+                const remaining = missionCooldowns[missionType] - now;
 
-                if (missionCooldowns[missionType] <= 0) {
-                    clearInterval(interval);
+                if (remaining <= 0) {
+                    clearInterval(countdown);
+                    // Aplica recompensas
+                    energy += rewards.energy || 0;
+                    gold += rewards.gold || 0;
                     
-                    // Ajuste a recompensa da energia para considerar o bônus de energia do equipamento
-                    const totalEnergyReward = rewards.energy ? (rewards.energy * energyPerClick) : 0;
-                    if (totalEnergyReward > 0) energy += totalEnergyReward;
-                    if (rewards.gold) gold += rewards.gold;
-
-                    button.textContent = `Missão Completa!`;
+                    alert(`✅ Missão "${buttonText.split('(')[0].trim()}" concluída! Recompensas recebidas.`);
                     
-                    setTimeout(() => {
-                        button.textContent = buttonText;
-                        button.disabled = false;
-                    }, 5000);
-
+                    // Reseta o botão e atualiza
+                    button.disabled = false;
                     updateDisplay();
                     saveGame();
+                } else {
+                    // Atualiza o display
+                    const remainingSeconds = Math.ceil(remaining / 1000);
+                    button.textContent = `[⏳ ${remainingSeconds}s] ${buttonText}`;
                 }
             }, 1000);
-            updateDisplay();
-        }
-
-        // 4. Treinamento para EXP e Chance de Bônus de Status
-        function trainForStats(type) {
-            const costEnergy = 25;
-            const expGain = 10;
-
-            if (energy >= costEnergy) {
-                energy -= costEnergy;
-                currentExp += expGain;
-                
-                let message = `Você treinou. Ganhou ${expGain} EXP.`;
-
-                if (Math.random() < 0.15) { 
-                    if (type === 'attack') {
-                        heroBaseATK += 1;
-                        message += " E descobriu um novo golpe (+1 ATK Bônus Base)!";
-                    } else if (type === 'defense') {
-                        heroBaseHP += 5;
-                        heroCurrentHP += 5; // Aumenta o HP atual também
-                        message += " E fortificou sua armadura (+5 HP Bônus Base)!";
-                    }
-                }
-                
-                alert(message);
-                
-                updateDisplay();
-                levelUp(); 
-            } else {
-                alert("Energia insuficiente. Complete missões para obter mais ⚡.");
-            }
         }
 
         // 5. Início de Missões Diárias (24h de Cooldown)
@@ -1555,7 +1579,7 @@
                 return;
             }
 
-            status.completedAt = now; 
+            status.completedAt = now;
             let message = "Missão Diária completa!";
 
             if (key === 'scouting') {
@@ -1567,11 +1591,11 @@
                 heroBaseATK += 2;
                 message += " Recompensa: 200 EXP e +2 ATK base!";
             }
-
+            
             alert(message);
             updateDisplay();
             levelUp();
-            saveGame(); 
+            saveGame();
         }
 
         // 6. Início de Missões Únicas (Desaparecem após completar)
@@ -1579,10 +1603,10 @@
             const status = uniqueMissionStatus[key];
 
             if (status.completed) {
-                return; 
+                return;
             }
 
-            status.completed = true; 
+            status.completed = true;
             let message = "Missão Única concluída!";
 
             if (key === 'firstQuest') {
@@ -1595,57 +1619,45 @@
                 energy += 100;
                 message += " Recompensa: 100 💰 e 100 ⚡!";
             }
-
+            
             alert(message);
             updateDisplay();
             levelUp();
-            saveGame(); 
+            saveGame();
         }
         
         // ====================================================================
-        // VI. FUNÇÕES DE COMBATE E MONSTROS
+        // VI. FUNÇÕES DE COMBATE E AVENTURA
         // ====================================================================
-
-        // Função para selecionar um monstro aleatório baseado no Nível do Herói
+        
+        // Seleciona um monstro baseado no nível do herói (ou um nível próximo)
         function selectMonsterByLevel() {
-            // Determina a região de nível do monstro com base no Nível do Herói
-            const level = powerLevel;
+            const monsterLevel = powerLevel;
+            const availableMonsters = MONSTERS_BY_LEVEL[monsterLevel] || MONSTERS_BY_LEVEL[1];
             
-            const availableLevels = Object.keys(MONSTERS_BY_LEVEL).map(Number).sort((a, b) => a - b);
-            
-            // Pega o nível mais alto disponível para evitar erros se o herói estiver muito forte
-            let targetLevel = level;
-            if (level > availableLevels[availableLevels.length - 1]) {
-                targetLevel = availableLevels[availableLevels.length - 1];
-            }
-            
-            // Garante que o nível de destino seja pelo menos 1
-            if (targetLevel < 1) targetLevel = 1;
-
-            const availableMonsters = MONSTERS_BY_LEVEL[targetLevel];
-
-            if (!availableMonsters || availableMonsters.length === 0) {
+            if (availableMonsters && availableMonsters.length > 0) {
+                // Escolhe um monstro aleatoriamente
+                const randomIndex = Math.floor(Math.random() * availableMonsters.length);
+                const baseMonster = availableMonsters[randomIndex];
+                
+                // Cria uma cópia para o combate atual
+                currentMonster = {
+                    ...baseMonster,
+                    currentHP: baseMonster.baseHP,
+                    energyCost: baseMonster.energyCost || 5 // Padrão 5
+                };
+            } else {
                 currentMonster = null;
-                logToCombat("Não há monstros disponíveis para lutar. Treine mais no Quartel-General!");
-                updateAdventurePanel();
-                return null;
             }
-            
-            const randomIndex = Math.floor(Math.random() * availableMonsters.length);
-            const selectedMonster = availableMonsters[randomIndex];
-            
-            currentMonster = {
-                ...selectedMonster,
-                currentHP: selectedMonster.baseHP,
-                level: targetLevel 
-            };
-            
-            // Alerta o jogador sobre a área de combate
-            logToCombat(`<p style="color: var(--color-accent);">Você entrou na região de Nível ${targetLevel}. Encontrado: ${currentMonster.name}.</p>`);
-
-            updateAdventurePanel();
-            
-            return currentMonster;
+        }
+        
+        // Adiciona mensagens ao log de combate
+        function logToCombat(message) {
+            const p = document.createElement('p');
+            p.innerHTML = message;
+            combatLog.appendChild(p);
+            // Auto-scroll
+            combatLog.scrollTop = combatLog.scrollHeight; 
         }
 
         // Lógica de Combate
@@ -1656,7 +1668,7 @@
             }
             
             const energyCost = currentMonster.energyCost;
-
+            
             if (isFighting) {
                 alert("A batalha já está em andamento!");
                 return;
@@ -1674,16 +1686,19 @@
             startBattleButton.disabled = true;
 
             // Restaura HP do monstro para a base a cada nova luta
-            currentMonster.currentHP = currentMonster.baseHP; 
+            currentMonster.currentHP = currentMonster.baseHP;
 
             // Recalcula ATK Total do Herói (buscando o valor do display, que já inclui equipamento)
-            let heroATK = parseInt(document.getElementById('eq-total-atk').textContent) || heroBaseATK; 
+            let heroATK = parseInt(document.getElementById('eq-total-atk').textContent) || heroBaseATK;
+            // Multiplicador de Dano (Exemplo: +20% por nível)
+            const levelMultiplier = powerLevel > 0 ? (1 + (powerLevel - 1) * 0.2) : 1;
+            const finalHeroDamage = Math.floor(heroATK * levelMultiplier);
 
 
             // Limpa Log
             combatLog.innerHTML = `<p style="font-weight: bold;">[Batalha Iniciada contra ${currentMonster.name}]</p>`;
             logToCombat(`<p style="color: var(--color-energy);">Herói consome ${energyCost} ⚡ e se prepara para lutar!</p>`);
-            
+
             // 2. Loop de Turnos (Simulação)
             let turn = 1;
             const battleInterval = setInterval(() => {
@@ -1695,70 +1710,89 @@
                     return;
                 }
 
-                // --- Turno do Herói ---
-                // O dano base é multiplicado pelo Nível (o multiplicador xNível é o nosso 'power curve')
-                // Multiplicador de Nível para a Curva de Poder (multiplica o ATK Total)
-                const levelMultiplier = powerLevel > 0 ? (1 + (powerLevel - 1) * 0.2) : 1; 
-                const heroDamage = Math.round(heroATK * levelMultiplier);
-                
+                // Turno do Herói
+                const heroDamage = finalHeroDamage; 
                 currentMonster.currentHP -= heroDamage;
-                currentMonster.currentHP = Math.max(0, currentMonster.currentHP); 
-                
-                logToCombat(`Turno ${turn}: <span style="color: var(--color-hp);">Seu herói (ATK: ${heroATK}) causa ${heroDamage} de dano!</span>`);
-                
-                updateDisplay();
+                logToCombat(`[Turno ${turn}] Herói ataca ${currentMonster.name} causando ${heroDamage} de dano! (HP Monstro: ${Math.max(0, currentMonster.currentHP)})`);
 
-                if (currentMonster.currentHP <= 0) return; // Monstro morreu
+                // Turno do Monstro (se ainda estiver vivo)
+                if (currentMonster.currentHP > 0) {
+                    const monsterDamage = currentMonster.atk;
+                    heroCurrentHP -= monsterDamage;
+                    logToCombat(`<span style="color: var(--color-combat);"> ${currentMonster.name} contra-ataca causando ${monsterDamage} de dano! (HP Herói: ${Math.max(0, heroCurrentHP)})</span>`);
+                }
 
-                // --- Turno do Monstro ---
-                const monsterDamage = currentMonster.atk;
-                heroCurrentHP -= monsterDamage;
-                heroCurrentHP = Math.max(0, heroCurrentHP);
-                
-                logToCombat(`<span style="color: var(--color-combat);">Turno ${turn}: O ${currentMonster.name} revida, causando ${monsterDamage} de dano.</span>`);
-
-                updateDisplay();
-                
                 turn++;
-            }, 1000); 
+                updateDisplay(); // Atualiza os displays de HP
+            }, 1000); // Um turno a cada 1 segundo
         }
 
-        // Log de Combate
-        function logToCombat(message) {
-            const p = document.createElement('p');
-            p.innerHTML = message;
-            combatLog.prepend(p);
-        }
-
-        // Resolução da Batalha
-        function endBattle(heroWon) {
+        // Finaliza a batalha
+        function endBattle(isVictory) {
             isFighting = false;
-            startBattleButton.textContent = 'Iniciar Batalha! (Custo: 5 ⚡)';
+            startBattleButton.textContent = 'Iniciar Batalha!';
             
-            if (heroWon) {
-                gold += currentMonster.goldReward;
-                currentExp += currentMonster.expReward;
-                logToCombat(`<p style="color: var(--color-hp); font-weight: bold;">[VITÓRIA!] Você derrotou o ${currentMonster.name}!</p>`);
-                logToCombat(`+${currentMonster.expReward} EXP, +${currentMonster.goldReward} 💰`);
-                levelUp();
+            if (isVictory) {
+                // Vitória!
+                const expGain = currentMonster.expReward;
+                const goldGain = currentMonster.goldReward;
+                
+                currentExp += expGain;
+                gold += goldGain;
+                
+                logToCombat(`<p style="color: var(--color-hp); font-weight: bold;">[VITÓRIA!] ${currentMonster.name} foi derrotado!</p>`);
+                logToCombat(`Recompensa: ${expGain} EXP e ${goldGain} 💰.`);
+                
+                levelUp(); // Tenta subir de nível
+                
             } else {
-                const goldLoss = 10;
+                // Derrota! (Herói perde uma pequena quantidade de ouro)
+                const goldLoss = Math.floor(gold * 0.1); // Perde 10% do ouro
                 gold = Math.max(0, gold - goldLoss);
+                
                 heroCurrentHP = heroMaxHP; // Restaura HP do herói após derrota
                 logToCombat(`<p style="color: var(--color-combat); font-weight: bold;">[DERROTA!] Seu herói foi derrotado e perdeu ${goldLoss} 💰.</p>`);
                 logToCombat(`Herói se recupera. HP restaurado para ${heroMaxHP}.`);
             }
 
             // Garante que o herói tenha vida máxima para a próxima luta
-            heroCurrentHP = heroMaxHP; 
+            heroCurrentHP = heroMaxHP;
             
             // Seleciona o próximo monstro imediatamente após a batalha
             selectMonsterByLevel();
-            
             updateDisplay();
             saveGame();
         }
-        
+
+        // Atualiza o Painel de Aventura
+        function updateAdventurePanel() {
+            if (!currentMonster) {
+                // Exibe monstro padrão (ou vazio)
+                document.getElementById('monster-name').textContent = "---";
+                document.getElementById('monster-hp-display').textContent = "0";
+                document.getElementById('monster-atk-display').textContent = "0";
+                document.getElementById('monster-reward-exp').textContent = "0";
+                document.getElementById('monster-reward-gold').textContent = "0";
+                startBattleButton.textContent = "Nenhum Monstro Aqui";
+                startBattleButton.disabled = true;
+                return;
+            }
+            
+            // Atualiza informações do monstro
+            document.getElementById('monster-name').textContent = currentMonster.name;
+            document.getElementById('monster-hp-display').textContent = currentMonster.currentHP;
+            document.getElementById('monster-atk-display').textContent = currentMonster.atk;
+            document.getElementById('monster-reward-exp').textContent = currentMonster.expReward;
+            document.getElementById('monster-reward-gold').textContent = currentMonster.goldReward;
+            
+            // Verifica o custo de energia no display do botão
+            startBattleButton.textContent = `Iniciar Batalha! (Custo: ${currentMonster.energyCost} ⚡)`;
+
+            // Garante que o botão de batalha esteja no estado correto
+            startBattleButton.disabled = energy < currentMonster.energyCost || isFighting;
+        }
+
+
         // ====================================================================
         // VII. FUNÇÕES DE EQUIPAMENTO E INVENTÁRIO
         // ====================================================================
@@ -1780,7 +1814,7 @@
 
                 const itemDisplay = document.createElement('div');
                 itemDisplay.className = 'equipped-item-display';
-                
+
                 if (item) {
                     let statText = '';
                     if (item.atk) statText = `+${item.atk} ATK`;
@@ -1788,8 +1822,16 @@
                     else if (item.energyBonus) statText = `+${item.energyBonus} EN`;
 
                     itemDisplay.innerHTML = `<span style="font-weight: bold;">${item.name}</span> <span style="font-size: 0.8em; color: var(--color-hp);">(${statText})</span>`;
-                    itemDisplay.onclick = () => inspectItem(item);
+                    itemDisplay.title = item.description;
+                    
+                    // Adiciona um listener para desequipar clicando no item equipado
                     itemDisplay.style.cursor = 'pointer';
+                    itemDisplay.onclick = () => {
+                        // Passa a referência real do item que está no inventário para a inspeção
+                        const itemInInventory = inventory.find(i => i.id === item.id);
+                        if (itemInInventory) inspectItem(itemInInventory);
+                    };
+
                 } else {
                     itemDisplay.innerHTML = `<span class="empty-slot">Vazio</span>`;
                 }
@@ -1798,63 +1840,59 @@
                 slotDiv.appendChild(itemDisplay);
                 equipmentPanel.appendChild(slotDiv);
             }
-            
-            updateEquipmentStats();
         }
-
-        // 2. Calcula e exibe os bônus de equipamento
+        
+        // 2. Calcula e atualiza estatísticas baseadas em equipamento
         function updateEquipmentStats() {
+            let totalMaxHP = heroBaseHP; // Começa com o base
+            let totalMaxATK = heroBaseATK;
+            let totalMaxEnergy = CLASSES[selectedClass] ? CLASSES[selectedClass].initialEnergy : 50; // Começa com energia base da classe
+            
             let bonusHP = 0;
             let bonusATK = 0;
             let bonusEnergy = 0;
-            
+
+
             for (const key in EQUIPMENT_SLOTS) {
                 const item = EQUIPMENT_SLOTS[key].currentItem;
                 if (item) {
+                    // Adiciona bônus
+                    totalMaxHP += item.hpBonus || 0;
+                    totalMaxATK += item.atk || 0;
+                    totalMaxEnergy += item.energyBonus || 0;
+                    
+                    // Salva os bônus para exibição
                     bonusHP += item.hpBonus || 0;
                     bonusATK += item.atk || 0;
                     bonusEnergy += item.energyBonus || 0;
                 }
             }
-            
-            // Stats Base = Valor Base da Classe/Upgrades + Bônus por Nível
-            // (Para um crescimento exponencial)
-            const hpPerLevel = 5;
-            const atkPerLevel = 1;
 
-            const heroStatsHP = heroBaseHP + (powerLevel - 1) * hpPerLevel; 
-            const heroStatsATK = heroBaseATK + (powerLevel - 1) * atkPerLevel; 
+            // 3. Atualiza as variáveis globais
+            heroMaxHP = totalMaxHP; 
+            // Garante que o HP atual não ultrapasse o máximo
+            heroCurrentHP = Math.min(heroCurrentHP, heroMaxHP);
 
-            // Calcula o total (Base + Bônus de Equipamento)
-            const totalMaxHP = heroStatsHP + bonusHP;
-            const totalMaxATK = heroStatsATK + bonusATK;
-            const totalMaxEnergy = energy + bonusEnergy;
-
-            // Atualiza o DOM do Painel de Equipamento
+            // Atualiza o display principal
             document.getElementById('eq-max-hp').textContent = totalMaxHP;
-            document.getElementById('eq-base-hp').textContent = heroStatsHP;
+            document.getElementById('eq-base-hp').textContent = heroBaseHP;
             document.getElementById('eq-bonus-hp').textContent = bonusHP;
 
             document.getElementById('eq-total-atk').textContent = totalMaxATK;
-            document.getElementById('eq-base-atk').textContent = heroStatsATK;
+            document.getElementById('eq-base-atk').textContent = heroBaseATK;
             document.getElementById('eq-bonus-atk').textContent = bonusATK;
-
+            
             document.getElementById('eq-max-energy').textContent = totalMaxEnergy;
-            document.getElementById('eq-base-energy').textContent = energy;
+            document.getElementById('eq-base-energy').textContent = CLASSES[selectedClass] ? CLASSES[selectedClass].initialEnergy : 50;
             document.getElementById('eq-bonus-energy').textContent = bonusEnergy;
 
-            // Define o novo HP/ATK do herói para o resto do jogo
-            heroMaxHP = totalMaxHP;
-            // Garante que o HP atual não ultrapasse o máximo
-            heroCurrentHP = Math.min(heroCurrentHP, heroMaxHP);
-            
-            // Atualiza o display principal
+            // Atualiza o display de combate
             heroCurrentHPDisplay.textContent = heroCurrentHP;
             heroMaxHPDisplay.textContent = heroMaxHP;
             heroTotalATKDisplay.textContent = totalMaxATK;
             
             // Multiplicador de Dano (Exemplo: +20% por nível)
-            const levelMultiplier = powerLevel > 0 ? (1 + (powerLevel - 1) * 0.2) : 1; 
+            const levelMultiplier = powerLevel > 0 ? (1 + (powerLevel - 1) * 0.2) : 1;
             heroLevelMultiplierDisplay.textContent = levelMultiplier.toFixed(1);
 
             saveGame(); // Salva o novo estado após o update
@@ -1863,81 +1901,89 @@
         // 3. Renderiza os itens no inventário
         function renderInventory() {
             inventoryPanel.innerHTML = '';
-            
+
             // Marca quais itens estão equipados
             const equippedIds = Object.values(EQUIPMENT_SLOTS)
-                                    .map(slot => slot.currentItem ? slot.currentItem.id : null)
-                                    .filter(id => id !== null);
+                .map(slot => slot.currentItem ? slot.currentItem.id : null)
+                .filter(id => id !== null);
 
             inventory.forEach(item => {
                 const card = document.createElement('div');
-                card.className = `item-card ${equippedIds.includes(item.id) ? 'equipped' : ''}`;
-                card.onclick = () => inspectItem(item);
-
+                card.className = 'item-card';
+                card.setAttribute('data-item-id', item.id);
+                
+                if (equippedIds.includes(item.id)) {
+                    card.classList.add('equipped');
+                }
+                
                 card.innerHTML = `
                     <p style="font-weight: bold;">${item.name}</p>
-                    <p style="color: var(--color-energy);">${item.type.toUpperCase()}</p>
-                    ${equippedIds.includes(item.id) ? '<p style="color: var(--color-hp); font-size: 0.9em;">[E] EQUIPADO</p>' : ''}
+                    <p>Tipo: ${EQUIPMENT_SLOTS[item.type] ? EQUIPMENT_SLOTS[item.type].name : item.type}</p>
+                    <p style="color: var(--color-accent); font-size: 0.8em;">${item.rarity}</p>
                 `;
+
+                card.onclick = () => inspectItem(item);
+
                 inventoryPanel.appendChild(card);
             });
             
-            // Garante que o painel de detalhes esteja oculto se não houver item inspecionado
-            if (!inspectedItem) {
-                 document.getElementById('item-details-panel').style.display = 'none';
-            } else {
-                 // Se o item inspecionado foi desequipado, atualiza o botão
-                 inspectItem(inspectedItem); 
+            // Se o inventário estiver vazio, mostra uma mensagem
+            if (inventory.length === 0) {
+                inventoryPanel.innerHTML = `<p style="font-style: italic; color: #7f8c8d;">Seu inventário está vazio.</p>`;
             }
         }
-        
-        // 4. Exibe os detalhes de um item
-        function inspectItem(item) {
-            inspectedItem = item;
-            
-            // Atualiza os detalhes
-            document.getElementById('detail-item-name').textContent = item.name;
-            document.getElementById('detail-item-type').textContent = item.type.toUpperCase();
-            document.getElementById('detail-item-rarity').textContent = item.rarity;
-            document.getElementById('detail-item-desc').textContent = item.description;
-            
-            let statsText = '';
-            if (item.atk) statsText += `⚔️ ATK Bônus: +${item.atk}<br>`;
-            if (item.hpBonus) statsText += `❤️ HP Bônus: +${item.hpBonus}<br>`;
-            if (item.energyBonus) statsText += `⚡ Energia Bônus: +${item.energyBonus}<br>`;
-            document.getElementById('detail-item-stats').innerHTML = statsText;
-            
-            // Determina a ação do botão
-            const isEquipped = EQUIPMENT_SLOTS[item.type] && EQUIPMENT_SLOTS[item.type].currentItem && EQUIPMENT_SLOTS[item.type].currentItem.id === item.id;
-            const actionButton = document.getElementById('detail-action-button');
-            
-            if (isEquipped) {
-                actionButton.textContent = "DESEQUIPAR";
-                actionButton.onclick = () => unequipItem(item);
-                actionButton.disabled = false;
-            } else if (EQUIPMENT_SLOTS[item.type]) {
-                actionButton.textContent = "EQUIPAR";
-                actionButton.onclick = () => equipItem(item);
-                actionButton.disabled = false;
-            } else {
-                actionButton.textContent = "USAR/VENDER"; // Placeholder para consumíveis
-                actionButton.disabled = true;
-            }
 
-            document.getElementById('item-details-panel').style.display = 'block';
-        }
-        
-        // 5. Equipa o item (Adicionado 'showAlert' para uso em inicialização)
-        function equipItem(item, showAlert = true) {
-            const slotKey = item.type;
+        // 4. Inspeciona o item (mostra detalhes e botões)
+        function inspectItem(item, shouldClearIfSame = true) {
             
-            // Verifica se o tipo de item corresponde a um slot válido
-            if (!EQUIPMENT_SLOTS[slotKey]) {
-                if (showAlert) alert(`Não é possível equipar ${item.name}. Tipo de item inválido: ${slotKey}`);
+            // Lógica para alternar a inspeção se clicar no mesmo item
+            if (inspectedItem && inspectedItem.id === item.id && shouldClearIfSame) {
+                inspectedItem = null;
+                inspectionArea.innerHTML = `<p style="font-style: italic; color: #7f8c8d;">Selecione um item no inventário para ver os detalhes.</p>`;
                 return;
             }
             
-            // O item está sendo equipado, então ele substitui o item atual no slot
+            inspectedItem = item;
+
+            const isEquipped = EQUIPMENT_SLOTS[item.type].currentItem && EQUIPMENT_SLOTS[item.type].currentItem.id === item.id;
+            
+            let statsHtml = '';
+            if (item.atk) statsHtml += `<p>⚔️ Ataque: +${item.atk}</p>`;
+            if (item.hpBonus) statsHtml += `<p>❤️ HP Máximo: +${item.hpBonus}</p>`;
+            if (item.energyBonus) statsHtml += `<p>⚡ Energia Máxima: +${item.energyBonus}</p>`;
+
+            let buttonHtml = isEquipped 
+                ? `<button onclick="unequipItem(inspectedItem)" style="background-color: var(--color-combat); color: white; padding: 10px; border-radius: 5px; margin-top: 10px; width: 100%;">DESEQUIPAR</button>`
+                : `<button onclick="equipItem(inspectedItem)" style="background-color: var(--color-hp); color: white; padding: 10px; border-radius: 5px; margin-top: 10px; width: 100%;">EQUIPAR</button>`;
+
+            inspectionArea.innerHTML = `
+                <h4 style="color: var(--color-accent);">${item.name}</h4>
+                <p>Tipo: ${EQUIPMENT_SLOTS[item.type] ? EQUIPMENT_SLOTS[item.type].name : item.type}</p>
+                <p>Raridade: ${item.rarity}</p>
+                <p style="font-style: italic; font-size: 0.9em;">"${item.description}"</p>
+                <hr>
+                ${statsHtml}
+                ${buttonHtml}
+            `;
+            
+            // Highlight the selected card
+            document.querySelectorAll('.item-card').forEach(card => card.style.border = '2px solid var(--color-secondary)');
+            const selected = document.querySelector(`.item-card[data-item-id="${item.id}"]`);
+            if (selected) {
+                selected.style.border = '2px solid var(--color-energy)';
+            }
+        }
+
+        // 5. Equipa o item
+        function equipItem(item, showAlert = true) {
+            const slotKey = item.type;
+            
+            if (!EQUIPMENT_SLOTS[slotKey]) {
+                if (showAlert) alert(`Tipo de item inválido para equipamento: ${item.type}`);
+                return;
+            }
+
+            // Verifica se o item está sendo equipado, então ele substitui o item atual no slot
             EQUIPMENT_SLOTS[slotKey].currentItem = item;
             
             // Atualiza todos os painéis
