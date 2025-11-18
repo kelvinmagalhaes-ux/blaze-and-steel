@@ -274,6 +274,13 @@
         }
 
         /* Estilo para os botões de seleção de classe */
+        #class-selection-container {
+             display: flex; 
+             justify-content: center; 
+             flex-wrap: wrap; 
+             gap: 15px;
+        }
+        
         #class-selection-container button {
             background-color: var(--color-secondary);
             color: var(--color-text); 
@@ -486,7 +493,7 @@
                 </div>
                 
                 <h3>Selecione Sua Classe:</h3>
-                <div id="class-selection-container" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 15px;">
+                <div id="class-selection-container">
                     </div>
                 
                 <div id="class-details" class="content-panel" style="margin-top: 20px; display: none; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto;">
@@ -760,7 +767,7 @@
         // ====================================================================
         
         let heroName = "Herói Desconhecido"; // Nome do Herói
-        let selectedClass = null; // Classe do Herói (warrior, mage, archer)
+        let selectedClass = null; // Classe do Herói (warrior, mage, archer, assassin)
         let powerLevel = 1; // Nível de Poder
         let currentExp = 0; // Experiência Atual
         let expToNextLevel = 50; // EXP Necessária para o Próximo Nível
@@ -774,7 +781,7 @@
         let heroBaseHP = 10; // HP base do herói
         let heroBaseATK = 1; // ATK base do herói
         let heroCurrentHP = heroBaseHP; // HP atual do herói (deve ser heroBaseHP ao iniciar/curar)
-        let heroMaxHP = heroBaseHP; // <<-- CORREÇÃO: Variável que estava faltando!
+        let heroMaxHP = heroBaseHP; // Vida Máxima do Herói (Corrigido no último turno)
         
         // Upgrades
         let atkUpgradeCost = 50; // Custo inicial do upgrade de ATK
@@ -818,7 +825,7 @@
         let currentVolume = 1.0; // 0.0 a 1.0
         let hasInteracted = false; // Para controlar o bloqueio de autoplay
 
-        // Estrutura de Classes do Personagem (ATUALIZADA com startingItems)
+        // Estrutura de Classes do Personagem (ADICIONADO ASSASSINO)
         const CLASSES = {
             warrior: {
                 name: "Guerreiro",
@@ -855,7 +862,21 @@
                     { id: 5, name: "Arco Simples", type: "weapon", atk: 3, rarity: "Comum", description: "Um arco de caça padrão." },
                     { id: 6, name: "Veste Leve", type: "armor", hpBonus: 8, rarity: "Comum", description: "Vestimentas que favorecem a agilidade." }
                 ]
+            },
+            // NOVA CLASSE: ASSASSINO
+            assassin: {
+                name: "Assassino",
+                description: "Mestre da furtividade e do dano crítico. Pouca vida, alto ataque.",
+                initialHP: 8,
+                initialATK: 3, // ATK alto
+                initialEnergy: 120, // Boa reserva de energia
+                imagePath: "assets/assassino.png", // Imagem placeholder
+                startingItems: [
+                    { id: 7, name: "Adaga de Aço", type: "weapon", atk: 4, rarity: "Incomum", description: "Uma lâmina afiada, ideal para golpes rápidos." },
+                    { id: 8, name: "Veste de Sombra", type: "armor", hpBonus: 5, rarity: "Comum", description: "Roupas escuras que favorecem a discrição." }
+                ]
             }
+            // FIM NOVA CLASSE
         };
 
         // Objeto central para a seleção de monstros por Nível
@@ -996,7 +1017,13 @@
             
             // Re-renderiza o item inspecionado para atualizar o botão Equipar/Desequipar
             if (inspectedItem) {
-                inspectItem(inspectedItem, false);
+                // Encontra a referência do item no inventário (se ainda existir)
+                const itemInInventory = inventory.find(i => i.id === inspectedItem.id);
+                if (itemInInventory) {
+                    inspectItem(itemInInventory, false);
+                } else {
+                    inspectedItem = null; // Limpa se o item não existir mais (ex: foi vendido - futuro)
+                }
             }
         }
         
@@ -1115,6 +1142,8 @@
 
             // Reseta a variável de classe para forçar a seleção
             selectedClass = null;
+            // Limpa o item inspecionado
+            inspectedItem = null; 
 
             // Exibe APENAS a tela de criação
             characterCreationPanel.style.display = 'flex';
@@ -1258,7 +1287,7 @@
             gameThemeMusic.volume = volumeValue;
             
             // Se o volume for 0, mute o áudio
-            if (vol === 0) {
+            if (vol == 0) {
                 gameThemeMusic.muted = true;
             } else if (gameThemeMusic.muted && vol > 0) {
                 // Se estava mutado (pelo botão) e aumentou o volume, desmute
@@ -1277,7 +1306,7 @@
         // Alterna entre Mute e Unmute
         function toggleMute() {
             // Se o volume estiver em 0, não faz sentido desmutar
-            if (currentVolume === 0 && gameThemeMusic.muted) {
+            if (currentVolume == 0 && gameThemeMusic.muted) {
                 alert("Volume está em 0. Por favor, aumente o volume para ouvir.");
                 return;
             }
@@ -1327,7 +1356,12 @@
                 // Inventário
                 inventory: inventory,
                 nextItemId: nextItemId,
-                equipment: EQUIPMENT_SLOTS // Salva a estrutura de equipamento
+                
+                // Salva apenas os IDs dos itens equipados, para que a referência seja refeita ao carregar
+                equipment: {
+                    weapon: EQUIPMENT_SLOTS.weapon.currentItem ? EQUIPMENT_SLOTS.weapon.currentItem.id : null,
+                    armor: EQUIPMENT_SLOTS.armor.currentItem ? EQUIPMENT_SLOTS.armor.currentItem.id : null,
+                }
             };
             
             localStorage.setItem('gameData', JSON.stringify(gameData));
@@ -1390,23 +1424,34 @@
                     inventory = gameData.inventory || [];
                     nextItemId = gameData.nextItemId || 1000;
                     
+                    // Lógica para remontar as referências de equipamento
                     if (gameData.equipment) {
                         for (const slotKey in gameData.equipment) {
                             if (EQUIPMENT_SLOTS[slotKey]) {
-                                // É crucial que o item carregado do save seja uma referência ao objeto no inventário
-                                const equippedItemId = gameData.equipment[slotKey].currentItem ? 
-                                    gameData.equipment[slotKey].currentItem.id : null;
-                                    
+                                const equippedItemId = gameData.equipment[slotKey];
+                                
                                 if (equippedItemId !== null) {
                                     // Procura a referência real no novo array 'inventory'
                                     const itemReference = inventory.find(item => item.id === equippedItemId);
-                                    EQUIPMENT_SLOTS[slotKey].currentItem = itemReference || null;
+                                    // NOVO: Verifica se o item de save ainda tem a mesma chave de slot
+                                    if (itemReference && itemReference.type === slotKey) {
+                                         EQUIPMENT_SLOTS[slotKey].currentItem = itemReference;
+                                    } else {
+                                        EQUIPMENT_SLOTS[slotKey].currentItem = null;
+                                        // console.warn(`Item equipado ID ${equippedItemId} não encontrado ou slot inválido. Desequipado.`);
+                                    }
                                 } else {
                                     EQUIPMENT_SLOTS[slotKey].currentItem = null;
                                 }
                             }
                         }
+                    } else {
+                        // Se não houver dados de equipamento (save antigo), zera
+                        for (const slotKey in EQUIPMENT_SLOTS) {
+                            EQUIPMENT_SLOTS[slotKey].currentItem = null;
+                        }
                     }
+
 
                     // Inicia o jogo e esconde o menu
                     startMenu.style.display = 'none';
@@ -1817,9 +1862,12 @@
 
                 if (item) {
                     let statText = '';
-                    if (item.atk) statText = `+${item.atk} ATK`;
-                    else if (item.hpBonus) statText = `+${item.hpBonus} HP`;
-                    else if (item.energyBonus) statText = `+${item.energyBonus} EN`;
+                    // Combina todos os bônus para exibição
+                    const bonuses = [];
+                    if (item.atk) bonuses.push(`+${item.atk} ATK`);
+                    if (item.hpBonus) bonuses.push(`+${item.hpBonus} HP`);
+                    if (item.energyBonus) bonuses.push(`+${item.energyBonus} EN`);
+                    statText = bonuses.join(' | ');
 
                     itemDisplay.innerHTML = `<span style="font-weight: bold;">${item.name}</span> <span style="font-size: 0.8em; color: var(--color-hp);">(${statText})</span>`;
                     itemDisplay.title = item.description;
@@ -1846,7 +1894,9 @@
         function updateEquipmentStats() {
             let totalMaxHP = heroBaseHP; // Começa com o base
             let totalMaxATK = heroBaseATK;
-            let totalMaxEnergy = CLASSES[selectedClass] ? CLASSES[selectedClass].initialEnergy : 50; // Começa com energia base da classe
+            // Garante que o totalMaxEnergy comece com o valor base da classe (pode mudar se houver rebalanceamento)
+            let initialClassEnergy = CLASSES[selectedClass] ? CLASSES[selectedClass].initialEnergy : 50; 
+            let totalMaxEnergy = initialClassEnergy; 
             
             let bonusHP = 0;
             let bonusATK = 0;
@@ -1859,14 +1909,12 @@
                     // Adiciona bônus
                     totalMaxHP += item.hpBonus || 0;
                     totalMaxATK += item.atk || 0;
-                    totalMaxEnergy += item.energyBonus || 0;
-                    
-                    // Salva os bônus para exibição
-                    bonusHP += item.hpBonus || 0;
-                    bonusATK += item.atk || 0;
-                    bonusEnergy += item.energyBonus || 0;
+                    bonusEnergy += item.energyBonus || 0; // O bônus de energia é separado
                 }
             }
+            
+            // O total de energia é o base da classe + bônus dos itens
+            totalMaxEnergy += bonusEnergy;
 
             // 3. Atualiza as variáveis globais
             heroMaxHP = totalMaxHP; 
@@ -1883,7 +1931,7 @@
             document.getElementById('eq-bonus-atk').textContent = bonusATK;
             
             document.getElementById('eq-max-energy').textContent = totalMaxEnergy;
-            document.getElementById('eq-base-energy').textContent = CLASSES[selectedClass] ? CLASSES[selectedClass].initialEnergy : 50;
+            document.getElementById('eq-base-energy').textContent = initialClassEnergy;
             document.getElementById('eq-bonus-energy').textContent = bonusEnergy;
 
             // Atualiza o display de combate
@@ -1940,12 +1988,34 @@
             if (inspectedItem && inspectedItem.id === item.id && shouldClearIfSame) {
                 inspectedItem = null;
                 inspectionArea.innerHTML = `<p style="font-style: italic; color: #7f8c8d;">Selecione um item no inventário para ver os detalhes.</p>`;
+                // Remove o destaque
+                document.querySelectorAll('.item-card').forEach(card => card.style.border = '2px solid var(--color-secondary)');
                 return;
             }
             
             inspectedItem = item;
 
-            const isEquipped = EQUIPMENT_SLOTS[item.type].currentItem && EQUIPMENT_SLOTS[item.type].currentItem.id === item.id;
+            // Verifica se o slot de equipamento existe para este tipo de item
+            const slot = EQUIPMENT_SLOTS[item.type];
+            if (!slot) {
+                // Item não-equipável (futuramente consumível ou misc)
+                let statsHtml = '';
+                if (item.atk) statsHtml += `<p>⚔️ Ataque: +${item.atk}</p>`;
+                
+                 inspectionArea.innerHTML = `
+                    <h4 style="color: var(--color-accent);">${item.name}</h4>
+                    <p>Tipo: ${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</p>
+                    <p>Raridade: ${item.rarity}</p>
+                    <p style="font-style: italic; font-size: 0.9em;">"${item.description}"</p>
+                    <hr>
+                    ${statsHtml || '<p>Nenhum bônus de status.</p>'}
+                    <button disabled style="background-color: #7f8c8d; color: white; padding: 10px; border-radius: 5px; margin-top: 10px; width: 100%;">NÃO EQUIPÁVEL</button>
+                `;
+                return;
+            }
+
+
+            const isEquipped = slot.currentItem && slot.currentItem.id === item.id;
             
             let statsHtml = '';
             if (item.atk) statsHtml += `<p>⚔️ Ataque: +${item.atk}</p>`;
@@ -1958,7 +2028,7 @@
 
             inspectionArea.innerHTML = `
                 <h4 style="color: var(--color-accent);">${item.name}</h4>
-                <p>Tipo: ${EQUIPMENT_SLOTS[item.type] ? EQUIPMENT_SLOTS[item.type].name : item.type}</p>
+                <p>Tipo: ${slot.name}</p>
                 <p>Raridade: ${item.rarity}</p>
                 <p style="font-style: italic; font-size: 0.9em;">"${item.description}"</p>
                 <hr>
@@ -1989,6 +2059,7 @@
             // Atualiza todos os painéis
             renderEquipment();
             renderInventory();
+            updateEquipmentStats(); // Recalcula stats
             if (showAlert) inspectItem(item); // Reinspeciona para mostrar "DESEQUIPAR"
             saveGame();
             if (showAlert) alert(`${item.name} equipado no slot de ${EQUIPMENT_SLOTS[slotKey].name}.`);
@@ -2006,6 +2077,7 @@
             // Atualiza todos os painéis
             renderEquipment();
             renderInventory();
+            updateEquipmentStats(); // Recalcula stats
             // Reinspeciona para atualizar o botão para "EQUIPAR"
             if (inspectedItem) {
                 inspectItem(inspectedItem); 
