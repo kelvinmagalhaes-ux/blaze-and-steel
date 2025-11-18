@@ -286,7 +286,7 @@
         #class-selection-container button {
             background-color: var(--color-secondary); 
             color: var(--color-text); 
-            border: 2px solid var(--color-primary); 
+            border: 2px solid var(--color-primary); /* Ajustado para var(--color-primary) no default */
             padding: 10px 15px; 
             border-radius: 5px; 
             cursor: pointer;
@@ -399,6 +399,12 @@
             justify-content: space-between;
             align-items: center;
         }
+        
+        .region-card.selected-region {
+             background-color: rgba(52, 152, 219, 0.1);
+             border: 2px solid var(--color-energy);
+        }
+
 
         .region-card:hover:not(.locked) {
             transform: translateY(-2px);
@@ -547,7 +553,7 @@
                         Estudo de Magia (Custo: 5 ⚡ | Ganho: 50 💰)
                     </button>
                     <button id="action-blacksmith" data-action="blacksmith" style="background-color: var(--color-accent); color: var(--color-primary); border: none; padding: 10px 15px; border-radius: 5px;">
-                        Trabalho no Ferreiro (+10 🔨 | Vender Recurso -50 💰 | +15 ⚡)
+                        Trabalho no Ferreiro (Custo: 50 💰 | Ganho: 15 ⚡)
                     </button>
                 </div>
                 <div id="preparation-cooldowns" style="margin-top: 15px; display: flex; gap: 10px;">
@@ -735,6 +741,7 @@
         };
 
         const CLASSES = {
+            // VERIFIQUE SE OS CAMINHOS DAS IMAGENS A SEGUIR ESTÃO CORRETOS NA SUA ESTRUTURA DE PASTAS
             guerreiro: { name: "Guerreiro", icon: "img/icon-warrior.png", description: "Focado em força e defesa.", baseStats: { hp: 10, atk: 2, energy: 80 } },
             mago: { name: "Mago", icon: "img/icon-mage.png", description: "Especialista em magias.", baseStats: { hp: 7, atk: 1, energy: 120 } },
             arqueiro: { name: "Arqueiro", icon: "img/icon-archer.png", description: "Ágil e preciso.", baseStats: { hp: 8, atk: 3, energy: 90 } },
@@ -1050,9 +1057,9 @@
             
             for (const id in MAP_REGIONS) {
                 const region = MAP_REGIONS[id];
-                const isUnlocked = heroLevel >= region.minLevel && heroLevel <= region.maxLevel;
+                const isUnlocked = heroLevel >= region.minLevel; // Nível min é a única condição de desbloqueio
                 const card = document.createElement('div');
-                card.className = `region-card ${isUnlocked ? 'unlocked' : 'locked'}`;
+                card.className = `region-card ${isUnlocked ? 'unlocked' : 'locked'} ${id === selectedRegionId ? 'selected-region' : ''}`;
                 card.setAttribute('data-region-id', id);
                 
                 card.innerHTML = `
@@ -1103,7 +1110,7 @@
             // 2. Limpa o Log de Combate
             document.getElementById('combat-log').textContent = `Região ${region.name} selecionada. Escolha um monstro acima para atacar!`;
 
-            // 3. Atualiza o destaque no mapa (se necessário)
+            // 3. Atualiza o destaque no mapa
             if (shouldRenderMap) {
                 document.querySelectorAll('.region-card').forEach(card => card.classList.remove('selected-region'));
                 document.querySelector(`.region-card[data-region-id="${regionId}"]`).classList.add('selected-region');
@@ -1253,7 +1260,7 @@
                     button.disabled = true;
                     const cooldownDiv = document.createElement('div');
                     cooldownDiv.style.color = 'var(--color-accent)';
-                    cooldownDiv.textContent = `Em Progresso (${action.cooldown}s restantes)`;
+                    cooldownDiv.textContent = `${actionName.charAt(0).toUpperCase() + actionName.slice(1)} em Progresso (${action.cooldown}s restantes)`;
                     cooldownsDiv.appendChild(cooldownDiv);
                 } else {
                     button.disabled = false;
@@ -1399,16 +1406,26 @@
         let selectedClass = null;
         function selectClass(className) {
             selectedClass = className;
+            
+            // 1. Remove o destaque de todos os botões
             document.querySelectorAll('#class-selection-container button').forEach(btn => {
-                btn.style.border = '2px solid var(--color-primary)';
+                btn.style.border = '2px solid var(--color-primary)'; // Cor padrão
             });
-            document.querySelector(`button[data-class="${className}"]`).style.border = '2px solid var(--color-energy)';
+            
+            // 2. Adiciona o destaque ao botão selecionado
+            const selectedBtn = document.querySelector(`button[data-class="${className}"]`);
+            if (selectedBtn) {
+                selectedBtn.style.border = '2px solid var(--color-energy)'; // Destaque
+            }
+            
+            // 3. Verifica o formulário para habilitar o botão "CONFIRMAR CRIAÇÃO"
             checkCreationForm();
         }
 
         function checkCreationForm() {
             const name = document.getElementById('hero-name').value.trim();
             const confirmBtn = document.getElementById('btn-confirm-creation');
+            // Habilita se o nome tiver tamanho > 0 E uma classe foi selecionada
             confirmBtn.disabled = !(name.length > 0 && selectedClass !== null);
         }
 
@@ -1423,8 +1440,12 @@
                 
                 // Remove itens iniciais, caso a classe não os use
                 if (classData.name !== 'Mago') {
-                     gameState.hero.inventory = gameState.hero.inventory.filter(i => i.id !== 'w1');
-                     gameState.hero.equipment.weapon = null;
+                     // Exemplo: 'Cajado de Madeira' é para o Mago.
+                     // Assumindo que o Mago foi o único a iniciar com ele.
+                     if(gameState.hero.class !== 'Mago') {
+                        gameState.hero.inventory = gameState.hero.inventory.filter(i => i.id !== 'w1');
+                        gameState.hero.equipment.weapon = null;
+                     }
                 }
                 
                 gameState.isCharacterCreated = true;
@@ -1457,7 +1478,6 @@
                             gameState.hero.resources.gold += action.rewardGold;
                             alert(`Estudo de Magia concluído! Ganho: ${action.rewardGold} 💰.`);
                         } else if (actionName === 'blacksmith') {
-                            // Assumindo que "rewardResource" é um recurso não rastreado explicitamente ainda, mas para o exemplo, damos energia
                             gameState.hero.resources.energy += action.rewardEnergy;
                             alert(`Trabalho no Ferreiro concluído! Ganho: ${action.rewardEnergy} ⚡.`);
                         }
@@ -1469,13 +1489,7 @@
             updatePreparationDisplay();
             
             // Timer simplificado para Cooldown Diário
-            // gameState.hero.missions.dailyTraining.cooldown = Math.max(0, gameState.hero.missions.dailyTraining.cooldown - 1);
-            // if (gameState.hero.missions.dailyTraining.cooldown === 0 && gameState.hero.missions.dailyTraining.completed) {
-            //      gameState.hero.missions.dailyTraining.completed = false;
-            //      renderTrainingPanelMissions();
-            //      renderEquipmentPanel(); // Para remover o bônus de ATK
-            //      alert('As Missões Diárias foram resetadas!');
-            // }
+            // (Comentado, mas se for ativar, é aqui)
 
 
         }
