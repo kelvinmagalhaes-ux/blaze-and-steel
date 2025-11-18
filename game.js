@@ -917,9 +917,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Se for carregado, o menu inicial é escondido dentro de loadGame.
     const loaded = loadGame(false);
     
-    // Se não houver save, o menu inicial permanece visível.
+    // Se não houver save (ou seja, 'loaded' é false), garantimos que o menu inicial está visível.
     if (!loaded) {
-         document.getElementById('start-menu').classList.remove('hidden');
+         // Esta linha garante que a tela inicial `#start-menu` seja mostrada
+         document.getElementById('start-menu').classList.remove('hidden'); 
     }
     
     // Adicionar um listener para a primeira interação do usuário, para iniciar o áudio.
