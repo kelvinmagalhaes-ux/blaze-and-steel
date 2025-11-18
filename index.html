@@ -333,11 +333,6 @@
             box-shadow: 0 0 5px var(--color-hp);
         }
 
-        .item-card p {
-            margin: 5px 0 0 0;
-            font-size: 0.9em;
-        }
-
         .slot-container {
             display: flex;
             align-items: center;
@@ -926,6 +921,18 @@
             mainContent.style.display = 'none';
         }
 
+        // CORREÇÃO: Função para mostrar a tela de criação
+        function showCharacterCreation() {
+            // Esconde todas as telas principais (menu e jogo)
+            hideAllPanels(); 
+            // Mostra o painel de criação usando 'flex' para centralização via CSS
+            characterCreationPanel.style.display = 'flex'; 
+            // Gera os botões de classe dinamicamente
+            generateClassButtons(); 
+            // Verifica se o botão de confirmação deve ser habilitado
+            checkCreationRequirements(); 
+        }
+
         // Atualiza a exibição na tela
         function updateDisplay() {
             // NOME
@@ -1010,8 +1017,9 @@
                 const cls = CLASSES[key];
                 const button = document.createElement('button');
                 button.setAttribute('data-class', key);
+                // Usa onerror para tratar casos onde as imagens não existam (substitui por placeholder)
                 button.innerHTML = `
-                    <img src="${cls.imagePath}" alt="${cls.name} Icon" onerror="this.src='assets/placeholder.png';">
+                    <img src="${cls.imagePath}" alt="${cls.name} Icon" onerror="this.onerror=null; this.src='https://via.placeholder.com/80?text=ICON';">
                     <span>${cls.name}</span>
                 `;
                 button.onclick = () => selectClass(key);
@@ -1038,7 +1046,7 @@
             document.querySelectorAll('#class-selection-container button').forEach(btn => {
                 btn.style.borderWidth = '2px';
                 if (btn.getAttribute('data-class') === key) {
-                    btn.style.borderColor = CLASSES[key].name === 'Guerreiro' ? 'var(--color-hp)' : 'var(--color-accent)';
+                    btn.style.borderColor = 'var(--color-accent)';
                 } else {
                     btn.style.borderColor = 'var(--color-primary)';
                 }
