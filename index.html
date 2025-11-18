@@ -1068,8 +1068,6 @@
             }
         }
         
-        // **REMOVIDO: O ouvinte de evento duplicado. O oninput no HTML é suficiente.**
-        // heroNameInput.addEventListener('input', checkCreationRequirements); 
         
         // Finaliza a criação do personagem
         function finalizeCreation() {
@@ -1084,34 +1082,42 @@
                 return;
             }
 
-            // 1. Define atributos base
-            const cls = CLASSES[selectedClass];
-            heroBaseHP = cls.initialHP;
-            heroBaseATK = cls.initialATK;
-            
+            // **CORREÇÃO:** Bloco try...catch para isolar e permitir a continuação, mesmo com erro interno.
+            try {
+                // 1. Define atributos base
+                const cls = CLASSES[selectedClass];
+                heroBaseHP = cls.initialHP;
+                heroBaseATK = cls.initialATK;
+                
 
-            // 2. Limpa inventário e equipamento (para garantir um começo limpo)
-            inventory = [];
-            for (const slotKey in EQUIPMENT_SLOTS) {
-                EQUIPMENT_SLOTS[slotKey].currentItem = null;
+                // 2. Limpa inventário e equipamento (para garantir um começo limpo)
+                inventory = [];
+                for (const slotKey in EQUIPMENT_SLOTS) {
+                    EQUIPMENT_SLOTS[slotKey].currentItem = null;
+                }
+                
+                // 3. Adiciona itens iniciais ao inventário e equipa-os
+                cls.startingItems.forEach(starterItem => {
+                    // Cria uma cópia do item para que IDs de itens sejam únicos em saves
+                    const newItem = { 
+                        ...starterItem, 
+                        id: nextItemId++, // Usa um ID incremental único para o item
+                        rarity: starterItem.rarity || "Básico" // Adiciona a raridade se não existir (para o display)
+                    };
+                    inventory.push(newItem); // Adiciona ao inventário
+                    equipItem(newItem, false); // Equipa o item (sem alerta, para não floodar)
+                });
+                
+                // CORREÇÃO ESSENCIAL: Chama a atualização de stats para calcular o HP Máximo
+                // antes de definir o HP atual.
+                updateEquipmentStats();
+                heroCurrentHP = calculateMaxHP(); 
+
+            } catch (e) {
+                console.error("Erro durante a inicialização de itens/atributos. O jogo será iniciado, mas pode haver problemas de status:", e);
+                // Continua, mas o console mostrará o erro original
             }
             
-            // 3. Adiciona itens iniciais ao inventário e equipa-os
-            cls.startingItems.forEach(starterItem => {
-                // Cria uma cópia do item para que IDs de itens sejam únicos em saves
-                const newItem = { 
-                    ...starterItem, 
-                    id: nextItemId++, // Usa um ID incremental único para o item
-                    rarity: starterItem.rarity || "Básico" // Adiciona a raridade se não existir (para o display)
-                };
-                inventory.push(newItem); // Adiciona ao inventário
-                equipItem(newItem, false); // Equipa o item (sem alerta, para não floodar)
-            });
-            
-            // **CORREÇÃO ESSENCIAL:** Chama a atualização de stats para calcular o HP Máximo
-            // antes de definir o HP atual.
-            updateEquipmentStats();
-            heroCurrentHP = calculateMaxHP(); 
 
             // 4. Inicia o jogo
             characterCreationPanel.style.display = 'none'; // Esconde a tela de criação
@@ -1383,7 +1389,6 @@
             saveGame();
         }
 
-        // ... FUNÇÕES DE MISSÕES (MANTIDAS SEM ALTERAÇÃO SE NÃO HOUVER ERRO REPORTADO) ...
         
         // Atualiza a exibição de Cooldown de Missões
         function updateMissionDisplays() {
@@ -1498,7 +1503,6 @@
             levelUp();
             saveGame();
         }
-        // ... FIM FUNÇÕES DE MISSÕES ...
 
 
         // ====================================================================
