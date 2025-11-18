@@ -4,1053 +4,210 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BLAZE AND STEEL</title>
-    <style>
-        /* Variáveis de Cores (CSS Custom Properties) */
-        :root {
-            --color-primary: #1e1e2d; /* Gray escuro */
-            --color-secondary: #36364f; /* Gray meio */
-            --color-text: #e0e0e0; /* Claro */
-            --color-accent: #f39c12; /* Ouro */
-            --color-combat: #c0392b; /* Combate/Aventura */
-            --color-evolve: #8e44ad; /* Evoluir/Treinamento */
-            --color-energy: #3498db; /* Energia */
-            --color-soul: #9b59b6; /* Alma/Reencarnação */
-            --color-hp: #2ecc71; /* HP/Vida */
-            --color-stats-background: #25252e; /* Fundo do Painel de Estatísticas */
-            --color-border: #4a4a68; /* Borda geral */
-            --color-item-highlight: #616168; /* Item inventário highlight */
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--color-primary);
-            color: var(--color-text);
-            margin: 0;
-            display: flex;
-            min-height: 100vh;
-            overflow: hidden; 
-        }
-
-        /* Estrutura Geral */
-        #app-wrapper {
-            display: flex;
-            width: 100%;
-            height: 100vh;
-        }
-
-        .column {
-            padding: 10px;
-            height: 100vh;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-        }
-
-        #left-column {
-            flex: 0.25; /* 25% */
-            border-right: 1px solid var(--color-border);
-        }
-
-        #center-column {
-            flex: 0.45; /* 45% */
-        }
-
-        #right-column {
-            flex: 0.30; /* 30% */
-            border-left: 1px solid var(--color-border);
-        }
-
-        /* Painéis Principais */
-        .panel {
-            background-color: var(--color-secondary);
-            border-radius: 6px;
-            padding: 10px;
-            margin-bottom: 10px;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .panel-title {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: var(--color-accent);
-            margin-bottom: 5px;
-            border-bottom: 1px solid rgba(243, 156, 18, 0.3);
-            padding-bottom: 3px;
-            text-align: center;
-        }
-
-        /* Coluna Esquerda: Stats e Gerenciamento */
-        #game-management {
-            flex: 0.20; /* 20% da coluna 01 */
-        }
-        #data-stats {
-            flex: 0.8;
-            height: 100%;
-        }
-
-        .stats-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-        }
-        .stats-table td {
-            padding: 2px 5px;
-            text-align: left;
-        }
-        .stats-table td:first-child {
-            font-weight: bold;
-            width: 60%;
-        }
-        .stats-table td:last-child {
-            text-align: right;
-            color: var(--color-accent);
-        }
-        .stats-table tr:nth-child(odd) {
-            background-color: rgba(255, 255, 255, 0.05);
-        }
-
-        /* Coluna Central: Aventura e Combate */
-        #hero-panel {
-            margin-bottom: 5px;
-            flex: 0.6; /* 60% da coluna 02 */
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            padding: 15px;
-            background-color: var(--color-secondary);
-            border-radius: 6px;
-        }
-
-        #combat-log-panel {
-            flex: 0.4; /* 40% da coluna 02 */
-            overflow-y: scroll;
-            padding: 10px;
-            font-size: 0.85rem;
-            background-color: var(--color-stats-background);
-            border-radius: 6px;
-        }
-
-        /* Display de Personagens */
-        #display-hero, #display-enemy {
-            text-align: center;
-            flex-basis: 45%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .character-box {
-            border: 1px solid var(--color-border);
-            border-radius: 6px;
-            padding: 5px;
-            width: 95%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: var(--color-stats-background);
-            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-            margin-bottom: 8px;
-        }
-
-        .character-image {
-            width: 120px;
-            height: 180px;
-            border: 1px solid var(--color-accent);
-            border-radius: 5px;
-            object-fit: cover;
-            margin-top: 5px;
-        }
-        
-        .image-name {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-top: 5px;
-            color: var(--color-text);
-        }
-
-        /* Barra de Progresso */
-        .progress-bar-container {
-            width: 100%;
-            height: 12px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            margin-top: 2px;
-            overflow: hidden;
-            border: 1px solid var(--color-hp);
-        }
-
-        .progress-bar {
-            transition: width 0.4s ease-out, background-color 0.4s ease-out;
-            height: 100%;
-            background-color: var(--color-hp);
-            text-align: center;
-            color: var(--color-text);
-            font-size: 0.8rem;
-            line-height: 12px;
-        }
-
-        /* Painel de Habilidades (Skills) */
-        .skill-box {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .skill-button {
-            padding: 5px 10px;
-            background-color: var(--color-primary);
-            color: var(--color-text);
-            border: 1px solid var(--color-evolve);
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 3px;
-            font-size: 0.9rem;
-            transition: background-color 0.2s;
-            text-align: center;
-        }
-
-        .skill-button:hover {
-            background-color: var(--color-evolve);
-        }
-
-        /* Painel de Ações */
-        #action-panel {
-            flex: 0.4;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 10px;
-        }
-
-        .action-button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            color: var(--color-text);
-            cursor: pointer;
-            font-weight: bold;
-            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
-            transition: background-color 0.2s;
-            min-width: 120px;
-            display: inline-block;
-            margin: 5px;
-        }
-
-        .action-button.listening {
-            background-color: var(--color-energy);
-            --color-type-text: var(--color-text);
-        }
-
-        .action-button.soul {
-            background-color: var(--color-soul);
-            --color-type-text: var(--color-text);
-        }
-
-        .action-button.combat {
-            background-color: var(--color-combat);
-            --color-type-text: var(--color-text);
-        }
-
-        .action-button:disabled, .action-button.already {
-            opacity: 0.65;
-            cursor: default;
-            pointer-events: none;
-        }
-
-        .action-button.listening:hover {
-            background-color: darken(var(--color-energy), 10%);
-        }
-
-        .action-button.soul:hover {
-            background-color: darken(var(--color-soul), 10%);
-        }
-
-        .action-button.combat:hover {
-            background-color: darken(var(--color-combat), 10%);
-        }
-
-        /* Coluna Direita: Equipamentos e Inventário */
-        #equipment-panel {
-            flex: 0.35; /* 35% da coluna 03 */
-            height: auto;
-            flex-grow: 1;
-        }
-        
-        #display-equipment {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            align-items: center;
-            flex-grow: 1;
-        }
-        
-        .equipment-slot {
-            width: 70px;
-            height: 70px;
-            background-color: var(--color-stats-background);
-            border: 1px dashed var(--color-border);
-            border-radius: 4px;
-            margin: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            cursor: pointer;
-            transition: border-color 0.2s;
-        }
-
-        .equipment-slot:hover {
-            border-color: var(--color-accent);
-        }
-
-        .equipment-slot.filled {
-            border: 1px solid var(--color-accent);
-        }
-
-        .equipment-slot-label {
-            position: absolute;
-            bottom: -15px;
-            font-size: 0.7rem;
-            color: var(--color-text);
-            text-align: center;
-            width: 100%;
-        }
-
-        .equipment-item-icon {
-            width: 60px;
-            height: 60px;
-            object-fit: contain;
-        }
-
-        #inventory-panel {
-            flex: 0.45; /* 45% da coluna 03 */
-            height: auto;
-            min-height: 200px;
-            overflow-y: auto;
-        }
-
-        #item-details-panel {
-            flex: 0.2; /* 20% da coluna 03 */
-        }
-
-        #inventory-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-            gap: 5px;
-            padding: 5px;
-        }
-        
-        .inventory-item {
-            width: 50px;
-            height: 50px;
-            background-color: var(--color-stats-background);
-            border: 1px solid var(--color-border);
-            border-radius: 3px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            position: relative;
-            transition: border-color 0.1s, background-color 0.1s;
-        }
-
-        .inventory-item:hover {
-            border-color: var(--color-accent);
-        }
-
-        .inventory-item.selected {
-            border-color: var(--color-accent);
-            background-color: var(--color-item-highlight);
-            box-shadow: 0 0 5px var(--color-accent);
-        }
-
-        .item-icon {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-        }
-        
-        .item-stack-size {
-            position: absolute;
-            bottom: 0px;
-            right: 0px;
-            font-size: 0.65rem;
-            color: var(--color-text);
-            background-color: rgba(0, 0, 0, 0.6);
-            padding: 0 2px;
-            border-radius: 0 0 3px 0;
-            line-height: 1;
-        }
-
-        /* Detalhes do Item */
-        #item-details-content {
-            font-size: 0.9rem;
-        }
-        #item-details-content h4 {
-            color: var(--color-accent);
-            margin: 0 0 5px 0;
-            text-align: center;
-        }
-        #item-details-content p {
-            margin: 0 0 5px 0;
-        }
-        .item-action-button {
-            display: block;
-            width: 100%;
-            padding: 5px;
-            margin-top: 5px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            background-color: var(--color-evolve);
-            color: var(--color-text);
-            font-weight: bold;
-            transition: background-color 0.2s;
-        }
-        .item-action-button:hover {
-            background-color: darken(var(--color-evolve), 10%);
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div id="app-wrapper">
-        <div id="left-column" class="column">
-            <div id="game-management" class="panel">
-                <div class="panel-title">Gerenciamento</div>
-                <button onclick="saveGame(true)" class="action-button listening">Salvar Jogo</button>
-                <button onclick="loadGame(true)" class="action-button soul">Carregar Jogo</button>
-                <button onclick="resetGame()" class="action-button combat">Novo Jogo</button>
+        
+        <div id="start-menu">
+            <h1>BLAZE AND STEEL</h1>
+            <h2>Um RPG Ocioso Incremental</h2>
+            <div class="menu-options">
+                <button onclick="newGame()">NOVO JOGO</button>
+                <button onclick="loadGame(true)">CARREGAR JOGO</button>
             </div>
             
-            <div id="data-stats" class="panel">
-                <div class="panel-title">Estatísticas do Herói</div>
-                <table id="stats-table-content" class="stats-table">
-                    </table>
+            <div class="settings">
+                <div class="volume-control">
+                    <label for="volume-slider">Volume:</label>
+                    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5" oninput="changeVolume(this.value)">
+                    <button onclick="toggleMute()" id="mute-button">🔇</button>
+                </div>
             </div>
         </div>
 
-        <div id="center-column" class="column">
-            <div id="hero-panel">
-                <div id="display-hero">
-                    <div class="character-box">
-                        <span class="image-name">Herói</span>
-                        <img id="hero-image" class="character-image" src="" alt="Herói">
+        <div id="character-creation-panel" class="hidden">
+            <h2>Criação de Personagem</h2>
+            <div class="char-section">
+                <label for="hero-name">Nome do Herói:</label>
+                <input type="text" id="hero-name" maxlength="15" value="Aventureiro">
+            </div>
+
+            <div class="char-section">
+                <h3>Escolha sua Classe:</h3>
+                <div class="class-selection">
+                    <div class="class-card" onclick="selectClass('warrior')">
+                        <img id="warrior-img" src="./assets/warrior.png" alt="Guerreiro">
+                        <h4>Guerreiro</h4>
+                        <p>Forte e Resistente.</p>
+                        <p>ATK: +2, DEF: +3, HP: +20</p>
+                    </div>
+                    <div class="class-card" onclick="selectClass('archer')">
+                        <img id="archer-img" src="./assets/archer.png" alt="Arqueiro">
+                        <h4>Arqueiro</h4>
+                        <p>Rápido e Preciso.</p>
+                        <p>ATK: +3, DEF: +1, DEX: +2</p>
+                    </div>
+                    <div class="class-card" onclick="selectClass('assassin')">
+                        <img id="assassin-img" src="./assets/assassin.png" alt="Assassino">
+                        <h4>Assassino</h4>
+                        <p>Crítico e Esquivo.</p>
+                        <p>ATK: +4, DEF: +0, CRIT: +5%</p>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="finalizeCharacter()" id="start-adventure-button" disabled>Iniciar Aventura!</button>
+        </div>
+
+        <div id="main-interface" class="hidden">
+            
+            <div id="sidebar">
+                <div id="hero-mini-stats">
+                    </div>
+                
+                <nav id="navigation-menu">
+                    <button id="nav-stats" onclick="showPanel('stats-panel')" class="active">📊 Estatísticas</button>
+                    <button id="nav-training" onclick="showPanel('training-panel')">🏋️ Treinamento</button>
+                    <button id="nav-adventure" onclick="showPanel('adventure-panel')">🗺️ Aventura</button>
+                    <button id="nav-inventory" onclick="showPanel('inventory-panel')">🎒 Inventário</button>
+                    <button id="nav-settings" onclick="showPanel('settings-panel')">⚙️ Configurações</button>
+                    <button id="nav-rebirth" onclick="showPanel('rebirth-panel')" class="hidden rebirth-button">✨ Reencarnação</button>
+                </nav>
+
+                <div id="game-status-indicators">
+                    </div>
+            </div>
+
+            <div id="main-content">
+                
+                <div id="stats-panel" class="game-panel">
+                    <h2>📊 Estatísticas e Equipamento</h2>
+                    <div class="panel-layout">
+                        <div id="stats-display" class="panel-section">
+                            <h3>Estatísticas Base</h3>
+                            <table id="stats-table">
+                                </table>
+                            <div id="attribute-points-display" class="attribute-points-display hidden">
+                                <strong>Pontos de Atributo:</strong> <span id="attribute-points-count">0</span>
+                                <button onclick="increaseStat('baseAttack')">⬆️ ATK</button>
+                                <button onclick="increaseStat('baseDefense')">⬆️ DEF</button>
+                                <button onclick="increaseStat('baseDexterity')">⬆️ DEX</button>
+                            </div>
+                        </div>
+
+                        <div id="equipment-display" class="panel-section">
+                            <h3>Equipamento</h3>
+                            <div id="equipment-slots">
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="training-panel" class="game-panel hidden">
+                    <h2>🏋️ Treinamento e Progresso</h2>
+                    <div id="training-activities" class="panel-section">
+                        <h3>Atividades de Treino (Gera EXP e Recursos)</h3>
+                        <div id="resource-missions-container">
+                             </div>
+
+                        <div id="daily-missions-container">
+                            </div>
                         
-                        <div class="progress-bar-container">
-                            <div id="hero-hp-bar" class="progress-bar" style="width: 100%;">100/100</div>
-                        </div>
+                        <div id="unique-missions-container">
+                            </div>
                     </div>
-                    <div id="skill-panel" class="character-box skill-box">
-                        <button class="skill-button">Ataque Básico</button>
-                        <button class="skill-button">Skill 1</button>
-                        <button class="skill-button">Skill 2</button>
+
+                    <div id="skill-training" class="panel-section">
+                         <h3>Progresso da Alma (Soul)</h3>
+                         <p>Use *Alma* para Evoluir permanentemente.</p>
+                         <button onclick="evolveStat('baseAttack')" class="evolve-button" id="evolve-atk">Evoluir ATK (+1)</button>
+                         <button onclick="evolveStat('baseDefense')" class="evolve-button" id="evolve-def">Evoluir DEF (+1)</button>
+                    </div>
+                </div>
+                
+                <div id="adventure-panel" class="game-panel hidden">
+                    <h2>🗺️ Aventura e Combate</h2>
+                    <div class="panel-layout">
+                        <div id="map-selection" class="panel-section">
+                            <h3>Explorar Mapa</h3>
+                            <div id="map-display">
+                                <img src="./assets/map.jpg" alt="Mapa do Mundo">
+                            </div>
+                            <div id="area-selection-buttons">
+                                <button onclick="selectArea('Forest')">Floresta Iniciante (Lv 1-10)</button>
+                                <button onclick="selectArea('Desert')" disabled>Deserto Ardente (Lv 11-20)</button>
+                            </div>
+                        </div>
+
+                        <div id="combat-display" class="panel-section">
+                            <h3>Campo de Batalha</h3>
+                            <div id="combat-log">
+                                <strong>Log de Combate:</strong>
+                                </div>
+                            
+                            <div id="battle-area">
+                                <div id="hero-display">
+                                    <img id="hero-char-img" src="./assets/hero.png" alt="Herói">
+                                    <div id="hero-hp-bar">HP</div>
+                                </div>
+                                <div id="enemy-display">
+                                    <img id="enemy-char-img" src="./assets/enemy.png" alt="Inimigo">
+                                    <div id="enemy-hp-bar">HP</div>
+                                </div>
+                            </div>
+                            
+                            <div id="combat-actions" class="hidden">
+                                <button onclick="performAttack()">Ataque Básico</button>
+                                <button onclick="performSkill('Skill1')">Skill 1</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div id="display-enemy">
-                    <div class="character-box">
-                        <span class="image-name">Inimigo (??? - Lv 0)</span>
-                        <img id="enemy-image" class="character-image" src="" alt="Inimigo">
-
-                        <div class="progress-bar-container">
-                            <div id="enemy-hp-bar" class="progress-bar" style="width: 100%;">100/100</div>
+                <div id="inventory-panel" class="game-panel hidden">
+                    <h2>🎒 Inventário</h2>
+                    <div class="panel-layout">
+                        <div id="inventory-grid-container" class="panel-section">
+                            <h3>Itens</h3>
+                            <div id="inventory-grid">
+                                </div>
+                        </div>
+                        <div id="item-details-panel" class="panel-section">
+                            <h3>Detalhes do Item</h3>
+                            <div id="item-details-content">
+                                <p>Selecione um item.</p>
+                            </div>
                         </div>
                     </div>
-                    <div id="enemy-skill-panel" class="character-box skill-box">
-                        <button class="skill-button" disabled>Ataque Inimigo</button>
+                </div>
+                
+                <div id="settings-panel" class="game-panel hidden">
+                    <h2>⚙️ Configurações</h2>
+                    <div class="panel-section">
+                        <h3>Dados do Jogo</h3>
+                        <button onclick="saveGame(true)">Salvar Jogo Manualmente</button>
+                        <button onclick="loadGame(true)">Carregar Jogo Salvo</button>
+                        <button onclick="resetGame()">RESETAR JOGO (Perde tudo!)</button>
                     </div>
                 </div>
-            </div>
-            
-            <div id="combat-log-panel" class="panel">Logs de Combate:<br>Pronto para a aventura...</div>
 
-            <div id="action-panel">
-                <button onclick="performAction('listen')" class="action-button listening">Explorar (Ouvir)</button>
-                <button onclick="performAction('evolve')" class="action-button soul">Evoluir (Alma)</button>
-                <button onclick="performAction('combat')" class="action-button combat">Combater</button>
+                <div id="rebirth-panel" class="game-panel hidden">
+                    <h2>✨ Reencarnação (Prestígio)</h2>
+                    <div class="panel-section">
+                         <p>Ao reencarnar, você volta ao Nível 1, mas ganha um bônus de *Alma* que aumenta o seu progresso permanentemente.</p>
+                         <p><strong>Alma Acumulada:</strong> <span id="soul-amount-rebirth">0</span></p>
+                         <p><strong>Bônus de Reencarnação:</strong> <span id="rebirth-bonus-info">0%</span> de EXP a mais.</p>
+                         <button onclick="rebirthConfirm()" id="rebirth-button" disabled>REENCARNAR</button>
+                     </div>
+                </div>
+
             </div>
         </div>
 
-        <div id="right-column" class="column">
-            <div id="equipment-panel" class="panel">
-                <div class="panel-title">Equipamento</div>
-                <div id="display-equipment">
-                    </div>
-            </div>
-
-            <div id="inventory-panel" class="panel">
-                <div class="panel-title">Inventário</div>
-                <div id="inventory-grid">
-                    </div>
-            </div>
-
-            <div id="item-details-panel" class="panel">
-                <div class="panel-title">Detalhes do Item</div>
-                <div id="item-details-content">
-                    <p>Clique em um item para ver detalhes.</p>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <script>
-        // ====================================================================
-        // I. CONFIGURAÇÃO DE DADOS
-        // ====================================================================
-        
-        // Base64 Placeholder para Imagens
-        // Usei um pixel preto de 1x1 para reduzir o tamanho do código.
-        // SUBSTITUA ESTAS STRINGS PELAS SUAS IMAGENS Base64 COMPLETAS
-        const heroImageBase64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-        const enemyImageBase64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-
-        const INITIAL_STATS = {
-            level: 1,
-            exp: 0,
-            expToNextLevel: 100,
-            gold: 0,
-            baseHp: 100,
-            currentHp: 100,
-            baseAttack: 10,
-            baseDefense: 5,
-            baseEnergy: 1,
-            baseSoul: 0,
-            baseDexterity: 1,
-        };
-
-        let hero = { ...INITIAL_STATS };
-        
-        let heroEquipmentStats = {
-            attack: 0,
-            defense: 0,
-            hp: 0,
-        };
-
-        const ENEMY_DEFS = {
-            // Definição de inimigos por nível/área
-            level1: {
-                name: "Slime Iniciante",
-                level: 1,
-                hp: 50,
-                attack: 8,
-                defense: 2,
-                goldDrop: 5,
-                expDrop: 15
-            }
-        };
-
-        let currentEnemy = null;
-        let inventory = []; // [{id: 1, name: "Espada Curta", type: "weapon", stat: {attack: 5}, icon: '🗡️', count: 1}, ...]
-
-        const EQUIPMENT_SLOTS = {
-            weapon: { name: "Arma", currentItem: null, icon: '⚔️' },
-            armor: { name: "Armadura", currentItem: null, icon: '🛡️' },
-            accessory: { name: "Acessório", currentItem: null, icon: '💍' },
-        };
-        
-        let inspectedItem = null; // Item atualmente inspecionado no painel de detalhes
-
-        // ====================================================================
-        // II. FUNÇÕES DE CÁLCULO DE ESTATÍSTICAS
-        // ====================================================================
-
-        // 1. Recalcula os bônus de equipamento e armazena em heroEquipmentStats
-        function updateEquipmentStats() {
-            heroEquipmentStats = { attack: 0, defense: 0, hp: 0 };
-
-            for (const slotKey in EQUIPMENT_SLOTS) {
-                const item = EQUIPMENT_SLOTS[slotKey].currentItem;
-                if (item && item.stat) {
-                    heroEquipmentStats.attack += item.stat.attack || 0;
-                    heroEquipmentStats.defense += item.stat.defense || 0;
-                    heroEquipmentStats.hp += item.stat.hp || 0;
-                }
-            }
-            renderStats(); // Atualiza a exibição de estatísticas
-        }
-
-        // 2. Retorna o valor total da estatística (base + equipamento)
-        function getStatValue(statKey) {
-            let baseValue = hero[statKey];
-            let equipmentBonus = 0;
-
-            if (statKey.includes('Attack')) {
-                equipmentBonus = heroEquipmentStats.attack;
-            } else if (statKey.includes('Defense')) {
-                equipmentBonus = heroEquipmentStats.defense;
-            } else if (statKey.includes('Hp')) {
-                // Para HP, somamos o bônus ao baseHp para obter o HP Máximo total
-                if (statKey === 'baseHp') {
-                    equipmentBonus = heroEquipmentStats.hp;
-                }
-            }
-
-            return baseValue + equipmentBonus;
-        }
-
-        // 3. Atualiza o estado da barra de vida (HP)
-        function updateHpBar(character, hpElementId) {
-            const maxHp = getStatValue('baseHp');
-            const currentHp = character.currentHp;
-            const percentage = (currentHp / maxHp) * 100;
-            const hpBar = document.getElementById(hpElementId);
-
-            if (hpBar) {
-                hpBar.style.width = `${percentage}%`;
-                hpBar.innerHTML = `${currentHp}/${maxHp}`;
-                
-                // Mudar cor da barra de HP em combate (opcional)
-                if (percentage < 30) {
-                    hpBar.style.backgroundColor = '#e74c3c'; // Vermelho
-                } else if (percentage < 60) {
-                    hpBar.style.backgroundColor = '#f1c40f'; // Amarelo
-                } else {
-                    hpBar.style.backgroundColor = 'var(--color-hp)'; // Verde padrão
-                }
-            }
-        }
-        
-        // ====================================================================
-        // III. FUNÇÕES DE RENDERIZAÇÃO
-        // ====================================================================
-        
-        // 1. Renderiza o painel de Estatísticas
-        function renderStats() {
-            // Recalcula o HP Máximo com equipamentos
-            const maxHp = getStatValue('baseHp');
-            
-            const statsHtml = `
-                <tr><td>Nível</td><td>${hero.level}</td></tr>
-                <tr><td>EXP</td><td>${hero.exp} / ${hero.expToNextLevel}</td></tr>
-                <tr><td>Ouro</td><td>${hero.gold}</td></tr>
-                <tr><td>HP Total</td><td>${maxHp} (+${heroEquipmentStats.hp})</td></tr>
-                <tr><td>Ataque Base</td><td>${hero.baseAttack}</td></tr>
-                <tr><td>Bônus Ataque</td><td>+${heroEquipmentStats.attack}</td></tr>
-                <tr><td>Defesa Base</td><td>${hero.baseDefense}</td></tr>
-                <tr><td>Bônus Defesa</td><td>+${heroEquipmentStats.defense}</td></tr>
-                <tr><td>Total Ataque</td><td>${getStatValue('baseAttack') + heroEquipmentStats.attack}</td></tr>
-                <tr><td>Total Defesa</td><td>${getStatValue('baseDefense') + heroEquipmentStats.defense}</td></tr>
-                <tr><td>Energia (Ações)</td><td>${hero.baseEnergy}</td></tr>
-                <tr><td>Alma (Evolução)</td><td>${hero.baseSoul}</td></tr>
-            `;
-            document.getElementById('stats-table-content').innerHTML = statsHtml;
-            updateHpBar(hero, 'hero-hp-bar'); // Atualiza a barra de HP do herói
-        }
-
-        // 2. Renderiza o painel de Equipamento
-        function renderEquipment() {
-            const equipmentDiv = document.getElementById('display-equipment');
-            let html = '';
-
-            for (const slotKey in EQUIPMENT_SLOTS) {
-                const slot = EQUIPMENT_SLOTS[slotKey];
-                const item = slot.currentItem;
-                const icon = item ? item.icon : slot.icon;
-                const className = item ? 'filled' : '';
-                const onclickAction = item ? `inspectItem(${JSON.stringify(item).replace(/"/g, '&quot;')})` : '';
-
-                html += `
-                    <div class="equipment-slot ${className}" onclick="${onclickAction}">
-                        <img src="${icon}" alt="${slot.name}" class="equipment-item-icon">
-                        <span class="equipment-slot-label">${slot.name}</span>
-                    </div>
-                `;
-            }
-            equipmentDiv.innerHTML = html;
-        }
-
-        // 3. Renderiza o painel de Inventário
-        function renderInventory() {
-            const inventoryGrid = document.getElementById('inventory-grid');
-            let html = '';
-
-            // Mapeia o inventário para agrupar itens por ID e contar
-            const groupedInventory = inventory.reduce((acc, item) => {
-                const key = item.id;
-                if (!acc[key]) {
-                    acc[key] = { ...item, count: 0 };
-                }
-                acc[key].count++;
-                return acc;
-            }, {});
-
-            for (const itemId in groupedInventory) {
-                const item = groupedInventory[itemId];
-                const selectedClass = inspectedItem && inspectedItem.id === item.id ? 'selected' : '';
-
-                html += `
-                    <div class="inventory-item ${selectedClass}" onclick="inspectItem(${JSON.stringify(item).replace(/"/g, '&quot;')}, ${item.count})">
-                        <span class="item-icon">${item.icon}</span>
-                        ${item.count > 1 ? `<span class="item-stack-size">${item.count}</span>` : ''}
-                    </div>
-                `;
-            }
-            inventoryGrid.innerHTML = html;
-        }
-        
-        // 4. Inspeciona e renderiza os detalhes do item
-        function inspectItem(item, count = 1) {
-            inspectedItem = item;
-            renderInventory(); // Atualiza a seleção visual
-            
-            const detailsDiv = document.getElementById('item-details-content');
-            let detailsHtml = `<h4>${item.name}</h4>`;
-            
-            if (item.type) {
-                detailsHtml += `<p><strong>Tipo:</strong> ${EQUIPMENT_SLOTS[item.type] ? EQUIPMENT_SLOTS[item.type].name : item.type.charAt(0).toUpperCase() + item.type.slice(1)}</p>`;
-            }
-            if (count > 1) {
-                detailsHtml += `<p><strong>Quantidade:</strong> ${count}</p>`;
-            }
-            
-            detailsHtml += `<p><strong>Descrição:</strong> ${item.description || 'Nenhuma descrição.'}</p>`;
-
-            if (item.stat) {
-                detailsHtml += '<p><strong>Efeitos:</strong></p><ul>';
-                for (const stat in item.stat) {
-                    detailsHtml += `<li>+${item.stat[stat]} ${stat.charAt(0).toUpperCase() + stat.slice(1)}</li>`;
-                }
-                detailsHtml += '</ul>';
-            }
-
-            // Ação: Equipar/Desequipar
-            let actionButton = '';
-            if (item.type && EQUIPMENT_SLOTS[item.type]) {
-                const slot = EQUIPMENT_SLOTS[item.type];
-                const isEquipped = slot.currentItem && slot.currentItem.id === item.id;
-
-                if (isEquipped) {
-                    actionButton = `<button class="item-action-button" onclick="unequipItem(${JSON.stringify(item).replace(/"/g, '&quot;')})">DESEQUIPAR</button>`;
-                } else {
-                    actionButton = `<button class="item-action-button" onclick="equipItem(${JSON.stringify(item).replace(/"/g, '&quot;')})">EQUIPAR</button>`;
-                }
-            }
-            
-            // Ação: Usar (consumível, futuro)
-            // Ação: Descartar (futuro)
-            
-            detailsHtml += actionButton;
-            detailsDiv.innerHTML = detailsHtml;
-        }
-
-        // 5. Renderiza o Painel de Ações
-        function renderActionPanel() {
-            // Define o estado de cada botão, se necessário (ex: desabilitar 'Combater' se já estiver em combate)
-            // Por enquanto, todos ativos
-        }
-        
-        // 6. Atualiza a imagem dos personagens
-        function renderCharacterImages() {
-            document.getElementById('hero-image').src = heroImageBase64;
-            document.getElementById('enemy-image').src = enemyImageBase64;
-        }
-        
-        // ====================================================================
-        // IV. FUNÇÕES DE JOGO (SALVAR/CARREGAR/RESETAR)
-        // ====================================================================
-
-        // 1. Salvar Jogo
-        function saveGame(showAlert = false) {
-            try {
-                const gameState = {
-                    hero: hero,
-                    equipment: EQUIPMENT_SLOTS,
-                    inventory: inventory
-                };
-                localStorage.setItem('blazeAndSteelSave', JSON.stringify(gameState));
-                if (showAlert) logMessage("Jogo salvo com sucesso!", "accent");
-            } catch (e) {
-                console.error("Erro ao salvar o jogo:", e);
-                logMessage("Erro ao salvar o jogo. O armazenamento local está cheio ou indisponível.", "combat");
-            }
-        }
-
-        // 2. Carregar Jogo
-        function loadGame(showAlert = false) {
-            const savedState = localStorage.getItem('blazeAndSteelSave');
-            if (savedState) {
-                const gameState = JSON.parse(savedState);
-                hero = gameState.hero;
-                // Deve-se carregar os itens e garantir que o objeto de slots seja o original com os items carregados.
-                for (const key in EQUIPMENT_SLOTS) {
-                    if (gameState.equipment[key]) {
-                         EQUIPMENT_SLOTS[key].currentItem = gameState.equipment[key].currentItem;
-                    }
-                }
-                inventory = gameState.inventory;
-
-                // Força a atualização do HP Máximo e HP atual após carregar
-                const maxHp = getStatValue('baseHp');
-                if (hero.currentHp > maxHp) {
-                    hero.currentHp = maxHp;
-                }
-                
-                updateEquipmentStats();
-                renderAll();
-                if (showAlert) logMessage("Jogo carregado com sucesso!", "accent");
-            } else if (showAlert) {
-                logMessage("Nenhum jogo salvo encontrado.", "combat");
-            }
-        }
-
-        // 3. Resetar Jogo
-        function resetGame() {
-            if (confirm("Tem certeza que deseja começar um novo jogo? Todo o progresso será perdido.")) {
-                localStorage.removeItem('blazeAndSteelSave');
-                hero = { ...INITIAL_STATS };
-                inventory = [];
-                for (const key in EQUIPMENT_SLOTS) {
-                    EQUIPMENT_SLOTS[key].currentItem = null;
-                }
-                // Adicionar item inicial (exemplo)
-                addItem({ id: 100, name: "Espada Enferrujada", type: "weapon", stat: { attack: 3 }, description: "Uma lâmina velha e fraca.", icon: '⚔️' });
-                addItem({ id: 101, name: "Armadura de Couro", type: "armor", stat: { defense: 2 }, description: "Proteção básica de pele.", icon: '🛡️' });
-                addItem({ id: 102, name: "Moeda de Ouro", type: "currency", description: "Ouro puro.", icon: '💰', stackable: true });
-                addItem({ id: 102, name: "Moeda de Ouro", type: "currency", description: "Ouro puro.", icon: '💰', stackable: true });
-                hero.gold = 50; // Ouro inicial
-
-                updateEquipmentStats();
-                renderAll();
-                logMessage("Novo jogo iniciado!", "soul");
-            }
-        }
-        
-        // ====================================================================
-        // V. FUNÇÕES DE LOG E MENSAGENS
-        // ====================================================================
-
-        // Adiciona uma mensagem ao log de combate
-        function logMessage(message, style = 'text') {
-            const logPanel = document.getElementById('combat-log-panel');
-            const colorMap = {
-                'combat': 'var(--color-combat)',
-                'accent': 'var(--color-accent)',
-                'soul': 'var(--color-soul)',
-                'energy': 'var(--color-energy)',
-                'hp': 'var(--color-hp)',
-                'text': 'var(--color-text)'
-            };
-            const color = colorMap[style] || colorMap['text'];
-            
-            const time = new Date().toLocaleTimeString();
-            logPanel.innerHTML += `<span style="color: ${color};">[${time}] ${message}</span><br>`;
-            logPanel.scrollTop = logPanel.scrollHeight; // Rola para o fim
-        }
-
-        // ====================================================================
-        // VI. FUNÇÕES DE INVENTÁRIO/ITEM
-        // ====================================================================
-        
-        // 1. Adiciona um item ao inventário
-        function addItem(item, showAlert = false) {
-            inventory.push(item);
-            renderInventory();
-            saveGame();
-            if (showAlert) logMessage(`${item.name} adicionado ao inventário.`, 'accent');
-        }
-        
-        // 2. Remove um item do inventário (por ID)
-        function removeItem(item) {
-            const index = inventory.findIndex(i => i.id === item.id);
-            if (index !== -1) {
-                inventory.splice(index, 1);
-                renderInventory();
-                saveGame();
-                return true;
-            }
-            return false;
-        }
-
-        // 3. Equipa um item
-        function equipItem(item, showAlert = true) {
-            const slotKey = item.type;
-            if (!EQUIPMENT_SLOTS[slotKey]) {
-                logMessage("Não é possível equipar: Tipo de item inválido.", "combat");
-                return;
-            }
-
-            // 3.1. Se houver um item equipado no slot, desequipamos e o movemos para o inventário
-            const oldItem = EQUIPMENT_SLOTS[slotKey].currentItem;
-            if (oldItem) {
-                addItem(oldItem, false); // Adiciona o item antigo ao inventário sem alerta
-            }
-            
-            // 3.2. Remove o item do inventário (apenas uma instância, se for empilhável)
-            removeItem(item); // Remove do inventário
-            
-            // 3.3. O novo item está sendo equipado, então ele substitui o item atual no slot
-            EQUIPMENT_SLOTS[slotKey].currentItem = item;
-            
-            // Atualiza todos os painéis
-            renderEquipment();
-            renderInventory();
-            updateEquipmentStats(); // Recalcula stats
-            if (showAlert) inspectItem(item); // Reinspeciona para mostrar "DESEQUIPAR"
-            saveGame();
-            if (showAlert) logMessage(`${item.name} equipado no slot de ${EQUIPMENT_SLOTS[slotKey].name}.`, 'energy');
-        }
-        
-        // 4. Desequipa o item
-        function unequipItem(item) {
-            const slotKey = item.type;
-            
-            if (EQUIPMENT_SLOTS[slotKey].currentItem && EQUIPMENT_SLOTS[slotKey].currentItem.id === item.id) {
-                 EQUIPMENT_SLOTS[slotKey].currentItem = null;
-                 addItem(item, false); // Adiciona o item desequipado de volta ao inventário
-                 logMessage(`${item.name} desequipado.`, 'energy');
-            }
-            
-            // Atualiza todos os painéis
-            renderEquipment();
-            renderInventory();
-            updateEquipmentStats(); // Recalcula stats
-            // Reinspeciona para atualizar o botão para "EQUIPAR"
-            if (inspectedItem) {
-                // Tenta inspecionar o item (agora no inventário)
-                const itemInInventory = inventory.find(i => i.id === item.id);
-                if (itemInInventory) {
-                    inspectItem(itemInInventory); 
-                } else {
-                    document.getElementById('item-details-content').innerHTML = "<p>Clique em um item para ver detalhes.</p>";
-                    inspectedItem = null;
-                }
-            } else {
-                document.getElementById('item-details-content').innerHTML = "<p>Clique em um item para ver detalhes.</p>";
-                inspectedItem = null;
-            }
-            saveGame();
-        }
-        
-        // ====================================================================
-        // VII. FUNÇÕES DE AÇÃO PRINCIPAL
-        // ====================================================================
-        
-        function performAction(actionType) {
-            logMessage(`Ação: ${actionType.toUpperCase()}`, 'text');
-            
-            switch (actionType) {
-                case 'listen':
-                    // Ação de exploração: Ganhando ouro e talvez EXP
-                    const goldFound = Math.floor(Math.random() * 5) + 1; // 1-5 gold
-                    const expGained = Math.floor(Math.random() * 3) + 1; // 1-3 exp
-                    hero.gold += goldFound;
-                    hero.exp += expGained;
-                    logMessage(`Você ouviu ruídos nas proximidades e encontrou ${goldFound} Ouro. (+${expGained} EXP)`, 'accent');
-                    checkLevelUp();
-                    break;
-                case 'evolve':
-                    // Ação de evolução: Usando Soul para aprimorar uma estatística
-                    if (hero.baseSoul >= 1) {
-                        hero.baseSoul--;
-                        hero.baseAttack++; // Exemplo simples
-                        logMessage(`Você usou 1 Alma e seu Ataque Base aumentou para ${hero.baseAttack}.`, 'soul');
-                    } else {
-                        logMessage("Você não tem Alma suficiente para Evoluir!", 'combat');
-                    }
-                    break;
-                case 'combat':
-                    // Iniciar Combate com um inimigo de nível 1
-                    startCombat(ENEMY_DEFS.level1);
-                    break;
-            }
-
-            renderStats();
-            saveGame();
-        }
-        
-        function checkLevelUp() {
-            if (hero.exp >= hero.expToNextLevel) {
-                hero.exp -= hero.expToNextLevel;
-                hero.level++;
-                hero.expToNextLevel = Math.floor(hero.expToNextLevel * 1.5);
-                hero.baseAttack += 2;
-                hero.baseDefense += 1;
-                hero.baseHp += 10;
-                // Cura total ao subir de nível
-                hero.currentHp = getStatValue('baseHp');
-                
-                logMessage(`*** PARABÉNS! Você alcançou o Nível ${hero.level}! ***`, 'accent');
-                logMessage('Suas estatísticas melhoraram! (HP +10, ATK +2, DEF +1)', 'energy');
-            }
-        }
-        
-        // ====================================================================
-        // VIII. FUNÇÕES DE COMBATE
-        // (Apenas esqueleto, você deve expandir esta seção)
-        // ====================================================================
-        
-        function startCombat(enemyDef) {
-            if (currentEnemy) {
-                logMessage(`Você já está em combate contra ${currentEnemy.name}!`, 'combat');
-                return;
-            }
-
-            // Clona a definição do inimigo para criar uma instância de combate
-            currentEnemy = JSON.parse(JSON.stringify(enemyDef));
-            currentEnemy.currentHp = currentEnemy.hp;
-            
-            // Atualiza o display do inimigo
-            document.querySelector('#display-enemy .image-name').textContent = `${currentEnemy.name} (Lv ${currentEnemy.level})`;
-            updateHpBar(currentEnemy, 'enemy-hp-bar');
-            
-            logMessage(`*** Você encontrou ${currentEnemy.name} (Lv ${currentEnemy.level})! ***`, 'combat');
-            
-            // Inicia o loop de combate
-            // fightTurn(); // Implementar esta função
-        }
-        
-        // Função placeholder para o loop de combate (para futura expansão)
-        // function fightTurn() {
-        //     // 1. Herói ataca
-        //     // 2. Inimigo ataca
-        //     // 3. Checa vitória/derrota
-        //     // ...
-        // }
-        
-        // ====================================================================
-        // IX. INICIALIZAÇÃO E FUNÇÕES DE AJUDA
-        // ====================================================================
-        
-        function renderAll() {
-            renderCharacterImages();
-            renderStats();
-            renderEquipment();
-            renderInventory();
-            renderActionPanel();
-        }
-
-        // Função de Início do Jogo
-        function startGame() {
-            // Verifica se há dados carregados
-            if (hero.level === INITIAL_STATS.level && inventory.length === 0) {
-                // Se for a primeira vez, reseta para popular o inventário
-                resetGame();
-            } else {
-                // Se já houver dados carregados, apenas renderiza
-                renderAll();
-            }
-            document.getElementById('combat-log-panel').innerHTML = "Logs de Combate:<br>Pronto para a aventura...";
-        }
-
-
-        // ====================================================================
-        // X. EXECUÇÃO AO CARREGAR A PÁGINA
-        // ====================================================================
-
-        // Tenta carregar o jogo salvo ao iniciar a página. 
-        loadGame();
-
-        // Inicia a renderização da tela, garantindo que o jogo apareça mesmo sem save
-        startGame();
-
-    </script>
-
+    <script src="game.js"></script>
 </body>
 </html>
