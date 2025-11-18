@@ -1630,18 +1630,16 @@
         }
 
 
-        // ====================================================================
-        // X. INICIALIZAÇÃO (Bloco Final)
+        // X. INICIALIZAÇÃO
         // ====================================================================
 
         // 1. Garantimos que os painéis de jogo (sidebar e main-content) estão ocultos.
         hideAllPanels(); 
 
         // 2. Tentamos carregar os dados salvos.
-        // loadGame() não inicia o jogo, apenas carrega os dados.
         loadGame();
         
-        // 3. Garantimos que o Menu Inicial seja exibido, forçando a tela de título.
+        // 3. Forçamos a exibição do Menu Inicial.
         startMenu.style.display = 'flex'; 
         
     </script>
