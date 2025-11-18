@@ -1156,15 +1156,13 @@
             localStorage.setItem('blazeAndSteelSave', JSON.stringify(gameData));
         }
 
-        // ALTERADO: Adicionado 'autoStartGame' para evitar o carregamento automático na inicialização
+        // ALTERADO: A função agora é focada em carregar os dados e só inicia o jogo se 'autoStartGame' for true.
         function loadGame(showAlert = false, autoStartGame = false) {
             const savedState = localStorage.getItem('blazeAndSteelSave');
             
-            hideAllPanels(); 
+            // CORREÇÃO: loadGame não é mais responsável por hideAllPanels, exceto quando inicia o jogo.
 
             if (!savedState) {
-                // Se não houver save, sempre mostra o menu
-                startMenu.style.display = 'flex';
                 return false;
             }
 
@@ -1217,18 +1215,15 @@
                 hasInteracted = true;
                 checkAndPlayMusic();
                 
-                // NOVO: Condição para iniciar o jogo ou apenas mostrar o menu
+                // Agora, startGame só é chamado se autoStartGame for true
                 if (autoStartGame) {
                     startGame();
                     if (showAlert) {
                         alert("Jogo salvo carregado com sucesso!");
                     }
-                } else {
-                    // Carrega os dados, mas mantém o menu visível (o comportamento esperado na inicialização)
-                    startMenu.style.display = 'flex';
-                }
+                } 
                 
-                updateDisplay(); // Atualiza display, mesmo no menu, para pegar volume/mudo
+                updateDisplay(); 
                 return true;
 
             } catch (e) {
@@ -1236,8 +1231,6 @@
                 localStorage.removeItem('blazeAndSteelSave'); 
                 alert("Erro ao carregar o jogo salvo. O arquivo de save foi removido. Reiniciando em Novo Jogo.");
                 
-                hideAllPanels();
-                startMenu.style.display = 'flex';
                 return false;
             }
         }
@@ -1642,9 +1635,16 @@
         // X. INICIALIZAÇÃO
         // ====================================================================
 
-        // No carregamento da página, apenas tentamos carregar os dados. 
-        // O menu inicial só será escondido se o usuário clicar em NOVO JOGO ou CARREGAR JOGO.
+        // No carregamento da página:
+        // 1. Garantimos que os painéis de jogo estão ocultos.
+        hideAllPanels(); 
+
+        // 2. Tentamos carregar os dados salvos.
+        // O loadGame() não vai iniciar o jogo, a menos que seja chamado pelo botão.
         loadGame();
+        
+        // 3. Garantimos que o Menu Inicial seja exibido, independentemente do save.
+        startMenu.style.display = 'flex'; 
         
     </script>
 
