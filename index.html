@@ -105,10 +105,11 @@
         
         /* Definição de Ícones */
         #btn-adventure::before { content: '🗺️'; color: var(--color-combat); } 
-        #btn-attributes::before { content: '✨'; color: var(--color-evolve); } /* NOVO: Atributos */
+        #btn-attributes::before { content: '✨'; color: var(--color-evolve); } 
         #btn-equipment::before { content: '⚔️'; color: var(--color-hp); } 
         #btn-inventory::before { content: '📦'; color: #f1c40f; } 
         #btn-status::before { content: '👤'; color: var(--color-soul); } 
+        #btn-main-menu::before { content: '🏠'; color: #3498db; } /* NOVO: Ícone Home */
 
 
         /* Área de Conteúdo Principal */
@@ -477,7 +478,7 @@
             
             <div class="menu-button-stack">
                 <button onclick="showCharacterCreation()">NOVO JOGO</button> 
-                <button onclick="loadGame(true)">CARREGAR JOGO</button>
+                <button onclick="loadGame(true, true)">CARREGAR JOGO</button>
                 <button onclick="alert('Sair: Por enquanto, feche a aba.')">SAIR</button>
             </div>
             
@@ -533,6 +534,8 @@
                 <button id="btn-attributes" onclick="showPanel('attributes-panel')">Atributos</button> <button id="btn-equipment" onclick="showPanel('equipment-panel')">Equipamento</button>
                 <button id="btn-inventory" onclick="showPanel('inventory-panel')">Inventário</button>
                 <button id="btn-status" onclick="showPanel('status-panel')">Status</button>
+                
+                <button id="btn-main-menu" onclick="returnToMainMenu()">Menu Inicial</button> 
                 
                 </nav>
         </div>
@@ -883,6 +886,19 @@
             generateClassButtons(); 
             checkCreationRequirements(); 
         }
+        
+        // NOVO: Volta para a tela de Menu Inicial
+        function returnToMainMenu() {
+            hideAllPanels(); 
+            startMenu.style.display = 'flex';
+            
+            // Opcional: Para o combate se estiver ativo
+            isFighting = false;
+            currentMonster = null;
+            
+            // Re-renderiza o display para atualizar o volume no menu
+            updateDisplay();
+        }
 
         // Atualiza a exibição na tela
         function updateDisplay() {
@@ -935,12 +951,6 @@
                 monsterNameDisplay.innerHTML = `Selecione um local para ver o monstro...`;
             }
 
-            // COOLDOWNS E MISSÕES (Simplificado)
-            // As missões diárias e únicas foram removidas, apenas a função de atualização ficou mais simples.
-            // O botão de Treinar Habilidades foi movido para o painel Aventura.
-
-            updateEquipmentStats(); 
-            
             // VOLUME
             const currentVolume = gameThemeMusic.volume * 100;
             volumeSliderStart.value = currentVolume;
@@ -1137,12 +1147,14 @@
             localStorage.setItem('blazeAndSteelSave', JSON.stringify(gameData));
         }
 
-        function loadGame(showAlert = false) {
+        // ALTERADO: Adicionado 'autoStartGame' para evitar o carregamento automático na inicialização
+        function loadGame(showAlert = false, autoStartGame = false) {
             const savedState = localStorage.getItem('blazeAndSteelSave');
             
             hideAllPanels(); 
 
             if (!savedState) {
+                // Se não houver save, sempre mostra o menu
                 startMenu.style.display = 'flex';
                 return false;
             }
@@ -1195,11 +1207,19 @@
 
                 hasInteracted = true;
                 checkAndPlayMusic();
-
-                startGame();
-                if (showAlert) {
-                    alert("Jogo salvo carregado com sucesso!");
+                
+                // NOVO: Condição para iniciar o jogo ou apenas mostrar o menu
+                if (autoStartGame) {
+                    startGame();
+                    if (showAlert) {
+                        alert("Jogo salvo carregado com sucesso!");
+                    }
+                } else {
+                    // Carrega os dados, mas mantém o menu visível (o comportamento esperado na inicialização)
+                    startMenu.style.display = 'flex';
                 }
+                
+                updateDisplay(); // Atualiza display, mesmo no menu, para pegar volume/mudo
                 return true;
 
             } catch (e) {
@@ -1295,10 +1315,6 @@
             updateDisplay();
             saveGame();
         }
-
-        // REMOVIDO: updateMissionDisplays, startDailyMission, startUniqueMission
-        // O código foi limpo para remover a lógica de missões complexas por enquanto.
-
 
         // ====================================================================
         // VIII. FUNÇÕES DE COMBATE
@@ -1617,6 +1633,8 @@
         // X. INICIALIZAÇÃO
         // ====================================================================
 
+        // No carregamento da página, apenas tentamos carregar os dados. 
+        // O menu inicial só será escondido se o usuário clicar em NOVO JOGO ou CARREGAR JOGO.
         loadGame();
         
     </script>
