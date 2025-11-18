@@ -182,7 +182,7 @@
         }
 
         #character-creation-panel .content-panel {
-            max-width: 600px;
+            max-width: 700px;
             margin: auto;
             padding: 30px;
             border: 2px solid var(--color-accent);
@@ -212,6 +212,10 @@
             transition: border-color 0.2s, background-color 0.2s;
         }
         
+        #class-selection-container button:hover {
+            border-color: var(--color-accent);
+        }
+
         #class-selection-container button.selected {
             border-color: var(--color-energy);
             background-color: rgba(52, 152, 219, 0.1); 
@@ -324,6 +328,16 @@
                 <div id="class-selection-container">
                     </div>
 
+                <div id="class-detail-display" class="content-panel" style="background-color: var(--color-primary); margin-top: 20px; padding: 15px;">
+                    <h4>Detalhes da Classe: <span id="class-detail-name" style="color: var(--color-accent);">Nenhuma Selecionada</span></h4>
+                    <p id="class-detail-desc">Selecione uma classe para ver suas informações, estatísticas base e item inicial.</p>
+                    <p>Estatísticas Iniciais:</p>
+                    <ul style="list-style: none; padding: 0; margin-top: 10px;">
+                        <li style="color: var(--color-hp);">❤️ HP Base: <span id="class-detail-hp">?</span></li>
+                        <li style="color: var(--color-combat);">⚔️ ATK Base: <span id="class-detail-atk">?</span></li>
+                        <li style="color: var(--color-energy);">⚡ Energia Base: <span id="class-detail-energy">?</span></li>
+                    </ul>
+                </div>
                 <button id="btn-confirm-creation" disabled style="width: 100%; padding: 15px; margin-top: 30px; background-color: var(--color-evolve); color: white; border: none; border-radius: 5px; font-size: 1.1em; cursor: pointer;">CONFIRMAR CRIAÇÃO</button>
             </div>
         </div>
@@ -503,12 +517,15 @@
             },
             currentPanel: 'hero-training-panel',
         };
-
+        
+        // CORREÇÃO: CLASSE LUTADOR ADICIONADA E DADOS DE CLASSES COMPLETOS
         const CLASSES = {
             // VERIFIQUE SE OS CAMINHOS DAS IMAGENS A SEGUIR ESTÃO CORRETOS NA SUA ESTRUTURA DE PASTAS
-            guerreiro: { name: "Guerreiro", icon: "assets/guerreiro.png", description: "Focado em força e defesa.", baseStats: { hp: 60, atk: 7, energy: 90 }, startingItem: { id: 's1', name: 'Espada de Ferro', type: 'weapon', rarity: 'common', stats: { atk: 3, hp: 0 }, desc: 'Uma espada padrão forjada em ferro.' } },
-            mago: { name: "Mago", icon: "assets/mago.png", description: "Especialista em magias.", baseStats: { hp: 45, atk: 4, energy: 120 }, startingItem: { id: 's2', name: 'Cajado de Bétula', type: 'weapon', rarity: 'common', stats: { atk: 2, energy: 10 }, desc: 'Um cajado simples para iniciantes.' } },
-            arqueiro: { name: "Arqueiro", icon: "assets/arqueiro.png", description: "Ágil e preciso.", baseStats: { hp: 50, atk: 8, energy: 100 }, startingItem: { id: 's3', name: 'Arco Curto', type: 'weapon', rarity: 'common', stats: { atk: 4, hp: 0 }, desc: 'Um arco leve, bom para caça.' } },
+            guerreiro: { name: "Guerreiro", icon: "assets/guerreiro.png", description: "Focado em força e defesa. Alto HP, bom ATK.", baseStats: { hp: 60, atk: 7, energy: 90 }, startingItem: { id: 's1', name: 'Espada de Ferro', type: 'weapon', rarity: 'common', stats: { atk: 3, hp: 0 }, desc: 'Uma espada padrão forjada em ferro.' } },
+            mago: { name: "Mago", icon: "assets/mago.png", description: "Especialista em magias. Alto Energy, baixo HP.", baseStats: { hp: 45, atk: 4, energy: 120 }, startingItem: { id: 's2', name: 'Cajado de Bétula', type: 'weapon', rarity: 'common', stats: { atk: 2, energy: 10 }, desc: 'Um cajado simples para iniciantes.' } },
+            arqueiro: { name: "Arqueiro", icon: "assets/arqueiro.png", description: "Ágil e preciso. Equilíbrio entre ATK e Energy.", baseStats: { hp: 50, atk: 8, energy: 100 }, startingItem: { id: 's3', name: 'Arco Curto', type: 'weapon', rarity: 'common', stats: { atk: 4, hp: 0 }, desc: 'Um arco leve, bom para caça.' } },
+            // CLASSE LUTADOR ADICIONADA
+            lutador: { name: "Lutador", icon: "assets/lutador.png", description: "Combate corpo a corpo, focado em agilidade e ataque rápido.", baseStats: { hp: 55, atk: 9, energy: 95 }, startingItem: { id: 's4', name: 'Manopla Enfaixada', type: 'weapon', rarity: 'common', stats: { atk: 5, hp: 0 }, desc: 'Um par de luvas simples, mas eficazes.' } },
         };
 
         const EXP_BASE = 50;
@@ -631,7 +648,7 @@
             if (panelId === 'inventory-panel') renderInventory();
             if (panelId === 'hero-training-panel') renderMissions();
             if (panelId === 'adventure-panel') {
-                renderMonsterButtons(); // RENDERIZA OS BOTÕES DE MONSTRO DINAMICAMENTE
+                renderMonsterButtons(); 
                 updateAdventurePanel();
             }
 
@@ -654,10 +671,19 @@
                 button.addEventListener('click', () => selectClass(key));
                 container.appendChild(button);
             }
+            // Limpa os detalhes da classe ao renderizar a seleção (apenas se não houver seleção prévia)
+            if (!selectedClass) {
+                 document.getElementById('class-detail-name').textContent = "Nenhuma Selecionada";
+                 document.getElementById('class-detail-desc').textContent = "Selecione uma classe para ver suas informações, estatísticas base e item inicial.";
+                 document.getElementById('class-detail-hp').textContent = "?";
+                 document.getElementById('class-detail-atk').textContent = "?";
+                 document.getElementById('class-detail-energy').textContent = "?";
+            }
         }
         
         function selectClass(className) {
             selectedClass = className;
+            const classData = CLASSES[className]; // Obtém os dados da classe
             
             // 1. Remove o destaque de todos os botões
             document.querySelectorAll('#class-selection-container button').forEach(btn => {
@@ -670,7 +696,16 @@
                 selectedBtn.classList.add('selected'); 
             }
             
-            // 3. Verifica o formulário para habilitar o botão "CONFIRMAR CRIAÇÃO"
+            // 3. NOVO: Atualiza o painel de detalhes da classe
+            if (classData) {
+                document.getElementById('class-detail-name').textContent = classData.name;
+                document.getElementById('class-detail-desc').textContent = classData.description;
+                document.getElementById('class-detail-hp').textContent = classData.baseStats.hp;
+                document.getElementById('class-detail-atk').textContent = classData.baseStats.atk;
+                document.getElementById('class-detail-energy').textContent = classData.baseStats.energy;
+            }
+
+            // 4. Verifica o formulário para habilitar o botão "CONFIRMAR CRIAÇÃO"
             checkCreationForm();
         }
 
@@ -692,23 +727,30 @@
                 
                 // Adiciona item inicial (e o equipa)
                 if (classData.startingItem) {
-                    const item = { ...classData.startingItem, id: Date.now().toString() }; // Gera ID único
+                    // Cria uma cópia profunda para garantir IDs únicos
+                    const item = JSON.parse(JSON.stringify(classData.startingItem)); 
+                    item.id = `start-${Date.now()}`; // Garante ID único
                     gameState.hero.inventory.push(item);
                     equipItem(item, false); // Equipa sem alertar
                 }
                 
                 gameState.isCharacterCreated = true;
                 
-                // Transição para a tela principal
+                // Transição para a tela principal (CORRIGIDO: Garante que os containers apareçam)
                 document.getElementById('character-creation-panel').style.display = 'none';
                 document.getElementById('start-menu').style.display = 'none';
                 document.getElementById('app-wrapper').style.display = 'flex';
                 document.getElementById('sidebar').style.display = 'block';
                 document.getElementById('main-content').style.display = 'block';
 
+                // Recalcula o HP total para o combate inicial
+                const stats = calculateStats();
+                currentHP = stats.totalHp;
+
                 updateHeroDisplay();
                 renderMissions();
                 renderEquipment();
+                showPanel('hero-training-panel'); // Garante que o painel inicial seja exibido
                 saveGame();
             }
         }
@@ -890,7 +932,7 @@
             });
             
             // Se o item inspecionado foi vendido/desequipado, limpa o painel
-            if (!inspectedItem || !gameState.hero.inventory.includes(inspectedItem)) {
+            if (!inspectedItem || !gameState.hero.inventory.some(i => i.id === inspectedItem.id)) {
                 inspectedItem = null;
                 // Limpa painel de detalhes
                 document.getElementById('item-detail-name').textContent = "Nenhum";
@@ -983,18 +1025,10 @@
                 return;
             }
             
-            // 1. Desequipa o item anterior no slot, se houver
-            const oldItem = EQUIPMENT_SLOTS[slotKey].currentItem;
-            if (oldItem) {
-                // Apenas desequipa, mas não remove do inventário
-                // O objeto item no inventário não precisa de uma flag 'equipped', 
-                // o slot de equipamento é a fonte da verdade.
-            }
-            
-            // 2. Equipa o novo item
+            // 1. Equipa o novo item
             EQUIPMENT_SLOTS[slotKey].currentItem = item;
             
-            // 3. Atualiza todos os painéis
+            // 2. Atualiza todos os painéis
             renderEquipment();
             renderInventory();
             if (showAlert) inspectItem(item); // Reinspeciona para mostrar "DESEQUIPAR"
@@ -1053,7 +1087,7 @@
         // VII. LÓGICA DE COMBATE E AVENTURA
         // ====================================================================
 
-        // Novo: Função para renderizar os botões de seleção de monstros
+        // Função para renderizar os botões de seleção de monstros
         function renderMonsterButtons() {
             const monsterSelectionContainer = document.getElementById('monster-selection-container');
             if (!monsterSelectionContainer) return;
@@ -1100,7 +1134,7 @@
             }
         }
         
-        // Novo: Função para selecionar o monstro e atualizar a interface de combate
+        // Função para selecionar o monstro e atualizar a interface de combate
         function selectMonster(monsterData) {
             currentMonster = monsterData; 
             currentMonster.currentHP = currentMonster.baseHP; 
@@ -1257,6 +1291,7 @@
                 // 2. Carrega Equipment
                 for (const key in data.equipment) {
                     if (EQUIPMENT_SLOTS[key]) {
+                        // Garante que o item seja carregado, mesmo que seja null
                         EQUIPMENT_SLOTS[key].currentItem = data.equipment[key].currentItem;
                     }
                 }
@@ -1285,6 +1320,9 @@
             } else {
                 // Jogo não iniciado
             }
+            
+            // Atualiza o estado do botão de Carregar Jogo após a tentativa de load
+            document.getElementById('btn-load-game').disabled = !localStorage.getItem('blazeAndSteelSave');
         }
         
         function clearGame() {
@@ -1308,11 +1346,8 @@
             });
             
             document.getElementById('btn-load-game').addEventListener('click', loadGame);
-            document.getElementById('btn-load-game').disabled = !localStorage.getItem('blazeAndSteelSave'); // Desabilita se não houver save
 
-            document.getElementById('btn-exit-game').addEventListener('click', () => {
-                 alert("Obrigado por jogar! Clique F5 para recomeçar ou feche a aba.");
-            });
+            document.getElementById('btn-exit-game').addEventListener('click', clearGame); // Usa clearGame como "sair" temporário
 
             // Eventos da Criação de Personagem
             document.getElementById('hero-name').addEventListener('input', checkCreationForm);
