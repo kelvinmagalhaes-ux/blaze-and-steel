@@ -1635,14 +1635,14 @@
         // ====================================================================
 
         // No carregamento da página:
-        // 1. Garantimos que os painéis de jogo estão ocultos.
+        // 1. Garantimos que os painéis de jogo estão ocultos, forçando o Menu Inicial a ser o único visível.
         hideAllPanels(); 
 
         // 2. Tentamos carregar os dados salvos.
-        // O loadGame() não vai iniciar o jogo, a menos que seja chamado pelo botão.
+        // O loadGame() não inicia o jogo, apenas carrega os dados.
         loadGame();
         
-        // 3. Garantimos que o Menu Inicial seja exibido, independentemente do save.
+        // 3. Garante que o Menu Inicial seja exibido (pois o CSS não é suficiente para forçar a exibição).
         startMenu.style.display = 'flex'; 
         
     </script>
