@@ -937,6 +937,7 @@
         }
 
         // Atualiza a exibição na tela
+        // *** OTIMIZAÇÃO DE PERFORMANCE: Funções pesadas (renderEquipment/Inventory) foram removidas daqui. ***
         function updateDisplay() {
             // NOME
             heroNameDisplay.textContent = heroName;
@@ -968,6 +969,7 @@
             document.getElementById('status-hero-name').textContent = heroName;
             document.getElementById('status-hero-class').textContent = selectedClass ? CLASSES[selectedClass].name : 'N/A';
             document.getElementById('status-power-level').textContent = powerLevel;
+            // O HP e ATK Totais são atualizados em updateEquipmentStats()
             document.getElementById('status-max-hp').textContent = calculateMaxHP();
             document.getElementById('status-total-atk').textContent = calculateTotalATK();
             
@@ -981,9 +983,7 @@
 
             // COOLDOWNS E MISSÕES
             updateMissionDisplays();
-            updateEquipmentStats(); // **CORREÇÃO: Chamado aqui para atualizar stats e HP no header**
-            renderEquipment(); // Renderiza sempre para manter os bônus atualizados
-            renderInventory(); // Renderiza para atualizar os itens equipados
+            updateEquipmentStats(); // **CHAMADA IMPORTANTE: Atualiza os bônus de stats e o HP no header.**
             
             // VOLUME
             const currentVolume = gameThemeMusic.volume * 100;
@@ -1009,7 +1009,14 @@
             });
             document.getElementById(`btn-${panelId.replace('-panel', '')}`).classList.add('active');
             
-            // Atualiza o display geral
+            // *** OTIMIZAÇÃO DE PERFORMANCE: Chama renderização pesada APENAS ao entrar no painel ***
+            if (panelId === 'equipment-panel') {
+                renderEquipment();
+            } else if (panelId === 'inventory-panel') {
+                renderInventory();
+            }
+
+            // Atualiza o display geral (estatísticas leves)
             updateDisplay();
         }
 
@@ -1109,8 +1116,8 @@
                 });
                 
                 // CORREÇÃO ESSENCIAL: Chama a atualização de stats para calcular o HP Máximo
-                // antes de definir o HP atual.
-                updateEquipmentStats();
+                // antes de definir o HP atual. (A função updateEquipmentStats não chama mais updateDisplay())
+                updateEquipmentStats(); 
                 heroCurrentHP = calculateMaxHP(); 
 
             } catch (e) {
@@ -1133,7 +1140,7 @@
             sidebar.style.display = 'block';
             mainContent.style.display = 'block'; // Exibe o conteúdo principal
             showPanel('training-panel');
-            updateDisplay();
+            // updateDisplay() já é chamado dentro de showPanel
             // Configuração do input de nome para o futuro
             heroNameInput.value = '';
         }
@@ -1356,7 +1363,7 @@
             }
             if(leveledUp) {
                 // Atualiza HP Máximo e cura o herói
-                updateEquipmentStats();
+                updateEquipmentStats(); // Essencial para recalcular o HP Máximo
                 heroCurrentHP = calculateMaxHP(); 
                 alert(`✨ Parabéns! ${heroName} atingiu o Nível ${powerLevel-1} -> ${powerLevel}!`);
             }
@@ -1378,7 +1385,7 @@
             } else if (type === 'hp' && gold >= hpUpgradeCost) {
                 gold -= hpUpgradeCost;
                 heroBaseHP += 10;
-                updateEquipmentStats(); // **CORREÇÃO: Chama para atualizar o HP Máximo**
+                updateEquipmentStats(); // **CHAMADA IMPORTANTE:** Recalcula o HP Máximo
                 heroCurrentHP = calculateMaxHP(); // Atualiza HP atual para refletir o máximo
                 hpUpgradeCost = Math.round(hpUpgradeCost * 1.5);
                 alert(`❤️ HP Base (Upgrade) aumentado para ${heroBaseHP}!`);
@@ -1491,7 +1498,7 @@
             if (key === 'firstQuest') {
                 currentExp += 500;
                 heroBaseHP += 10;
-                updateEquipmentStats(); // **CORREÇÃO: Chama para atualizar o HP Máximo**
+                updateEquipmentStats(); // **CHAMADA IMPORTANTE:** Recalcula o HP Máximo
                 heroCurrentHP = calculateMaxHP(); // Aumenta o HP atual também
                 message += " Recompensa: 500 EXP e +10 HP base!";
             } else if (key === 'tutorialComplete') {
@@ -1657,7 +1664,7 @@
         // IX. FUNÇÕES DE EQUIPAMENTO E INVENTÁRIO
         // ====================================================================
 
-        // 1. Renderiza os slots de equipamento
+        // 1. Renderiza os slots de equipamento (função pesada)
         function renderEquipment() {
             equipmentPanel.innerHTML = ''; // Limpa o painel
             for (const key in EQUIPMENT_SLOTS) {
@@ -1705,7 +1712,7 @@
             }
         }
         
-        // 2. Renderiza os itens no inventário
+        // 2. Renderiza os itens no inventário (função pesada)
         function renderInventory() {
             inventoryPanel.innerHTML = ''; // Limpa o painel
 
@@ -1773,7 +1780,7 @@
             renderInventory(); 
         }
         
-        // 4. Recalcula os bônus de equipamento e atualiza a tela de Equipamento/Stats
+        // 4. Recalcula os bônus de equipamento e atualiza a tela de Equipamento/Stats (função leve)
         function updateEquipmentStats() {
             let bonusHP = 0;
             let bonusATK = 0;
@@ -1799,7 +1806,7 @@
             // Garante que o HP atual não exceda o HP máximo
             heroCurrentHP = Math.min(heroCurrentHP, totalMaxHP);
             
-            updateDisplay();
+            // *** OTIMIZAÇÃO DE PERFORMANCE: Removido o updateDisplay() daqui para evitar chamadas redundantes. ***
         }
 
         // 5. Equipa um item
@@ -1820,7 +1827,8 @@
             // Atualiza todos os painéis
             renderEquipment();
             renderInventory();
-            updateEquipmentStats(); // **CORREÇÃO: Recalcula stats para atualizar HP máximo/ATK**
+            updateEquipmentStats(); // **CHAMADA IMPORTANTE:** Recalcula stats
+            updateDisplay(); // Chama update Display para atualizar HP no header
             if (showAlert) inspectItem(item); // Reinspeciona para mostrar "DESEQUIPAR"
             saveGame();
             if (showAlert) alert(`${item.name} equipado no slot de ${EQUIPMENT_SLOTS[slotKey].name}.`);
@@ -1841,7 +1849,8 @@
             // Atualiza todos os painéis
             renderEquipment();
             renderInventory();
-            updateEquipmentStats(); // **CORREÇÃO: Recalcula stats para atualizar HP máximo/ATK**
+            updateEquipmentStats(); // **CHAMADA IMPORTANTE:** Recalcula stats
+            updateDisplay(); // Chama update Display para atualizar HP no header
             // Reinspeciona para atualizar o botão para "EQUIPAR"
             if (inspectedItem) {
                 inspectItem(inspectedItem); 
