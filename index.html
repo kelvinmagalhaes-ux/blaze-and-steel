@@ -482,13 +482,10 @@
     <div id="app-wrapper">
 
         <div id="start-menu">
-            <img src="assets/blaze-and-steel.png" alt="Blaze and Steel Logo" class="game-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/500x150?text=BLAZE+AND+STEEL';"> 
-            
-            <div class="menu-button-stack">
-                <button onclick="showCharacterCreation()">NOVO JOGO</button> 
-                <button onclick="loadGame(true, true)">CARREGAR JOGO</button>
-                <button onclick="alert('Sair: Por enquanto, feche a aba.')">SAIR</button>
-            </div>
+    <img src="assets/blaze-and-steel.png" alt="Blaze and Steel Logo"> 
+    <button onclick="startGame()">NOVO JOGO</button>
+    <button id="btn-load-game" onclick="loadGame(true, true)">CARREGAR JOGO</button>
+</div>
             
             <div class="volume-control-container">
                 <label for="volume-slider-start">🎶 Volume: <span id="volume-label-start">100</span></label>
