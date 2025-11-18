@@ -13,7 +13,6 @@
             --color-accent: #f39c12; /* Ouro */
             --color-combat: #c0392b; /* Combate/Aventura */
             --color-evolve: #8e44ad; /* Evoluir/Treinamento */
-            --color-energy: #3498db; /* Energia */
             --color-soul: #9b59b6; /* Alma/Reencarnação */
             --color-hp: #2ecc71; /* HP/Vida */
         }
@@ -82,7 +81,7 @@
         #btn-adventure::before { content: '🗺️'; color: var(--color-combat); } 
         #btn-upgrades::before { content: '⏫'; color: var(--color-accent); } 
         #btn-equipment::before { content: '⚔️'; color: var(--color-hp); } 
-        #btn-inventory::before { content: '📦'; color: var(--color-energy); } 
+        #btn-inventory::before { content: '📦'; color: #f1c40f; } /* Cor amarela para inventário */
         #btn-status::before { content: '👤'; color: var(--color-soul); } 
         #btn-expedition::before { content: '🧭'; color: #f1c40f; } 
 
@@ -305,7 +304,7 @@
         }
         
         #class-selection-container button:hover {
-            border-color: var(--color-energy);
+            border-color: var(--color-accent);
         }
 
         /* Estilos para o Inventário e Equipamento */
@@ -346,7 +345,7 @@
         .slot-label {
             width: 100px;
             font-weight: bold;
-            color: var(--color-energy);
+            color: var(--color-accent);
         }
 
         .equipped-item-display {
@@ -503,7 +502,6 @@
                     <ul>
                         <li>❤️ HP Base: <span id="class-base-hp"></span></li>
                         <li>⚔️ ATK Base: <span id="class-base-atk"></span></li>
-                        <li>⚡ Energia Inicial: <span id="class-initial-energy"></span></li>
                         <li style="font-weight: bold;">⚔️ Equipamento Inicial: <span id="class-initial-equipment"></span></li>
                     </ul>
                     <p style="font-style: italic;"></p>
@@ -548,7 +546,6 @@
             <div id="header">
                 <h2></h2>
                 <div class="resource-display">
-                    <div class="resource-item" style="color: var(--color-energy);">⚡ Energia: <span id="energy-count">0</span></div>
                     <div class="resource-item" style="color: var(--color-accent);">💰 Ouro: <span id="gold-count">0</span></div>
                     <div class="resource-item" style="color: var(--color-soul);">💀 Alma: <span id="soul-count">0</span></div>
                 </div>
@@ -578,17 +575,12 @@
                                 Provar o Valor (Recompensa: 500 EXP | +10 HP Bônus!)
                             </button>
                             <button id="unique-tutorial-complete" class="mission-button mission-unique" onclick="startUniqueMission('tutorialComplete')">
-                                Finalizar Tutorial Básico (Recompensa: 100 💰 | 100 ⚡)
-                            </button>
+                                Finalizar Tutorial Básico (Recompensa: 100 💰 | 100 ⚡) </button>
                         </div>
                     </div>
 
                     <div id="resource-missions-panel" class="content-panel" style="text-align: center;">
                         <h3>Obtenção de Recursos (Cooldowns)</h3>
-                        
-                        <button id="provisions-button" onclick="startMission('provisions')" style="background-color: var(--color-energy); color: black; padding: 10px; margin: 5px;">
-                            Coletar Provisões (30s | Ganho: 50 ⚡)
-                        </button>
                         
                         <button id="work-gold-button" onclick="startMission('workGold')" style="background-color: var(--color-accent); color: black; padding: 10px; margin: 5px;">
                             Trabalhar por Ouro (60s | Ganho: 20 💰)
@@ -598,14 +590,12 @@
                     
                     <div id="hero-training-panel" class="content-panel" style="text-align: center;">
                         <h3>Treinamento & Progresso</h3>
-                        <p>Gaste Energia para aumentar sua EXP e preparo.</p>
-
                         <button onclick="trainForStats('attack')" style="background-color: var(--color-combat); color: white; padding: 10px; margin: 5px;">
-                            Estudar Táticas (Custo: 25 ⚡ | Ganho: 10 EXP)
+                            Estudar Táticas (Ganho: 10 EXP)
                         </button>
                         
                         <button onclick="trainForStats('defense')" style="background-color: var(--color-hp); color: white; padding: 10px; margin: 5px;">
-                            Preparar Defesas (Custo: 25 ⚡ | Ganho: 10 EXP)
+                            Preparar Defesas (Ganho: 10 EXP)
                         </button>
 
                         <div style="margin-top: 20px;">
@@ -634,7 +624,7 @@
                             <p style="font-size: 0.9em;">Recompensa: <span id="monster-reward-exp">0</span> EXP, <span id="monster-reward-gold">0</span> 💰</p>
                             
                             <button id="start-battle-button" onclick="startBattle()" style="background-color: var(--color-combat); color: white; padding: 10px 20px; margin-top: 15px;">
-                                Iniciar Batalha! (Custo: 5 ⚡)
+                                Iniciar Batalha!
                             </button>
                         </div>
 
@@ -659,8 +649,8 @@
                     <div class="content-panel">
                         <h3>Skills Ativas</h3>
                         <p>Use a seu favor em combate! (Funcionalidade futura)</p>
-                        <button disabled style="background-color: #3498db;">Ataque Forte (5 ⚡)</button>
-                        <button disabled style="background-color: #2ecc71;">Cura Rápida (10 ⚡)</button>
+                        <button disabled style="background-color: #3498db;">Ataque Forte</button>
+                        <button disabled style="background-color: #2ecc71;">Cura Rápida</button>
                     </div>
                     
                 </div>
@@ -707,8 +697,7 @@
                             <div id="hero-stats-equipment">
                                 <p>❤️ HP Máximo: <span id="eq-max-hp">0</span> (Base: <span id="eq-base-hp">0</span> + Bônus: <span id="eq-bonus-hp">0</span>)</p>
                                 <p>⚔️ ATK Total: <span id="eq-total-atk">0</span> (Base: <span id="eq-base-atk">0</span> + Bônus: <span id="eq-bonus-atk">0</span>)</p>
-                                <p>⚡ Energia Máxima: <span id="eq-max-energy">0</span> (Base: <span id="eq-base-energy">0</span> + Bônus: <span id="eq-bonus-energy">0</span>)</p>
-                            </div>
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -743,8 +732,7 @@
                         <p>EXP: <span id="status-exp"></span></p>
                         <p style="font-weight: bold;">❤️ HP Máximo: <span id="status-max-hp"></span></p>
                         <p style="font-weight: bold;">⚔️ ATK Total: <span id="status-total-atk"></span></p>
-                        <p>⚡ Energia Máxima: <span id="status-max-energy"></span></p>
-                    </div>
+                        </div>
                     
                     <div class="content-panel">
                         <h3>Progresso e Objetivos</h3>
@@ -757,7 +745,7 @@
                     <h2>🧭 Expedição (Funcionalidade Futura)</h2>
                     <div class="content-panel">
                         <p>Em Expedição, você envia seu herói para uma longa jornada (horas ou dias) para buscar recursos raros e novos desafios.</p>
-                        <button disabled style="background-color: var(--color-soul); color: white; padding: 15px;">Iniciar Expedição de 4 Horas (Custo: 100 ⚡)</button>
+                        <button disabled style="background-color: var(--color-soul); color: white; padding: 15px;">Iniciar Expedição de 4 Horas</button>
                     </div>
                 </div>
                 
@@ -773,7 +761,6 @@
         let expToNextLevel = 50; // EXP Necessária para o Próximo Nível
 
         // Recursos
-        let energy = 0; // Recurso principal (para treinamento/batalha)
         let gold = 0; // Moeda principal
         let soul = 0; // Recurso de Reencarnação (funcionalidade futura)
 
@@ -781,12 +768,11 @@
         let heroBaseHP = 10; // HP base do herói
         let heroBaseATK = 1; // ATK base do herói
         let heroCurrentHP = heroBaseHP; // HP atual do herói (deve ser heroBaseHP ao iniciar/curar)
-        let heroMaxHP = heroBaseHP; // Vida Máxima do Herói (Corrigido no último turno)
+        let heroMaxHP = heroBaseHP; // Vida Máxima do Herói
         
         // Upgrades
         let atkUpgradeCost = 50; // Custo inicial do upgrade de ATK
         let hpUpgradeCost = 50; // Custo inicial do upgrade de HP
-        let energyPerClick = 1; // Energia por clique (funcionalidade não implementada, mas boa prática)
 
         // Estado de Combate
         let currentMonster = null; // Monstro atual
@@ -795,7 +781,6 @@
         // Cooldowns
         const DAILY_COOLDOWN_MS = 24 * 60 * 60 * 1000; // 24 horas
         let missionCooldowns = {
-            provisions: 0, // Timestamp do próximo uso
             workGold: 0,
         };
         
@@ -825,14 +810,13 @@
         let currentVolume = 1.0; // 0.0 a 1.0
         let hasInteracted = false; // Para controlar o bloqueio de autoplay
 
-        // Estrutura de Classes do Personagem (ADICIONADO ASSASSINO)
+        // Estrutura de Classes do Personagem (ENERGIA REMOVIDA DOS ARQUÉTIPOS)
         const CLASSES = {
             warrior: {
                 name: "Guerreiro",
                 description: "Especialista em combate corpo-a-corpo, focado em vida e dano balanceado.",
                 initialHP: 15,
                 initialATK: 2,
-                initialEnergy: 50,
                 imagePath: "assets/guerreiro.png", // Imagem placeholder
                 startingItems: [
                     { id: 1, name: "Espada Curta", type: "weapon", atk: 2, rarity: "Comum", description: "Uma lâmina básica de treinamento." },
@@ -841,57 +825,53 @@
             },
             mage: {
                 name: "Mago",
-                description: "Frágil, mas com alto potencial de dano mágico e grande reserva de energia.",
+                description: "Frágil, mas com alto potencial de dano mágico e grande reserva de Mana (funcionalidade futura).",
                 initialHP: 8,
                 initialATK: 1,
-                initialEnergy: 150,
                 imagePath: "assets/mago.png", // Imagem placeholder
                 startingItems: [
-                    { id: 3, name: "Cajado de Madeira", type: "weapon", atk: 1, energyBonus: 50, rarity: "Comum", description: "Um cajado simples para canalizar magia." },
+                    { id: 3, name: "Cajado de Madeira", type: "weapon", atk: 1, rarity: "Comum", description: "Um cajado simples para canalizar magia." },
                     { id: 4, name: "Manto de Pano", type: "armor", hpBonus: 5, rarity: "Comum", description: "Roupas leves que não atrapalham o movimento." }
                 ]
             },
             archer: {
                 name: "Arqueiro",
-                description: "Focado em velocidade e ataques à distância, com energia e vida moderadas.",
+                description: "Focado em velocidade e ataques à distância, com vida moderada.",
                 initialHP: 10,
                 initialATK: 3,
-                initialEnergy: 100,
                 imagePath: "assets/arqueiro.png", // Imagem placeholder
                 startingItems: [
                     { id: 5, name: "Arco Simples", type: "weapon", atk: 3, rarity: "Comum", description: "Um arco de caça padrão." },
                     { id: 6, name: "Veste Leve", type: "armor", hpBonus: 8, rarity: "Comum", description: "Vestimentas que favorecem a agilidade." }
                 ]
             },
-            // NOVA CLASSE: ASSASSINO
             assassin: {
                 name: "Assassino",
                 description: "Mestre da furtividade e do dano crítico. Pouca vida, alto ataque.",
                 initialHP: 8,
-                initialATK: 3, // ATK alto
-                initialEnergy: 120, // Boa reserva de energia
+                initialATK: 3, 
                 imagePath: "assets/assassino.png", // Imagem placeholder
                 startingItems: [
                     { id: 7, name: "Adaga de Aço", type: "weapon", atk: 4, rarity: "Incomum", description: "Uma lâmina afiada, ideal para golpes rápidos." },
                     { id: 8, name: "Veste de Sombra", type: "armor", hpBonus: 5, rarity: "Comum", description: "Roupas escuras que favorecem a discrição." }
                 ]
             }
-            // FIM NOVA CLASSE
         };
 
         // Objeto central para a seleção de monstros por Nível
         const MONSTERS_BY_LEVEL = {
             1: [
-                { name: "Slime Iniciante", baseHP: 20, atk: 2, expReward: 30, goldReward: 5, energyCost: 5 },
-                { name: "Mosquito Mutante", baseHP: 15, atk: 3, expReward: 35, goldReward: 6, energyCost: 5 }
+                // Reduzindo o custo de energia para 0, agora é um recurso de tempo/cooldown
+                { name: "Slime Iniciante", baseHP: 20, atk: 2, expReward: 30, goldReward: 5, cost: 0 }, 
+                { name: "Mosquito Mutante", baseHP: 15, atk: 3, expReward: 35, goldReward: 6, cost: 0 }
             ],
             2: [
-                { name: "Lobo Faminto", baseHP: 45, atk: 8, expReward: 70, goldReward: 15, energyCost: 7 },
-                { name: "Cogumelo Venenoso", baseHP: 60, atk: 5, expReward: 65, goldReward: 12, energyCost: 7 }
+                { name: "Lobo Faminto", baseHP: 45, atk: 8, expReward: 70, goldReward: 15, cost: 0 },
+                { name: "Cogumelo Venenoso", baseHP: 60, atk: 5, expReward: 65, goldReward: 12, cost: 0 }
             ],
             3: [
-                { name: "Bandido de Estrada", baseHP: 80, atk: 12, expReward: 120, goldReward: 25, energyCost: 10 },
-                { name: "Golem de Pedra Pequeno", baseHP: 150, atk: 5, expReward: 110, goldReward: 20, energyCost: 10 }
+                { name: "Bandido de Estrada", baseHP: 80, atk: 12, expReward: 120, goldReward: 25, cost: 0 },
+                { name: "Golem de Pedra Pequeno", baseHP: 150, atk: 5, expReward: 110, goldReward: 20, cost: 0 }
             ]
         };
 
@@ -903,7 +883,6 @@
         
         // Display de Recursos e Nível
         const powerLevelDisplay = document.getElementById('power-level-display');
-        const energyCount = document.getElementById('energy-count');
         const goldCount = document.getElementById('gold-count');
         const soulCount = document.getElementById('soul-count');
         const expCount = document.getElementById('exp-count');
@@ -963,7 +942,6 @@
             // Recursos
             powerLevelDisplay.textContent = powerLevel;
             document.getElementById('power-level').textContent = powerLevel;
-            energyCount.textContent = energy;
             goldCount.textContent = gold;
             soulCount.textContent = soul;
             expCount.textContent = currentExp;
@@ -1032,12 +1010,12 @@
             const now = Date.now();
 
             // Missões Recorrentes (Cooldowns)
-            ['provisions', 'workGold'].forEach(type => {
+            ['workGold'].forEach(type => {
                 const button = document.getElementById(`${type}-button`);
                 let cooldown = missionCooldowns[type];
-                let duration = type === 'provisions' ? 30 : 60; 
-                let rewards = type === 'provisions' ? { energy: 50 } : { gold: 20 };
-                let buttonText = type === 'provisions' ? `Coletar Provisões (${duration}s | Ganho: ${rewards.energy} ⚡)` : `Trabalhar por Ouro (${duration}s | Ganho: ${rewards.gold} 💰)`;
+                let duration = type === 'workGold' ? 60 : 0; 
+                let rewards = { gold: 20 };
+                let buttonText = `Trabalhar por Ouro (${duration}s | Ganho: ${rewards.gold} 💰)`;
                 
                 if (cooldown > now) {
                     const remainingSeconds = Math.ceil((cooldown - now) / 1000);
@@ -1117,7 +1095,7 @@
             // Estatísticas obtidas de updateEquipmentStats
             document.getElementById('status-max-hp').textContent = heroMaxHP;
             document.getElementById('status-total-atk').textContent = heroTotalATKDisplay.textContent;
-            document.getElementById('status-max-energy').textContent = document.getElementById('eq-max-energy').textContent;
+            // REMOVIDO: status-max-energy
 
             // Funcionalidades futuras (para evitar erros)
             document.getElementById('status-battles-won').textContent = '0'; 
@@ -1186,7 +1164,7 @@
             document.getElementById('selected-class-name').textContent = cls.name;
             document.getElementById('class-base-hp').textContent = cls.initialHP;
             document.getElementById('class-base-atk').textContent = cls.initialATK;
-            document.getElementById('class-initial-energy').textContent = cls.initialEnergy;
+            // REMOVIDO: class-initial-energy
             
             const startingItemsText = cls.startingItems.map(item => item.name).join(' e ');
             document.getElementById('class-initial-equipment').textContent = startingItemsText;
@@ -1215,7 +1193,6 @@
             heroBaseATK = cls.initialATK;
             heroCurrentHP = heroBaseHP; // HP Atual = Base
             heroMaxHP = heroBaseHP; // Inicializa MAX HP corretamente na criação
-            energy = cls.initialEnergy;
             gold = 0;
             soul = 0;
             powerLevel = 1;
@@ -1333,12 +1310,11 @@
                 level: powerLevel,
                 exp: currentExp,
                 expRequired: expToNextLevel,
-                energy: energy,
+                // REMOVIDO: energy
                 gold: gold,
                 soul: soul,
 
                 // Upgrades/Base Stats
-                energyPerClick: energyPerClick,
                 heroHP: heroBaseHP,
                 heroATK: heroBaseATK,
                 atkCost: atkUpgradeCost,
@@ -1346,7 +1322,6 @@
                 
                 // Status de Combate
                 heroCurrentHP: heroCurrentHP,
-                // heroMaxHP não precisa ser salvo, pois é recalculado em updateEquipmentStats
 
                 // Missões
                 dailyStatus: dailyMissionStatus,
@@ -1398,12 +1373,11 @@
                     powerLevel = gameData.level || 1;
                     currentExp = gameData.exp || 0;
                     expToNextLevel = gameData.expRequired || 50;
-                    energy = gameData.energy || 0;
+                    // REMOVIDO: energy = gameData.energy || 0;
                     gold = gameData.gold || 0;
                     soul = gameData.soul || 0;
 
                     // Carrega Upgrades
-                    energyPerClick = gameData.energyPerClick || 1;
                     heroBaseHP = gameData.heroHP || 10;
                     heroBaseATK = gameData.heroATK || 1;
                     atkUpgradeCost = gameData.atkCost || 50;
@@ -1411,14 +1385,16 @@
                     
                     // Carrega Status de Combate
                     heroCurrentHP = gameData.heroCurrentHP || heroBaseHP;
-                    // heroMaxHP será recalculado em updateEquipmentStats/updateDisplay
 
                     // Carrega Status de Missões
                     dailyMissionStatus = gameData.dailyStatus || dailyMissionStatus;
                     uniqueMissionStatus = gameData.uniqueStatus || uniqueMissionStatus;
 
-                    // Carrega Cooldowns
-                    missionCooldowns = gameData.missionCooldowns || { provisions: 0, workGold: 0 };
+                    // Carrega Cooldowns (Atualizado)
+                    missionCooldowns = gameData.missionCooldowns || { workGold: 0 };
+                    // Se houver o cooldown de provisions, ele é ignorado agora, mas se for necessário o reset, pode ser feito aqui
+                    // delete missionCooldowns.provisions; 
+
 
                     // NOVO: Carrega Itens e Equipamento
                     inventory = gameData.inventory || [];
@@ -1514,17 +1490,12 @@
             saveGame();
         }
 
-        // Treina por stats (gasta energia para ganhar EXP)
+        // Treina por stats (Ganha EXP sem custo de Energia)
         function trainForStats(type) {
-            const energyCost = 25;
             const expGain = 10;
             
-            if (energy < energyCost) {
-                alert("Energia insuficiente! Você precisa de 25 ⚡.");
-                return;
-            }
+            // REMOVIDO: Teste de energia e custo
 
-            energy -= energyCost;
             currentExp += expGain;
             
             let message = `${heroName} treinou e ganhou ${expGain} EXP.`;
@@ -1568,18 +1539,13 @@
             let button = null;
             let buttonText = '';
 
-            if (missionType === 'provisions') {
-                duration = 30;
-                rewards = { energy: 50 };
-                button = document.getElementById('provisions-button');
-                buttonText = `Coletar Provisões (30s | Ganho: 50 ⚡)`;
-            } else if (missionType === 'workGold') {
+            if (missionType === 'workGold') {
                 duration = 60;
                 rewards = { gold: 20 };
                 button = document.getElementById('work-gold-button');
-                buttonText = `Trabalhar por Ouro (60s | Ganho: 20 💰)`;
+                buttonText = `Trabalhar por Ouro (${duration}s | Ganho: ${rewards.gold} 💰)`;
             } else {
-                return;
+                return; // Ignora missões removidas (como provisions)
             }
 
             // Inicia o cooldown
@@ -1597,7 +1563,6 @@
                 if (remaining <= 0) {
                     clearInterval(countdown);
                     // Aplica recompensas
-                    energy += rewards.energy || 0;
                     gold += rewards.gold || 0;
                     
                     alert(`✅ Missão "${buttonText.split('(')[0].trim()}" concluída! Recompensas recebidas.`);
@@ -1661,8 +1626,8 @@
                 message += " Recompensa: 500 EXP e +10 HP base!";
             } else if (key === 'tutorialComplete') {
                 gold += 100;
-                energy += 100;
-                message += " Recompensa: 100 💰 e 100 ⚡!";
+                // REMOVIDO: energy += 100;
+                message += " Recompensa: 100 💰!";
             }
             
             alert(message);
@@ -1689,7 +1654,7 @@
                 currentMonster = {
                     ...baseMonster,
                     currentHP: baseMonster.baseHP,
-                    energyCost: baseMonster.energyCost || 5 // Padrão 5
+                    cost: baseMonster.cost || 0 // Custo removido/zerado
                 };
             } else {
                 currentMonster = null;
@@ -1712,20 +1677,14 @@
                 return;
             }
             
-            const energyCost = currentMonster.energyCost;
+            // Custo de energia removido. A batalha agora é instantânea/gratuita no recurso.
             
             if (isFighting) {
                 alert("A batalha já está em andamento!");
                 return;
             }
             
-            if (energy < energyCost) {
-                alert(`Energia insuficiente! Você precisa de ${energyCost} ⚡ para entrar em combate.`);
-                return;
-            }
-
             // 1. Inicia Batalha
-            energy -= energyCost;
             isFighting = true;
             startBattleButton.textContent = 'Em Combate...';
             startBattleButton.disabled = true;
@@ -1742,7 +1701,7 @@
 
             // Limpa Log
             combatLog.innerHTML = `<p style="font-weight: bold;">[Batalha Iniciada contra ${currentMonster.name}]</p>`;
-            logToCombat(`<p style="color: var(--color-energy);">Herói consome ${energyCost} ⚡ e se prepara para lutar!</p>`);
+            logToCombat(`<p style="color: var(--color-combat);">Herói se prepara para lutar!</p>`);
 
             // 2. Loop de Turnos (Simulação)
             let turn = 1;
@@ -1830,11 +1789,11 @@
             document.getElementById('monster-reward-exp').textContent = currentMonster.expReward;
             document.getElementById('monster-reward-gold').textContent = currentMonster.goldReward;
             
-            // Verifica o custo de energia no display do botão
-            startBattleButton.textContent = `Iniciar Batalha! (Custo: ${currentMonster.energyCost} ⚡)`;
+            // Verifica o custo de energia no display do botão (removido o custo)
+            startBattleButton.textContent = `Iniciar Batalha!`;
 
             // Garante que o botão de batalha esteja no estado correto
-            startBattleButton.disabled = energy < currentMonster.energyCost || isFighting;
+            startBattleButton.disabled = isFighting; // Apenas se estiver lutando
         }
 
 
@@ -1866,7 +1825,6 @@
                     const bonuses = [];
                     if (item.atk) bonuses.push(`+${item.atk} ATK`);
                     if (item.hpBonus) bonuses.push(`+${item.hpBonus} HP`);
-                    if (item.energyBonus) bonuses.push(`+${item.energyBonus} EN`);
                     statText = bonuses.join(' | ');
 
                     itemDisplay.innerHTML = `<span style="font-weight: bold;">${item.name}</span> <span style="font-size: 0.8em; color: var(--color-hp);">(${statText})</span>`;
@@ -1894,27 +1852,22 @@
         function updateEquipmentStats() {
             let totalMaxHP = heroBaseHP; // Começa com o base
             let totalMaxATK = heroBaseATK;
-            // Garante que o totalMaxEnergy comece com o valor base da classe (pode mudar se houver rebalanceamento)
-            let initialClassEnergy = CLASSES[selectedClass] ? CLASSES[selectedClass].initialEnergy : 50; 
-            let totalMaxEnergy = initialClassEnergy; 
             
             let bonusHP = 0;
             let bonusATK = 0;
-            let bonusEnergy = 0;
 
 
             for (const key in EQUIPMENT_SLOTS) {
                 const item = EQUIPMENT_SLOTS[key].currentItem;
                 if (item) {
                     // Adiciona bônus
-                    totalMaxHP += item.hpBonus || 0;
-                    totalMaxATK += item.atk || 0;
-                    bonusEnergy += item.energyBonus || 0; // O bônus de energia é separado
+                    bonusHP += item.hpBonus || 0;
+                    bonusATK += item.atk || 0;
                 }
             }
             
-            // O total de energia é o base da classe + bônus dos itens
-            totalMaxEnergy += bonusEnergy;
+            totalMaxHP += bonusHP;
+            totalMaxATK += bonusATK;
 
             // 3. Atualiza as variáveis globais
             heroMaxHP = totalMaxHP; 
@@ -1930,9 +1883,7 @@
             document.getElementById('eq-base-atk').textContent = heroBaseATK;
             document.getElementById('eq-bonus-atk').textContent = bonusATK;
             
-            document.getElementById('eq-max-energy').textContent = totalMaxEnergy;
-            document.getElementById('eq-base-energy').textContent = initialClassEnergy;
-            document.getElementById('eq-bonus-energy').textContent = bonusEnergy;
+            // REMOVIDO: eq-max-energy e related displays
 
             // Atualiza o display de combate
             heroCurrentHPDisplay.textContent = heroCurrentHP;
@@ -2020,7 +1971,6 @@
             let statsHtml = '';
             if (item.atk) statsHtml += `<p>⚔️ Ataque: +${item.atk}</p>`;
             if (item.hpBonus) statsHtml += `<p>❤️ HP Máximo: +${item.hpBonus}</p>`;
-            if (item.energyBonus) statsHtml += `<p>⚡ Energia Máxima: +${item.energyBonus}</p>`;
 
             let buttonHtml = isEquipped 
                 ? `<button onclick="unequipItem(inspectedItem)" style="background-color: var(--color-combat); color: white; padding: 10px; border-radius: 5px; margin-top: 10px; width: 100%;">DESEQUIPAR</button>`
@@ -2040,7 +1990,7 @@
             document.querySelectorAll('.item-card').forEach(card => card.style.border = '2px solid var(--color-secondary)');
             const selected = document.querySelector(`.item-card[data-item-id="${item.id}"]`);
             if (selected) {
-                selected.style.border = '2px solid var(--color-energy)';
+                selected.style.border = '2px solid var(--color-accent)';
             }
         }
 
