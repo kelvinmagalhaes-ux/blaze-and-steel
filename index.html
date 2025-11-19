@@ -589,6 +589,7 @@
         </button>
 </div>
 </div> 
+
 <div id="app-wrapper" style="display: none;">
     
     <div id="sidebar">
@@ -608,7 +609,10 @@
             <button id="btn-status" onclick="showPanel('status-panel')">Status</button>
             <button id="btn-main-menu" onclick="returnToMainMenu()">Menu Inicial</button>  
         </nav>
-    </div> <div id="main-content">
+    </div>
+
+    <div id="main-content">
+        
         <div style="position: absolute; top: 10px; right: 10px; z-index: 10; text-align: right;">
             <button id="audio-control-button" onclick="toggleMute()" style="margin-bottom: 5px;">
                 🔊 Mute
@@ -630,17 +634,46 @@
         <div id="content-area">
             
             <div id="adventure-panel" style="display: block;"> 
-                <img src="assets/adventure.png" alt="Adventure Time Logo" id="adventure-title-logo" onerror="this.onerror=null; this.src='[https://via.placeholder.com/300x100?text=ADVENTURE](https://via.placeholder.com/300x100?text=ADVENTURE)';">
+                <img src="assets/adventure.png" alt="Adventure Time Logo" id="adventure-title-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x100?text=ADVENTURE';">
                 <h2>🗺️ Aventura</h2>
                 <p>Enfrente criaturas para ganhar Ouro, EXP e itens!</p>
-                
+
                 <div id="mission-area" class="content-panel">
+                    <h3>Progresso e Treinamento</h3>
+                    <p>Ganha experiência para subir de nível.</p>
+                    <button onclick="trainForStats('attack')" style="background-color: var(--color-evolve); color: white; padding: 10px; margin: 5px;"> Treinar Habilidades (Ganho: 10 EXP) </button>
+
+                    <div style="margin-top: 20px;">
+                        <p>🌟 Nível de Poder: <span id="power-level-display">1</span></p>
+                        <p>✨ EXP: <span id="exp-count">0</span> / <span id="exp-required">50</span></p>
+                        <button id="level-up-button" onclick="levelUp()" disabled style="background-color: var(--color-evolve); color: white;"> SUBIR DE NÍVEL (Falta: 50 EXP) </button>
+                    </div>
+                    
+                    <hr style="margin: 20px 0;">
+
+                    <h3>Missões de Exploração</h3>
+                    <p>Selecione seu nível de dificuldade:</p>
+                    
+                    <div style="margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 10px;">
+                        <button onclick="selectMonster(1)">Floresta (Nv 1)</button>
+                        <button onclick="selectMonster(5)">Pântano (Nv 5)</button>
+                        <button onclick="selectMonster(10)">Montanhas (Nv 10)</button>
+                    </div>
+
+                    <div id="selected-monster-details" style="min-height: 50px; margin-bottom: 15px;">
+                        <p id="monster-name-display">Selecione um local para ver o monstro...</p>
+                    </div>
+
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <button id="start-battle-button" onclick="startBattle()" disabled style="background-color: var(--color-combat); color: white; padding: 10px 20px; border: none; border-radius: 5px;">
                             INICIAR BATALHA!
                         </button>
                     </div>
-                </div> </div> </div> </div> </div> ```
+                </div> 
+            </div> 
+        </div> 
+
+    </div> </div> ```
 
                 <div id="attributes-panel" style="display: none;"> <h2>✨ Atributos</h2>
                     <p>Invista Ouro para melhorias permanentes nos atributos base.</p>
