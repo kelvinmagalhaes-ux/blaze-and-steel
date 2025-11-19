@@ -892,26 +892,26 @@
         // ====================================================================
 
         // Elementos de Estrutura
-        let appWrapper = document.getElementById('app-wrapper');
-        let startMenu = document.getElementById('start-menu');
-        let characterCreationPanel = document.getElementById('character-creation-panel');
-        let sidebar = document.getElementById('sidebar');
-        let mainContent = document.getElementById('main-content');
-        let contentArea = document.getElementById('content-area');
-        let headerTitle = document.getElementById('header').getElementsByTagName('h2')[0];
+        let appWrapper; 
+let startMenu;
+let characterCreationPanel;
+let sidebar;
+let mainContent;
+let contentArea;
+let headerTitle;
         
-     window.startGame = function(event) {
+    window.startGame = function(event) {
     if (event) {
         event.preventDefault(); 
     }
     
-    // 🚨 NOVO CÓDIGO AQUI: Verifica se a inicialização do DOM foi concluída (se 'startMenu' foi preenchido)
+    // 🚨 CHECAGEM CRÍTICA: Se a variável global startMenu ainda for nula/vazia, o HTML não carregou.
     if (!startMenu) {
-        console.warn("DOM ainda não carregado ou variáveis não inicializadas. Tente novamente.");
+        console.error("Erro de Inicialização: Recarregue a página.");
         return; 
     }
     
-    // Lógica principal
+    // Lógica principal: Esconde o menu e mostra a criação
     if (startMenu) {
         startMenu.style.display = 'none';
     }
@@ -923,6 +923,10 @@
     if (characterCreationPanel) {
         characterCreationPanel.style.display = 'flex'; 
     }
+
+    generateClassButtons(); 
+    checkCreationRequirements(); 
+}
 
     // Estas funções agora só rodam se o DOM estiver pronto
     generateClassButtons(); 
@@ -1794,19 +1798,17 @@ function finalizeCreation() {
         }
 
 
-        // X. INICIALIZAÇÃO
-        // ====================================================================
-
-        // 1. Garantimos que os painéis de jogo (sidebar e main-content) estão ocultos.
-        hideAllPanels(); 
-
-        // 2. Tentamos carregar os dados salvos.
-        loadGame();
+</div> <script>
+        // COLE O BLOCO INTEIRO DE ATRIBUIÇÕES E INICIALIZAÇÃO AQUI
         
-        // 3. Forçamos a exibição do Menu Inicial.
-        startMenu.style.display = 'flex'; 
+        appWrapper = document.getElementById('app-wrapper');
+        // ...
+        hideAllPanels(); 
+        loadGame();
+        startMenu.style.display = 'flex';
+        appWrapper.style.display = 'none';
         
     </script>
-
+    
 </body>
 </html>
