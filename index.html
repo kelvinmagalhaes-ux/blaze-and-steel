@@ -103,15 +103,19 @@
             width: 100%;
         }
 
-        /* Sidebar (Menu Lateral) */
-        #sidebar {
-            width: 200px;
-            background-color: var(--color-secondary);
-            padding: 20px 0;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-            display: none; 
-            flex-shrink: 0;
-        }
+        /* Sidebar (Menu Lateral) - CORRIGIDO */
+        #sidebar {
+            width: 200px;
+            background-color: var(--color-secondary);
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            
+            /* 🚨 CORREÇÃO: Remove display: none; e usa flex para alinhar o conteúdo */
+            display: flex; 
+            flex-direction: column;
+            
+            flex-shrink: 0;
+        }
 
         /* Informações do Herói e Foto */
         #hero-info {
@@ -545,52 +549,51 @@
         Seu navegador não suporta a tag de áudio.
     </audio>
 
+    
+
     <div id="app-wrapper">
 
-        <div id="start-menu">
+       <div id="start-menu">
     <img src="assets/blaze-and-steel.png" alt="Blaze and Steel Logo" style="max-width: 80%;">
     <button onclick="startGame()">NOVO JOGO</button>
     <button id="btn-load-game" onclick="loadGame(true, true)">CARREGAR JOGO</button>
-            <p class="credits">Criado por @psikelvinmagalhaes</p>
+    <p class="credits">Criado por @psikelvinmagalhaes</p>
 </div>
-            
-            <div class="volume-control-container">
-                <label for="volume-slider-start">🎶 Volume: <span id="volume-label-start">100</span></label>
-                <input type="range" id="volume-slider-start" min="0" max="100" value="100" oninput="setVolume(this.value)">
-            </div>
+
+<div id="character-creation-panel" style="display: none">
+    <div class="content-panel" style="text-align: center">
+        <h2>Crie Seu Herói!</h2>
+        <p>Escolha um nome e uma classe para começar sua aventura.</p>
+
+        <div style="margin-top: 20px;">
+            <label for="hero-name-input" style="font-weight: bold; display: block; margin-bottom: 5px;">Nome do Herói:</label>
+            <input type="text" id="hero-name-input" placeholder="Ex: Herói Blaze" maxlength="20" style="padding: 10px; font-size: 1.2em; width: 80%; max-width: 300px; border-radius: 5px; border: 1px solid var(--color-accent);">
         </div>
 
-        <div id="character-creation-panel" style="display: none;">
-            <div class="content-panel" style="text-align: center;">
-                <h2>Crie Seu Herói!</h2>
-                <p>Escolha um nome e uma classe para começar sua aventura.</p>
-               
-                <div style="margin: 20px 0;">
-                    <label for="hero-name-input" style="font-weight: bold; display: block; margin-bottom: 5px;">Nome do Herói:</label>
-                    <input type="text" id="hero-name-input" oninput="checkCreationRequirements()" placeholder="Ex: Herói Blaze" maxlength="20" style="padding: 10px; font-size: 1.2em; width: 80%; max-width: 300px; border-radius: 5px; border: 1px solid var(--color-accent); background-color: var(--color-primary); color: var(--color-text);">
-                </div>
-                
-                <h3>Selecione Sua Classe:</h3>
-                <div id="class-selection-container">
-                    </div>
-            
-                <div id="class-details" class="content-panel" style="margin-top: 20px; display: none; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto;">
-                    <h4>Detalhes da Classe Selecionada</h4>
-                    <p style="font-style: italic;"><span id="class-description"></span></p>
-                    <p><strong>Classe:</strong> <span id="selected-class-name"></span></p>
-                    <p><strong>Estatísticas Iniciais:</strong></p>
-                    <ul>
-                        <li>❤️ HP Base: <span id="class-base-hp"></span></li>
-                        <li>⚔️ ATK Base: <span id="class-base-atk"></span></li>
-                        <li style="font-weight: bold;">⚔️ Equipamento Inicial: <span id="class-initial-equipment"></span></li>
-                    </ul>
-                    
-                    <button id="confirm-creation-button" disabled onclick="finalizeCreation()" style="background-color: var(--color-evolve); color: white; padding: 12px 25px; border: none; border-radius: 5px; width: 100%;">
-                        INICIAR JOGO!
-                    </button>
-                </div>
+        <h3 style="margin-top: 20px;">Selecione Sua Classe:</h3>
+        <div id="class-selection-container">
             </div>
+
+        <div id="class-details" class="content-panel" style="margin-top: 20px; display: none; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto;">
+            <p style="font-style: italic">Classe: <span id="selected-class-name"></span></p>
+            <p><strong>Descrição:</strong> <span id="class-description"></span></p>
+            
+            <p><strong>Estatísticas Iniciais:</strong></p>
+            <ul>
+                <li>HP Base: <span id="class-base-hp"></span></li>
+                <li>ATK Base: <span id="class-base-atk"></span></li>
+                <li style="font-weight: bold;">Equipamento Inicial: <span id="class-initial-equipment"></span></li>
+            </ul>
         </div>
+
+        <button id="confirm-creation-button" onclick="finalizeCreation()" style="background-color: var(--color-evolve); color: white; padding: 12px 25px; border: none; border-radius: 5px; width: 100%;">
+            INICIAR JOGO!
+        </button>
+    </div>
+</div>
+
+<div id="app-wrapper" style="display: none;">
+    </div>
 
         <div id="sidebar">
             <div id="hero-info">
