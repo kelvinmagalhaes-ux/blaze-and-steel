@@ -18,13 +18,12 @@
             /* ... outras propriedades de layout/tamanho ... */
         }
 
-        #start-menu img {
-            max-width: 80% !important; 
-            height: auto;
-            margin-bottom: 40px; 
-            
-            /* TENTATIVA FINAL: Força a logo a não ocupar 100% da tela */
-            width: auto !important; 
+       #start-menu img {
+            /* Força a imagem a ter uma largura fixa e garante que ela não estique */
+            width: 50vw !important; /* NOVO: Define a largura em 50% da largura da tela (Viewport Width) */
+            height: auto !important; /* Garante a proporção */
+            max-width: 600px !important; /* Garante que não fique gigante em telas 4K */
+            margin-bottom: 40px;
         }
         
         /* Variáveis de Cores (CSS Custom Properties) */
