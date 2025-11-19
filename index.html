@@ -892,34 +892,47 @@
         // ====================================================================
 
         // Elementos de Estrutura
-        const appWrapper = document.getElementById('app-wrapper');
-        const startMenu = document.getElementById('start-menu');
-        const characterCreationPanel = document.getElementById('character-creation-panel');
-        const sidebar = document.getElementById('sidebar');
-        const mainContent = document.getElementById('main-content');
-        const contentArea = document.getElementById('content-area');
-        const headerTitle = document.getElementById('header').getElementsByTagName('h2')[0];
+        let appWrapper = document.getElementById('app-wrapper');
+        let startMenu = document.getElementById('start-menu');
+        let characterCreationPanel = document.getElementById('character-creation-panel');
+        let sidebar = document.getElementById('sidebar');
+        let mainContent = document.getElementById('main-content');
+        let contentArea = document.getElementById('content-area');
+        let headerTitle = document.getElementById('header').getElementsByTagName('h2')[0];
         
-       window.startGame = function(event) {
-    // 1. Evita o recarregamento (É crucial manter este)
+     window.startGame = function(event) {
     if (event) {
         event.preventDefault(); 
     }
     
-    // 2. ESCONDE O MENU INICIAL. (Usando a constante global)
+    // 🚨 NOVO CÓDIGO AQUI: Verifica se a inicialização do DOM foi concluída (se 'startMenu' foi preenchido)
+    if (!startMenu) {
+        console.warn("DOM ainda não carregado ou variáveis não inicializadas. Tente novamente.");
+        return; 
+    }
+    
+    // Lógica principal
     if (startMenu) {
         startMenu.style.display = 'none';
     }
     
-    // 3. ESCONDE O WRAPPER PRINCIPAL. (Usando a constante global)
     if (appWrapper) {
         appWrapper.style.display = 'none'; 
     }
 
-    // 4. MOSTRA O PAINEL DE CRIAÇÃO. (Usando a constante global)
     if (characterCreationPanel) {
         characterCreationPanel.style.display = 'flex'; 
     }
+
+    // Estas funções agora só rodam se o DOM estiver pronto
+    generateClassButtons(); 
+    checkCreationRequirements(); 
+}
+
+    // 5. Funções de inicialização
+    generateClassButtons(); 
+    checkCreationRequirements(); 
+}
 
     // 5. Funções de inicialização
     generateClassButtons(); 
