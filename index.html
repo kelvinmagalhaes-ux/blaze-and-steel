@@ -602,13 +602,15 @@
         </div>
         
         <nav class="sidebar-menu">
-            <button id="btn-adventure" onclick="showPanel('adventure-panel')" class="active">Aventura</button>
-            <button id="btn-attributes" onclick="showPanel('attributes-panel')">Atributos</button>
-            <button id="btn-equipment" onclick="showPanel('equipment-panel')">Equipamento</button>
-            <button id="btn-inventory" onclick="showPanel('inventory-panel')">Inventário</button>
-            <button id="btn-status" onclick="showPanel('status-panel')">Status</button>
-            <button id="btn-main-menu" onclick="returnToMainMenu()">Menu Inicial</button>  
-        </nav>
+    <button id="btn-adventure" onclick="showPanel('adventure-map-panel')" class="active">🗺️ Aventura</button>
+    
+    <button id="btn-attributes" onclick="showPanel('attributes-panel')">✨ Atributos</button>
+    <button id="btn-equipment" onclick="showPanel('equipment-panel')">⚔️ Equipamento</button>
+    <button id="btn-inventory" onclick="showPanel('inventory-panel')">📦 Inventário</button>
+    <button id="btn-status" onclick="showPanel('status-panel')">👤 Status</button>
+    
+    <button id="btn-main-menu" onclick="returnToMainMenu()">↩️ Menu Inicial</button>
+</nav>
     </div>
 
     <div id="main-content">
@@ -1050,24 +1052,35 @@
 
         // Mostra o painel de conteúdo
         function showPanel(panelId) {
-            Object.values(panels).forEach(p => p.style.display = 'none');
-            
-            panels[panelId].style.display = 'block';
+    // 1. Esconde todos os painéis internos dentro de #content-area
+    // Seleciona todas as DIVs que são filhos diretos de #content-area
+    const panels = document.querySelectorAll('#content-area > div'); 
+    panels.forEach(panel => {
+        panel.style.display = 'none';
+    });
 
-            document.querySelectorAll('.sidebar-menu button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            // O ID do botão Atributos mudou para 'btn-attributes'
-            document.getElementById(`btn-${panelId.replace('-panel', '')}`).classList.add('active');
-            
-            if (panelId === 'equipment-panel') {
-                renderEquipment();
-            } else if (panelId === 'inventory-panel') {
-                renderInventory();
-            }
+    // 2. Mostra o painel solicitado
+    const targetPanel = document.getElementById(panelId);
+    if (targetPanel) {
+        targetPanel.style.display = 'block'; // ou 'flex', dependendo do layout
+    } else {
+        console.error(`Painel não encontrado: #${panelId}`);
+        return; 
+    }
 
-            updateDisplay();
-        }
+    // 3. Atualiza os botões ativos na Sidebar
+    const buttons = document.querySelectorAll('.sidebar-menu button');
+    buttons.forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Encontra e ativa o botão na sidebar que corresponde ao painel clicado
+    const buttonId = 'btn-' + panelId.replace('-panel', ''); 
+    const targetButton = document.getElementById(buttonId);
+    if (targetButton) {
+        targetButton.classList.add('active');
+    }
+}
 
         // Gera os botões de seleção de classe no painel
         function generateClassButtons() {
