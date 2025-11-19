@@ -1147,10 +1147,17 @@
                 console.error("Erro durante a inicialização de itens/atributos. O jogo será iniciado, mas pode haver problemas de status:", e);
             }
             
-            characterCreationPanel.style.display = 'none'; 
-            startGame(); 
-            saveGame(); 
-        }
+            characterCreationPanel.style.display = 'none';  // Esconde a criação
+            
+            // 🚨 NOVO: MOSTRA O PAINEL PRINCIPAL DO JOGO (SideBar + Aventura)
+            document.getElementById('app-wrapper').style.display = 'flex'; 
+            
+            // Opcional: Se você tiver uma função que carrega a visualização da aventura:
+            // showAdventurePanel(); 
+
+            updateDisplay(); // Atualiza HP, EXP, etc.
+            saveGame();  // Salva o novo herói
+        }
 
         // Exemplo de como a função deve estar:
 
