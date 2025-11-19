@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BLAZE AND STEEL beta</title>
     <style>
+
+        #start-menu {
+            /* Garante que o menu ocupe todo o espaço e centraliza o conteúdo */
+            display: flex; /* Crucial para o layout */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* ... outras propriedades de layout/tamanho ... */
+        }
+
+        #start-menu img {
+            /* **CORREÇÃO CRÍTICA:** Limita o tamanho da imagem */
+            max-width: 80%; /* Garante que a logo caiba em telas menores */
+            height: auto;
+            margin-bottom: 40px; /* Adiciona espaço entre a logo e os botões */
+        }
         /* Variáveis de Cores (CSS Custom Properties) */
         :root {
             --color-primary: #1e1e2d;
