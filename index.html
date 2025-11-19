@@ -1101,55 +1101,54 @@
         
         // Finaliza a criação do personagem
         function finalizeCreation() {
-            if (!selectedClass) {
-                alert("Por favor, selecione uma classe.");
-                return;
-            }
-            
-            heroName = heroNameInput.value.trim();
-            if (heroName.length < 2) {
-                alert("O nome deve ter pelo menos 2 caracteres.");
-                return;
-            }
+    if (!selectedClass) {
+        alert("Por favor, selecione uma classe.");
+        return;
+    }
+    
+    // Supondo que 'heroNameInput' está definido globalmente ou foi inicializado
+    heroName = heroNameInput.value.trim(); 
+    if (heroName.length < 2) {
+        alert("O nome deve ter pelo menos 2 caracteres.");
+        return;
+    }
 
-            try {
-                const cls = CLASSES[selectedClass];
-                heroBaseHP = cls.initialHP;
-                heroBaseATK = cls.initialATK;
-                
-                inventory = [];
-                for (const slotKey in EQUIPMENT_SLOTS) {
-                    EQUIPMENT_SLOTS[slotKey].currentItem = null;
-                }
-                
-                cls.startingItems.forEach(starterItem => {
-                    const newItem = { 
-                        ...starterItem, 
-                        id: nextItemId++, 
-                        rarity: starterItem.rarity || "Básico" 
-                    };
-                    inventory.push(newItem); 
-                    equipItem(newItem, false); 
-                });
-                
-                updateEquipmentStats(); 
-                heroCurrentHP = calculateMaxHP(); 
+    try {
+        const cls = CLASSES[selectedClass];
+        heroBaseHP = cls.initialHP;
+        heroBaseATK = cls.initialATK;
+        
+        inventory = [];
+        for (const slotKey in EQUIPMENT_SLOTS) {
+            EQUIPMENT_SLOTS[slotKey].currentItem = null;
+        }
+        
+        cls.startingItems.forEach(starterItem => {
+            const newItem = { 
+                ...starterItem, 
+                id: nextItemId++, 
+                rarity: starterItem.rarity || "Básico" 
+            };
+            inventory.push(newItem); 
+            equipItem(newItem, false); 
+        });
+        
+        updateEquipmentStats(); 
+        heroCurrentHP = calculateMaxHP(); 
 
-            } catch (e) {
-                console.error("Erro durante a inicialização de itens/atributos. O jogo será iniciado, mas pode haver problemas de status:", e);
-            }
-            
-            characterCreationPanel.style.display = 'none';  // Esconde a criação
-            
-            // 🚨 NOVO: MOSTRA O PAINEL PRINCIPAL DO JOGO (SideBar + Aventura)
-            document.getElementById('app-wrapper').style.display = 'flex'; 
-            
-            // Opcional: Se você tiver uma função que carrega a visualização da aventura:
-            // showAdventurePanel(); 
-
-            updateDisplay(); // Atualiza HP, EXP, etc.
-            saveGame();  // Salva o novo herói
-        }
+    } catch (e) {
+        console.error("Erro durante a inicialização de itens/atributos. O jogo será iniciado, mas pode haver problemas de status:", e);
+    }
+    
+    // 🚨 CORREÇÃO/GARANTIA: Esconde o painel de criação usando o ID HTML (mais seguro)
+    document.getElementById('character-creation-panel').style.display = 'none';
+    
+    // 🟢 CRUCIAL: MOSTRA O PAINEL PRINCIPAL DO JOGO
+    document.getElementById('app-wrapper').style.display = 'flex'; 
+    
+    updateDisplay(); // Atualiza HP, EXP, etc.
+    saveGame(); // Salva o novo herói
+}
 
         // Exemplo de como a função deve estar:
 
