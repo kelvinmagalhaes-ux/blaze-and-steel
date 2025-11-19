@@ -904,9 +904,19 @@ let headerTitle;
         
     window.startGame = function(event) {
     if (event) event.preventDefault();
+
+    // Garantir que elementos existem
+    if (!startMenu || !characterCreationPanel || !appWrapper) {
+        console.error("Erro: elementos principais não carregados.");
+        return;
+    }
+
+    // Oculta o menu inicial e mostra o painel de criação
     startMenu.style.display = 'none';
     characterCreationPanel.style.display = 'flex';
     appWrapper.style.display = 'none';
+
+    // Geração da lista de classes e validação
     generateClassButtons();
     checkCreationRequirements();
 };
