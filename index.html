@@ -1140,10 +1140,10 @@
         console.error("Erro durante a inicialização de itens/atributos. O jogo será iniciado, mas pode haver problemas de status:", e);
     }
     
-    // 🚨 CORREÇÃO/GARANTIA: Esconde o painel de criação usando o ID HTML (mais seguro)
-    document.getElementById('character-creation-panel').style.display = 'none';
+    // 🟢 CRUCIAL: 1. Esconde TUDO (incluindo o painel de criação, start-menu, etc.)
+    hideAllPanels(); 
     
-    // 🟢 CRUCIAL: MOSTRA O PAINEL PRINCIPAL DO JOGO
+    // 🟢 CRUCIAL: 2. MOSTRA APENAS O PAINEL PRINCIPAL DO JOGO (app-wrapper)
     document.getElementById('app-wrapper').style.display = 'flex'; 
     
     updateDisplay(); // Atualiza HP, EXP, etc.
