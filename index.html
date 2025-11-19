@@ -1218,17 +1218,29 @@ function finalizeCreation() {
 
         // Exemplo de como a função deve estar:
 
-function startGame() {
-    // 1. Esconde todos os painéis
-    hideAllPanels(); 
+function startGame(event) {
+    // 🚨 1. CORREÇÃO CRUCIAL: Impede que o navegador recarregue a página
+    if (event) {
+        event.preventDefault(); 
+    }
     
-    // 2. MOSTRA O PAINEL DE CRIAÇÃO DE CLASSE (ID CORRIGIDO)
-    document.getElementById('character-creation-panel').style.display = 'flex'; // Usando o ID que você encontrou
+    // 2. Esconde o Menu Inicial
+    // O Menu Inicial e o Painel de Criação são elementos de alto nível.
+    // Você precisa esconder o Menu Inicial diretamente.
+    const startMenu = document.getElementById('start-menu');
+    if (startMenu) {
+        startMenu.style.display = 'none';
+    }
     
-    // 3. NOVO: GERA OS BOTÕES DE CLASSE PARA QUE ELES APAREÇAM!
-    generateClassButtons(); // ESTA É A LINHA QUE FALTAVA
-    
-    // ... outras linhas como updateDisplay() ...
+    // 3. Mostra o Painel de Criação de Personagem
+    const creationPanel = document.getElementById('character-creation-panel');
+    if (creationPanel) {
+        creationPanel.style.display = 'flex'; // Usando 'flex' para exibir o painel
+    }
+
+    // 4. GERA OS BOTÕES DE CLASSE
+    generateClassButtons(); 
+    checkCreationRequirements(); 
 }
 
         // ====================================================================
