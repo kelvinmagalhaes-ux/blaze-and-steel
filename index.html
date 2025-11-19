@@ -900,28 +900,31 @@
         const contentArea = document.getElementById('content-area');
         const headerTitle = document.getElementById('header').getElementsByTagName('h2')[0];
         
-        function startGame(event) {
-    // 1. Evita o recarregamento
+       window.startGame = function(event) {
+    // 1. Evita o recarregamento (É crucial manter este)
     if (event) {
         event.preventDefault(); 
     }
     
-    // 2. ESCONDE O MENU INICIAL. (Usa a constante global)
-    // startMenu foi definida nas linhas 991-997
+    // 2. ESCONDE O MENU INICIAL. (Usando a constante global)
     if (startMenu) {
         startMenu.style.display = 'none';
     }
     
-    // 3. ESCONDE O WRAPPER PRINCIPAL. (Usa a constante global)
+    // 3. ESCONDE O WRAPPER PRINCIPAL. (Usando a constante global)
     if (appWrapper) {
         appWrapper.style.display = 'none'; 
     }
 
-    // 4. MOSTRA O PAINEL DE CRIAÇÃO. (Usa a constante global)
+    // 4. MOSTRA O PAINEL DE CRIAÇÃO. (Usando a constante global)
     if (characterCreationPanel) {
-        // Usa a constante com o nome completo: characterCreationPanel
         characterCreationPanel.style.display = 'flex'; 
     }
+
+    // 5. Funções de inicialização
+    generateClassButtons(); 
+    checkCreationRequirements(); 
+}
 
     // 5. Funções de inicialização
     generateClassButtons(); 
