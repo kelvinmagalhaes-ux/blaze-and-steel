@@ -1,3 +1,4 @@
+<!-- Código HTML completo corrigido será inserido aqui. Por favor envie a versão atual do arquivo completa (não apenas o PDF truncado), para que eu gere a versão final funcional. -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -5,6 +6,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BLAZE AND STEEL beta</title>
     <style>
+
+        #start-menu {
+            /* Garante que o menu ocupe todo o espaço e centraliza o conteúdo */
+            width: 100%;       /* ADICIONADO: Ocupa toda a largura */
+            height: 100vh;     /* ADICIONADO/CRUCIAL: Ocupa 100% da altura da tela */
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; /* Agora esta linha vai funcionar corretamente! */
+            align-items: center;
+          
+            padding: 20px; /* RECOMENDADO: Adiciona um respiro nas laterais */
+            /* ... outras propriedades de layout/tamanho ... */
+        }
+
+       #start-menu img {
+            /* Força a imagem a ter uma largura fixa e garante que ela não estique */
+            width: 50vw !important; /* NOVO: Define a largura em 50% da largura da tela (Viewport Width) */
+            height: auto !important; /* Garante a proporção */
+            max-width: 600px !important; /* Garante que não fique gigante em telas 4K */
+            margin-bottom: 40px;
+        }
+
+        #start-menu button {
+            /* Estilo básico do botão */
+            background-color: var(--color-combat); /* Cor de fundo (vermelho escuro) */
+            color: var(--color-text); /* Cor do texto */
+            border: none;
+            padding: 15px 30px; /* Preenchimento interno */
+            margin: 10px 0; /* Espaçamento entre os botões */
+            font-size: 1.2em; /* Tamanho da fonte */
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px; /* Cantos arredondados */
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Animação suave */
+            min-width: 250px; /* Largura mínima para os botões */
+            text-transform: uppercase; /* Texto em maiúsculas */
+            letter-spacing: 1px; /* Espaçamento entre letras */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Sombra para profundidade */
+        }
+
+        /* Estilo dos Créditos CORRIGIDO */
+        .credits {
+            color: rgba(255, 255, 255, 0.7); /* Cor branca semi-transparente */
+            font-family: 'Georgia', serif; 
+            font-size: 1em; /* Aumentado para melhor legibilidade */
+            position: absolute; 
+            bottom: 40px; /* AUMENTADO: Move os créditos para 40px da parte inferior */
+            width: 100%; 
+            text-align: center; 
+            letter-spacing: 0.5px; 
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8); /* Sombra mais escura */
+            padding-bottom: 5px; /* Adiciona um pequeno espaçamento inferior */
+        }
+
+        /* Efeito ao passar o mouse */
+        #start-menu button:hover {
+            background-color: #e74c3c; /* Um vermelho um pouco mais claro */
+            transform: translateY(-2px); /* Efeito de "subir" levemente */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6); /* Sombra maior */
+        }
+
+        /* Efeito ao clicar */
+        #start-menu button:active {
+            transform: translateY(0); /* Volta à posição original */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Sombra menor */
+        }
+        
         /* Variáveis de Cores (CSS Custom Properties) */
         :root {
             --color-primary: #1e1e2d;
@@ -37,15 +105,19 @@
             width: 100%;
         }
 
-        /* Sidebar (Menu Lateral) */
-        #sidebar {
-            width: 200px;
-            background-color: var(--color-secondary);
-            padding: 20px 0;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-            display: none; 
-            flex-shrink: 0;
-        }
+        /* Sidebar (Menu Lateral) - CORRIGIDO */
+        #sidebar {
+            width: 200px;
+            background-color: var(--color-secondary);
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            
+            /* 🚨 CORREÇÃO: Remove display: none; e usa flex para alinhar o conteúdo */
+            display: flex; 
+            flex-direction: column;
+            
+            flex-shrink: 0;
+        }
 
         /* Informações do Herói e Foto */
         #hero-info {
@@ -163,10 +235,10 @@
         }
         
         .game-logo {
-            max-width: 90%;
+            max-width: 80%;
             width: 500px;
             height: auto;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
             image-rendering: -webkit-optimize-contrast;
             image-rendering: crisp-edges;
         }
@@ -227,7 +299,7 @@
             width: 100%;
             height: 100%;
             background-color: var(--color-primary);
-            z-index: 99;
+            z-index: 999;
             display: none; 
             justify-content: center;
             align-items: center;
@@ -479,225 +551,229 @@
         Seu navegador não suporta a tag de áudio.
     </audio>
 
-    <div id="app-wrapper">
+    
 
-        <div id="start-menu">
-            <img src="assets/blaze-and-steel.png" alt="Blaze and Steel Logo" class="game-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/500x150?text=BLAZE+AND+STEEL';"> 
-            
-            <div class="menu-button-stack">
-                <button onclick="showCharacterCreation()">NOVO JOGO</button> 
-                <button onclick="loadGame(true, true)">CARREGAR JOGO</button>
-                <button onclick="alert('Sair: Por enquanto, feche a aba.')">SAIR</button>
+       <div id="start-menu">
+    <img src="assets/blaze-and-steel.png" alt="Blaze and Steel Logo" style="max-width: 80%;">
+    <button type="button" onclick="startGame(event)">NOVO JOGO</button>
+    <button id="btn-load-game" onclick="loadGame(true, true)">CARREGAR JOGO</button>
+    <p class="credits">Criado por @psikelvinmagalhaes</p>
+</div>
+
+<div id="character-creation-panel" style="display: none">
+    <div class="content-panel" style="text-align: center">
+        <h2>Crie Seu Herói!</h2>
+        <p>Escolha um nome e uma classe para começar sua aventura.</p>
+
+        <div style="margin-top: 20px;">
+            <label for="hero-name-input" style="font-weight: bold; display: block; margin-bottom: 5px;">Nome do Herói:</label>
+            <input type="text" id="hero-name-input" placeholder="Ex: Herói Blaze" maxlength="20" style="padding: 10px; font-size: 1.2em; width: 80%; max-width: 300px; border-radius: 5px; border: 1px solid var(--color-accent);">
+        </div>
+
+        <h3 style="margin-top: 20px;">Selecione Sua Classe:</h3>
+        <div id="class-selection-container">
             </div>
+
+        <div id="class-details" class="content-panel" style="margin-top: 20px; display: none; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto;">
+            <p style="font-style: italic">Classe: <span id="selected-class-name"></span></p>
+            <p><strong>Descrição:</strong> <span id="class-description"></span></p>
             
-            <div class="volume-control-container">
-                <label for="volume-slider-start">🎶 Volume: <span id="volume-label-start">100</span></label>
-                <input type="range" id="volume-slider-start" min="0" max="100" value="100" oninput="setVolume(this.value)">
+            <p><strong>Estatísticas Iniciais:</strong></p>
+            <ul>
+                <li>HP Base: <span id="class-base-hp"></span></li>
+                <li>ATK Base: <span id="class-base-atk"></span></li>
+                <li style="font-weight: bold;">Equipamento Inicial: <span id="class-initial-equipment"></span></li>
+            </ul>
+        </div>
+
+        <button id="confirm-creation-button" onclick="finalizeCreation()" style="background-color: var(--color-evolve); color: white; padding: 12px 25px; border: none; border-radius: 5px; width: 100%;">
+            INICIAR JOGO!
+        </button>
+</div>
+</div> 
+
+<div id="app-wrapper" style="display: none;">
+    
+    <div id="sidebar">
+        <div id="hero-info">
+            <div id="hero-info-display">
+                <img id="hero-class-image" src="" alt="Foto do Herói" class="hidden">
+                <h3 id="hero-name"></h3>
+            </div>
+            <p>Nível: <span id="power-level">1</span></p>
+        </div>
+        
+        <nav class="sidebar-menu">
+    <button id="btn-adventure" onclick="showPanel('adventure-map-panel')" class="active">🗺️ Aventura</button>
+    
+    <button id="btn-attributes" onclick="showPanel('attributes-panel')">✨ Atributos</button>
+    <button id="btn-equipment" onclick="showPanel('equipment-panel')">⚔️ Equipamento</button>
+    <button id="btn-inventory" onclick="showPanel('inventory-panel')">📦 Inventário</button>
+    <button id="btn-status" onclick="showPanel('status-panel')">👤 Status</button>
+    
+    <button id="btn-main-menu" onclick="returnToMainMenu()">↩️ Menu Inicial</button>
+</nav>
+    </div>
+
+    <div id="main-content">
+        
+        <div style="position: absolute; top: 10px; right: 10px; z-index: 10; text-align: right;">
+            <button id="audio-control-button" onclick="toggleMute()" style="margin-bottom: 5px;">
+                🔊 Mute
+            </button>
+            
+            <div class="volume-control-container" style="width: 150px; padding: 5px; margin-left: auto;">
+                <label for="volume-slider-game" style="font-size: 0.8em; margin: 0;">Volume: <span id="volume-label-game">100</span></label>
+                <input type="range" id="volume-slider-game" min="0" max="100" value="100" oninput="setVolume(this.value)">
             </div>
         </div>
 
-        <div id="character-creation-panel" style="display: none;">
-            <div class="content-panel" style="text-align: center;">
-                <h2>Crie Seu Herói!</h2>
-                <p>Escolha um nome e uma classe para começar sua aventura.</p>
-               
-                <div style="margin: 20px 0;">
-                    <label for="hero-name-input" style="font-weight: bold; display: block; margin-bottom: 5px;">Nome do Herói:</label>
-                    <input type="text" id="hero-name-input" oninput="checkCreationRequirements()" placeholder="Ex: Herói Blaze" maxlength="20" style="padding: 10px; font-size: 1.2em; width: 80%; max-width: 300px; border-radius: 5px; border: 1px solid var(--color-accent); background-color: var(--color-primary); color: var(--color-text);">
-                </div>
-                
-                <h3>Selecione Sua Classe:</h3>
-                <div id="class-selection-container">
-                    </div>
-            
-                <div id="class-details" class="content-panel" style="margin-top: 20px; display: none; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto;">
-                    <h4>Detalhes da Classe Selecionada</h4>
-                    <p style="font-style: italic;"><span id="class-description"></span></p>
-                    <p><strong>Classe:</strong> <span id="selected-class-name"></span></p>
-                    <p><strong>Estatísticas Iniciais:</strong></p>
-                    <ul>
-                        <li>❤️ HP Base: <span id="class-base-hp"></span></li>
-                        <li>⚔️ ATK Base: <span id="class-base-atk"></span></li>
-                        <li style="font-weight: bold;">⚔️ Equipamento Inicial: <span id="class-initial-equipment"></span></li>
-                    </ul>
-                    
-                    <button id="confirm-creation-button" disabled onclick="finalizeCreation()" style="background-color: var(--color-evolve); color: white; padding: 12px 25px; border: none; border-radius: 5px; width: 100%;">
-                        INICIAR JOGO!
-                    </button>
-                </div>
+        <div id="header">
+            <h2></h2>
+            <div class="resource-display">
+                <div class="resource-item" style="color: var(--color-accent);">💰 Ouro: <span id="gold-count">0</span></div>
             </div>
         </div>
 
-        <div id="sidebar">
-            <div id="hero-info">
-                <div id="hero-info-display">
-                    <img id="hero-class-image" src="" alt="Foto do Herói" class="hidden">
-                    <h3 id="hero-name"></h3>
-                </div>
-                <p>Nível: <span id="power-level">1</span></p>
+        <div id="content-area">
+    
+    <div id="adventure-map-panel" class="content-panel" style="display: block;"> 
+        <h2>🌍 Mapa da Aventura</h2>
+        <p>Clique em uma região para iniciar uma missão ou explorar.</p>
+
+        <img src="map.jpg" alt="Mapa da Aventura" usemap="#adventure-map" id="game-map" style="max-width: 100%; height: auto; border: 2px solid var(--color-accent);">
+
+        <map name="adventure-map">
+            <area shape="poly" coords="205,80,314,79,350,154,302,238,229,234,228,155" alt="Skyrim" href="#" onclick="selectRegion('Skyrim'); return false;">
+            <area shape="poly" coords="109,241,200,230,229,322,176,346,134,321" alt="Hammerfell" href="#" onclick="selectRegion('Hammerfell'); return false;">
+            <area shape="poly" coords="396,25,500,20,535,165,490,270,395,250" alt="Morrowind" href="#" onclick="selectRegion('Morrowind'); return false;">
+            <area shape="poly" coords="235,245,390,250,390,380,240,375" alt="Cyrodiil" href="#" onclick="selectRegion('Cyrodiil'); return false;">
+        </map>
+
+        <div id="region-details" style="margin-top: 20px; padding: 10px; border: 1px dashed #555;">
+            Detalhes da região ou informações da missão aparecerão aqui.
+        </div>
+        
+        <button onclick="showPanel('adventure-training-panel')" style="margin-top: 20px; background-color: #555; color: white;">Ver Opções de Treinamento</button>
+    </div>
+    
+    <div id="adventure-training-panel" class="content-panel" style="display: none;">
+        <img src="assets/adventure.png" alt="Adventure Time Logo" id="adventure-title-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x100?text=ADVENTURE';">
+        <h2>⚔️ Treinamento e Batalha</h2>
+        <p>Enfrente criaturas para ganhar Ouro, EXP e itens!</p>
+        
+        <div id="mission-area" class="content-panel">
+            <h3>Progresso e Treinamento</h3>
+            <p>Ganha experiência para subir de nível.</p>
+            <button onclick="trainForStats('attack')" style="background-color: var(--color-evolve); color: white; padding: 10px; margin: 5px;"> Treinar Habilidades (Ganho: 10 EXP) </button>
+
+            <div style="margin-top: 20px;">
+                <p>🌟 Nível de Poder: <span id="power-level-display">1</span></p>
+                <p>✨ EXP: <span id="exp-count">0</span> / <span id="exp-required">50</span></p>
+                <button id="level-up-button" onclick="levelUp()" disabled style="background-color: var(--color-evolve); color: white;"> SUBIR DE NÍVEL (Falta: 50 EXP) </button>
             </div>
             
-            <nav class="sidebar-menu">
-                
-                <button id="btn-adventure" onclick="showPanel('adventure-panel')" class="active">Aventura</button>
-                <button id="btn-attributes" onclick="showPanel('attributes-panel')">Atributos</button>
-                <button id="btn-equipment" onclick="showPanel('equipment-panel')">Equipamento</button>
-                <button id="btn-inventory" onclick="showPanel('inventory-panel')">Inventário</button>
-                <button id="btn-status" onclick="showPanel('status-panel')">Status</button>
-                
-                <button id="btn-main-menu" onclick="returnToMainMenu()">Menu Inicial</button> 
-                
-            </nav>
-        </div>
+            <hr style="margin: 20px 0;">
 
-        <div id="main-content">
+            <h3>Missões de Exploração</h3>
+            <p>Selecione seu nível de dificuldade:</p>
             
-            <div style="position: absolute; top: 10px; right: 10px; z-index: 10; text-align: right;">
-                <button id="audio-control-button" onclick="toggleMute()" style="margin-bottom: 5px;">
-                    🔊 Mute
+            <div style="margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 10px;">
+                <button onclick="selectMonster(1)">Floresta (Nv 1)</button>
+                <button onclick="selectMonster(5)">Pântano (Nv 5)</button>
+                <button onclick="selectMonster(10)">Montanhas (Nv 10)</button>
+            </div>
+
+            <div id="selected-monster-details" style="min-height: 50px; margin-bottom: 15px;">
+                <p id="monster-name-display">Selecione um local para ver o monstro...</p>
+            </div>
+
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button id="start-battle-button" onclick="startBattle()" disabled style="background-color: var(--color-combat); color: white; padding: 10px 20px; border: none; border-radius: 5px;">
+                    INICIAR BATALHA!
                 </button>
-                
-                <div class="volume-control-container" style="width: 150px; padding: 5px; margin-left: auto;">
-                    <label for="volume-slider-game" style="font-size: 0.8em; margin: 0;">Volume: <span id="volume-label-game">100</span></label>
-                    <input type="range" id="volume-slider-game" min="0" max="100" value="100" oninput="setVolume(this.value)">
-                </div>
             </div>
-
-
-            <div id="header">
-                <h2></h2>
-                <div class="resource-display">
-                    <div class="resource-item" style="color: var(--color-accent);">💰 Ouro: <span id="gold-count">0</span></div>
-                    </div>
+        </div>
+        
+        <button onclick="showPanel('adventure-map-panel')" style="margin-top: 20px; background-color: #555; color: white;">Voltar para o Mapa</button>
+    </div> 
+    
+    <div id="attributes-panel" style="display: none;"> 
+        <h2>✨ Atributos</h2>
+        <p>Invista Ouro para melhorias permanentes nos atributos base.</p>
+        
+        <div id="upgrade-list" class="content-panel">
+            <h3>Melhorias Permanentes (Ouro)</h3>
+            <p>Melhorias permanentes nos atributos base.</p>
+            
+            <div style="margin-bottom: 10px;">
+                <p>⚔️ Ataque Base: <span id="hero-base-atk-display">0</span></p>
+                <button id="buy-atk-upgrade" onclick="buyUpgrade('atk')" style="background-color: var(--color-accent); color: black; padding: 8px 15px; border-radius: 5px;"> 
+                    Comprar +1 ATK (Custo: <span id="atk-upgrade-cost">0</span> 💰)
+                </button>
             </div>
-
-            <div id="content-area">
-                
-                <div id="adventure-panel" style="display: block;"> <img src="assets/adventure.png" alt="Adventure Time Logo" id="adventure-title-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x100?text=ADVENTURE';">
-                    <h2>🗺️ Aventura</h2>
-                    <p>Enfrente criaturas para ganhar Ouro, EXP e itens!</p>
-
-                    <div id="mission-area" class="content-panel">
-                        <h3>Progresso e Treinamento</h3>
-                        <p>Ganha experiência para subir de nível.</p>
-                        <button onclick="trainForStats('attack')" style="background-color: var(--color-evolve); color: white; padding: 10px; margin: 5px;"> Treinar Habilidades (Ganho: 10 EXP) </button>
-
-                        <div style="margin-top: 20px;">
-                            <p>🌟 Nível de Poder: <span id="power-level-display">1</span></p>
-                            <p>✨ EXP: <span id="exp-count">0</span> / <span id="exp-required">50</span></p>
-                            <button id="level-up-button" onclick="levelUp()" disabled style="background-color: var(--color-evolve); color: white;"> SUBIR DE NÍVEL (Falta: 50 EXP) </button>
-                        </div>
-                        
-                        <hr style="margin: 20px 0;">
-
-                        <h3>Missões de Exploração</h3>
-                        <p>Selecione seu nível de dificuldade:</p>
-                        
-                        <div style="margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 10px;">
-                            <button onclick="selectMonster(1)">Floresta (Nv 1)</button>
-                            <button onclick="selectMonster(5)">Pântano (Nv 5)</button>
-                            <button onclick="selectMonster(10)">Montanhas (Nv 10)</button>
-                        </div>
-
-                        <div id="selected-monster-details" style="min-height: 50px; margin-bottom: 15px;">
-                            <p id="monster-name-display">Selecione um local para ver o monstro...</p>
-                        </div>
-
-                        <div style="display: flex; gap: 10px; align-items: center;">
-                            <button id="start-battle-button" onclick="startBattle()" disabled style="background-color: var(--color-combat); color: white; padding: 10px 20px; border: none; border-radius: 5px;">
-                                INICIAR BATALHA!
-                            </button>
-                            <p id="hero-current-hp-status">❤️ HP: 0 / 0</p>
-                        </div>
-                    </div>
-
-                    <div id="combat-log-area" class="content-panel" style="height: 300px; overflow-y: scroll;">
-                        <h3>Registro de Batalha</h3>
-                        <div id="combat-log">
-                            <p>O registro da batalha aparecerá aqui.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="attributes-panel" style="display: none;"> <h2>✨ Atributos</h2>
-                    <p>Invista Ouro para melhorias permanentes nos atributos base.</p>
-                    
-                    <div id="upgrade-list" class="content-panel">
-                        <h3>Melhorias Permanentes (Ouro)</h3>
-                        <p>Melhorias permanentes nos atributos base.</p>
-                        
-                        <div style="margin-bottom: 10px;">
-                            <p>⚔️ Ataque Base: <span id="hero-base-atk-display">0</span></p>
-                            <button id="buy-atk-upgrade" onclick="buyUpgrade('atk')" style="background-color: var(--color-accent); color: black; padding: 8px 15px; border-radius: 5px;"> 
-                                Comprar +1 ATK (Custo: <span id="atk-upgrade-cost">0</span> 💰)
-                            </button>
-                        </div>
-                        
-                        <div>
-                            <p>❤️ HP Base: <span id="hero-base-hp-display">0</span></p>
-                            <button id="buy-hp-upgrade" onclick="buyUpgrade('hp')" style="background-color: var(--color-accent); color: black; padding: 8px 15px; border-radius: 5px;"> 
-                                Comprar +10 HP (Custo: <span id="hp-upgrade-cost">0</span> 💰)
-                            </button>
-                        </div>
-                    </div>
-                    
-                    </div>
-
-                <div id="equipment-panel" style="display: none;">
-                    <h2>⚔️ Equipamento</h2>
-                    <p>Equipe seus melhores itens para aumentar seu poder!</p>
-                    
-                    <div style="display: flex; gap: 20px;">
-                        <div class="content-panel" style="flex: 1;">
-                            <h3>Slots de Equipamento</h3>
-                            <div id="equipment-list" style="display: flex; flex-direction: column; gap: 10px;">
-                            </div>
-                        </div>
-                        
-                        <div class="content-panel" style="flex: 1;">
-                            <h3>Estatísticas Totais</h3>
-                            <div id="hero-stats-equipment">
-                                <p>❤️ HP Máximo: <span id="eq-max-hp">0</span> (Base: <span id="eq-base-hp">0</span> + Bônus: <span id="eq-bonus-hp">0</span>)</p>
-                                <p>⚔️ ATK Total: <span id="eq-total-atk">0</span> (Base: <span id="eq-base-atk">0</span> + Bônus: <span id="eq-bonus-atk">0</span>)</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="inventory-panel" style="display: none;">
-                    <h2>📦 Inventário</h2>
-                    <p>Selecione um item para ver os detalhes e equipá-lo/desequipá-lo.</p>
-                    
-                    <div style="display: flex; gap: 20px; margin-top: 20px;">
-                        <div class="content-panel" style="flex: 2;">
-                            <h3>Itens Coletados</h3>
-                            <div id="inventory-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;">
-                            </div>
-                        </div>
-                        
-                        <div id="item-inspection-area" class="content-panel" style="flex: 1;">
-                            <h3>Detalhes do Item</h3>
-                            <p>Selecione um item no inventário.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="status-panel" style="display: none;">
-                    <h2>👤 Status do Herói</h2>
-                    <div class="content-panel">
-                        <h3>Estatísticas Atuais</h3>
-                        <p>Nome: <span id="status-hero-name"></span></p>
-                        <p>Classe: <span id="status-hero-class"></span></p>
-                        <p>Nível: <span id="status-power-level">1</span></p>
-                        <p>HP Máximo: <span id="status-max-hp">0</span></p>
-                        <p>Ataque Total: <span id="status-total-atk">0</span></p>
-                    </div>
-                </div>
-                
-                </div>
+            
+            <div>
+                <p>❤️ HP Base: <span id="hero-base-hp-display">0</span></p>
+                <button id="buy-hp-upgrade" onclick="buyUpgrade('hp')" style="background-color: var(--color-accent); color: black; padding: 8px 15px; border-radius: 5px;"> 
+                    Comprar +10 HP (Custo: <span id="hp-upgrade-cost">0</span> 💰)
+                </button>
+            </div>
         </div>
     </div>
 
+    <div id="equipment-panel" style="display: none;">
+        <h2>⚔️ Equipamento</h2>
+        <p>Equipe seus melhores itens para aumentar seu poder!</p>
+        
+        <div style="display: flex; gap: 20px;">
+            <div class="content-panel" style="flex: 1;">
+                <h3>Slots de Equipamento</h3>
+                <div id="equipment-list" style="display: flex; flex-direction: column; gap: 10px;">
+                </div>
+            </div>
+            
+            <div class="content-panel" style="flex: 1;">
+                <h3>Estatísticas Totais</h3>
+                <div id="hero-stats-equipment">
+                    <p>❤️ HP Máximo: <span id="eq-max-hp">0</span> (Base: <span id="eq-base-hp">0</span> + Bônus: <span id="eq-bonus-hp">0</span>)</p>
+                    <p>⚔️ ATK Total: <span id="eq-total-atk">0</span> (Base: <span id="eq-base-atk">0</span> + Bônus: <span id="eq-bonus-atk">0</span>)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="inventory-panel" style="display: none;">
+        <h2>📦 Inventário</h2>
+        <p>Selecione um item para ver os detalhes e equipá-lo/desequipá-lo.</p>
+        
+        <div style="display: flex; gap: 20px; margin-top: 20px;">
+            <div class="content-panel" style="flex: 2;">
+                <h3>Itens Coletados</h3>
+                <div id="inventory-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;">
+                </div>
+            </div>
+            
+            <div id="item-inspection-area" class="content-panel" style="flex: 1;">
+                <h3>Detalhes do Item</h3>
+                <p>Selecione um item no inventário.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="status-panel" style="display: none;">
+        <h2>👤 Status do Herói</h2>
+        <div class="content-panel">
+            <h3>Estatísticas Atuais</h3>
+            <p>Nome: <span id="status-hero-name"></span></p>
+            <p>Classe: <span id="status-hero-class"></span></p>
+            <p>Nível: <span id="status-power-level">1</span></p>
+            <p>HP Máximo: <span id="status-max-hp">0</span></p>
+            <p>Ataque Total: <span id="status-total-atk">0</span></p>
+        </div>
+    </div>
+
+</div>
     <script>
         // ====================================================================
         // I. ESTADO DO JOGO (Variáveis Globais)
@@ -818,14 +894,37 @@
         // ====================================================================
 
         // Elementos de Estrutura
-        const startMenu = document.getElementById('start-menu');
-        const characterCreationPanel = document.getElementById('character-creation-panel');
-        const sidebar = document.getElementById('sidebar');
-        const mainContent = document.getElementById('main-content');
-        const contentArea = document.getElementById('content-area');
-        const headerTitle = document.getElementById('header').getElementsByTagName('h2')[0];
+        let appWrapper; 
+let startMenu;
+let characterCreationPanel;
+let sidebar;
+let mainContent;
+let contentArea;
+let headerTitle;
         
-        // Painéis
+    // Inicialização de elementos essenciais
+startMenu = document.getElementById('start-menu');
+characterCreationPanel = document.getElementById('character-creation-panel');
+appWrapper = document.getElementById('app-wrapper');
+
+// Função correta startGame
+window.startGame = function(event) {
+    if (event) event.preventDefault();
+
+    if (!startMenu || !characterCreationPanel || !appWrapper) {
+        console.error("Erro: elementos principais não carregados.");
+        return;
+    }
+
+    startMenu.style.display = 'none';
+    characterCreationPanel.style.display = 'flex';
+    appWrapper.style.display = 'none';
+
+    generateClassButtons();
+    checkCreationRequirements();
+};
+
+// Painéis
         const panels = {
             // REMOVIDO: 'training-panel'
             'adventure-panel': document.getElementById('adventure-panel'),
@@ -884,11 +983,15 @@
         // ====================================================================
 
         function hideAllPanels() {
-            startMenu.style.display = 'none';
-            characterCreationPanel.style.display = 'none';
-            sidebar.style.display = 'none';
-            mainContent.style.display = 'none';
-        }
+    // Esconde o Menu Inicial
+    startMenu.style.display = 'none';
+    
+    // Esconde o Painel de Criação de Herói
+    characterCreationPanel.style.display = 'none';
+    
+    // 🚨 CORRIGIDO: Esconda o APP WRAPPER inteiro, e NÃO a sidebar e o mainContent separadamente.
+    appWrapper.style.display = 'none';
+}
 
         function showCharacterCreation() {
             hideAllPanels(); 
@@ -898,751 +1001,4 @@
         }
         
         // CORRIGIDO: Volta para a tela de Menu Inicial
-        function returnToMainMenu() {
-            hideAllPanels(); 
-            startMenu.style.display = 'flex';
-            
-            // Opcional: Para o combate se estiver ativo
-            isFighting = false;
-            currentMonster = null;
-            
-            // Re-renderiza o display para atualizar o volume no menu
-            updateDisplay();
-        }
-
-        // Atualiza a exibição na tela
-        function updateDisplay() {
-            // NOME E FOTO
-            heroNameDisplay.textContent = heroName;
-            headerTitle.textContent = heroName;
-            
-            // Adiciona a foto da classe
-            if (selectedClass && CLASSES[selectedClass].imagePath) {
-                heroClassImage.src = CLASSES[selectedClass].imagePath;
-                heroClassImage.classList.remove('hidden');
-            } else {
-                heroClassImage.classList.add('hidden');
-            }
-            
-            // RECURSOS
-            goldCountDisplay.textContent = gold;
-            // REMOVIDO: soulCountDisplay.textContent = soul;
-
-            // NÍVEL E EXP
-            powerLevelDisplay.textContent = powerLevel;
-            powerLevelPanelDisplay.textContent = powerLevel;
-            expCountDisplay.textContent = currentExp;
-            expRequiredDisplay.textContent = expToNextLevel;
-            levelUpButton.disabled = currentExp < expToNextLevel;
-            levelUpButton.textContent = currentExp < expToNextLevel ? 
-                                       `SUBIR DE NÍVEL (Falta: ${expToNextLevel - currentExp} EXP)` : 
-                                       'SUBIR DE NÍVEL!';
-            
-            // ATRIBUTOS
-            heroBaseATKDisplay.textContent = heroBaseATK;
-            heroBaseHPDisplay.textContent = heroBaseHP;
-            atkUpgradeCostDisplay.textContent = atkUpgradeCost;
-            hpUpgradeCostDisplay.textContent = hpUpgradeCost;
-            buyAtkUpgradeButton.disabled = gold < atkUpgradeCost;
-            buyHpUpgradeButton.disabled = gold < hpUpgradeCost;
-
-            // ATUALIZA STATUS
-            document.getElementById('status-hero-name').textContent = heroName;
-            document.getElementById('status-hero-class').textContent = selectedClass ? CLASSES[selectedClass].name : 'N/A';
-            document.getElementById('status-power-level').textContent = powerLevel;
-            document.getElementById('status-max-hp').textContent = calculateMaxHP();
-            document.getElementById('status-total-atk').textContent = calculateTotalATK();
-            
-            // COMBATE
-            heroCurrentHPDisplay.textContent = `❤️ HP: ${heroCurrentHP} / ${calculateMaxHP()}`;
-            if (currentMonster) {
-                monsterNameDisplay.innerHTML = `<p style="font-weight: bold;">Monstro: ${currentMonster.name}</p><p>HP: ${Math.max(0, currentMonster.currentHP)}</p>`;
-            } else {
-                monsterNameDisplay.innerHTML = `Selecione um local para ver o monstro...`;
-            }
-
-            // VOLUME
-            const currentVolume = gameThemeMusic.volume * 100;
-            volumeSliderStart.value = currentVolume;
-            volumeLabelStart.textContent = Math.round(currentVolume);
-            volumeSliderGame.value = currentVolume;
-            volumeLabelGame.textContent = Math.round(currentVolume);
-            
-            audioControlButton.textContent = gameThemeMusic.muted ? '🔇 Muted' : '🔊 Unmute';
-        }
-
-        // Mostra o painel de conteúdo
-        function showPanel(panelId) {
-            Object.values(panels).forEach(p => p.style.display = 'none');
-            
-            panels[panelId].style.display = 'block';
-
-            document.querySelectorAll('.sidebar-menu button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            // O ID do botão Atributos mudou para 'btn-attributes'
-            document.getElementById(`btn-${panelId.replace('-panel', '')}`).classList.add('active');
-            
-            if (panelId === 'equipment-panel') {
-                renderEquipment();
-            } else if (panelId === 'inventory-panel') {
-                renderInventory();
-            }
-
-            updateDisplay();
-        }
-
-        // Gera os botões de seleção de classe no painel
-        function generateClassButtons() {
-            classContainer.innerHTML = '';
-            for (const key in CLASSES) {
-                const cls = CLASSES[key];
-                const button = document.createElement('button');
-                button.setAttribute('data-class', key);
-                button.innerHTML = `
-                    <img src="${cls.imagePath}" alt="${cls.name} Icon" onerror="this.onerror=null; this.src='https://via.placeholder.com/80?text=${cls.name.toUpperCase()}'; this.style.opacity='0.5';">
-                    <span>${cls.name}</span>
-                `;
-                button.onclick = () => selectClass(key);
-                classContainer.appendChild(button);
-            }
-        }
-
-        // Seleciona uma classe e atualiza os detalhes
-        function selectClass(key) {
-            const cls = CLASSES[key];
-            selectedClass = key;
-
-            document.getElementById('selected-class-name').textContent = cls.name;
-            document.getElementById('class-description').textContent = cls.description; 
-            document.getElementById('class-base-hp').textContent = cls.initialHP;
-            document.getElementById('class-base-atk').textContent = cls.initialATK;
-            document.getElementById('class-initial-equipment').textContent = cls.startingItems.map(item => item.name).join(', ');
-            classDetailsPanel.style.display = 'block';
-
-            checkCreationRequirements();
-            
-            document.querySelectorAll('#class-selection-container button').forEach(btn => {
-                btn.style.borderWidth = '2px';
-                if (btn.getAttribute('data-class') === key) {
-                    btn.style.borderColor = 'var(--color-accent)';
-                } else {
-                    btn.style.borderColor = 'var(--color-primary)';
-                }
-            });
-        }
-        
-        // Verifica se os requisitos de criação foram preenchidos
-        function checkCreationRequirements() {
-            const name = heroNameInput.value.trim();
-            if (name.length >= 2 && selectedClass !== null) {
-                confirmCreationButton.disabled = false;
-            } else {
-                confirmCreationButton.disabled = true;
-            }
-        }
-        
-        
-        // Finaliza a criação do personagem
-        function finalizeCreation() {
-            if (!selectedClass) {
-                alert("Por favor, selecione uma classe.");
-                return;
-            }
-            
-            heroName = heroNameInput.value.trim();
-            if (heroName.length < 2) {
-                alert("O nome deve ter pelo menos 2 caracteres.");
-                return;
-            }
-
-            try {
-                const cls = CLASSES[selectedClass];
-                heroBaseHP = cls.initialHP;
-                heroBaseATK = cls.initialATK;
-                
-                inventory = [];
-                for (const slotKey in EQUIPMENT_SLOTS) {
-                    EQUIPMENT_SLOTS[slotKey].currentItem = null;
-                }
-                
-                cls.startingItems.forEach(starterItem => {
-                    const newItem = { 
-                        ...starterItem, 
-                        id: nextItemId++, 
-                        rarity: starterItem.rarity || "Básico" 
-                    };
-                    inventory.push(newItem); 
-                    equipItem(newItem, false); 
-                });
-                
-                updateEquipmentStats(); 
-                heroCurrentHP = calculateMaxHP(); 
-
-            } catch (e) {
-                console.error("Erro durante a inicialização de itens/atributos. O jogo será iniciado, mas pode haver problemas de status:", e);
-            }
-            
-            characterCreationPanel.style.display = 'none'; 
-            startGame(); 
-            saveGame(); 
-        }
-
-        // Inicia o jogo após criação ou carregamento
-        function startGame() {
-            hideAllPanels(); 
-
-            sidebar.style.display = 'block';
-            mainContent.style.display = 'block'; 
-            showPanel('adventure-panel'); // Muda o painel inicial para Aventura
-            heroNameInput.value = '';
-        }
-
-        // ====================================================================
-        // V. FUNÇÕES DE ÁUDIO
-        // ====================================================================
-
-        function checkAndPlayMusic() {
-            if (hasInteracted) {
-                gameThemeMusic.play().catch(e => console.log("Erro ao tocar música:", e));
-            }
-        }
-
-        function setVolume(value) {
-            const volume = value / 100;
-            gameThemeMusic.volume = volume;
-            
-            hasInteracted = true;
-            checkAndPlayMusic();
-            
-            updateDisplay();
-            saveGame(); 
-        }
-
-        function toggleMute() {
-            gameThemeMusic.muted = !gameThemeMusic.muted;
-            updateDisplay();
-        }
-
-
-        // ====================================================================
-        // VI. FUNÇÕES DE SALVAR/CARREGAR (localStorage)
-        // ====================================================================
-
-        function saveGame() {
-            const gameData = {
-                heroName: heroName,
-                selectedClass: selectedClass,
-                level: powerLevel,
-                exp: currentExp,
-                expRequired: expToNextLevel,
-                gold: gold,
-                // REMOVIDO: soul
-                heroHP: heroBaseHP,
-                heroATK: heroBaseATK,
-                atkCost: atkUpgradeCost,
-                hpCost: hpUpgradeCost,
-                heroCurrentHP: heroCurrentHP,
-                // REMOVIDO: dailyStatus, uniqueStatus
-                missionCooldowns: missionCooldowns,
-                inventory: inventory,
-                nextItemId: nextItemId,
-                equipment: {
-                    weapon: EQUIPMENT_SLOTS.weapon.currentItem ? EQUIPMENT_SLOTS.weapon.currentItem.id : null,
-                    armor: EQUIPMENT_SLOTS.armor.currentItem ? EQUIPMENT_SLOTS.armor.currentItem.id : null,
-                },
-                volume: gameThemeMusic.volume,
-                muted: gameThemeMusic.muted
-            };
-            localStorage.setItem('blazeAndSteelSave', JSON.stringify(gameData));
-        }
-
-        // CORRIGIDO: A função agora é focada em carregar os dados e só inicia o jogo se 'autoStartGame' for true.
-        function loadGame(showAlert = false, autoStartGame = false) {
-            const savedState = localStorage.getItem('blazeAndSteelSave');
-            
-            if (!savedState) {
-                return false;
-            }
-
-            try {
-                const gameData = JSON.parse(savedState);
-                
-                heroName = gameData.heroName || heroName;
-                selectedClass = gameData.selectedClass || selectedClass;
-                powerLevel = gameData.level || powerLevel;
-                currentExp = gameData.exp || 0;
-                expToNextLevel = gameData.expRequired || expToNextLevel;
-                gold = gameData.gold || 0;
-                heroBaseHP = gameData.heroHP || heroBaseHP;
-                heroBaseATK = gameData.heroATK || heroBaseATK;
-                atkUpgradeCost = gameData.atkCost || atkUpgradeCost;
-                hpUpgradeCost = gameData.hpCost || hpUpgradeCost;
-                missionCooldowns = gameData.missionCooldowns || missionCooldowns;
-                inventory = gameData.inventory || [];
-                nextItemId = gameData.nextItemId || 1000;
-                
-                gameThemeMusic.volume = gameData.volume !== undefined ? gameData.volume : 1;
-                gameThemeMusic.muted = gameData.muted !== undefined ? gameData.muted : false;
-                
-                // Recarrega Equipamentos
-                if (gameData.equipment) {
-                    for (const slotKey in gameData.equipment) {
-                        if (EQUIPMENT_SLOTS[slotKey]) {
-                            const equippedItemId = gameData.equipment[slotKey];
-                            if (equippedItemId !== null) {
-                                const itemReference = inventory.find(item => item.id === equippedItemId);
-                                if (itemReference && itemReference.type === slotKey) {
-                                    EQUIPMENT_SLOTS[slotKey].currentItem = itemReference;
-                                } else {
-                                    EQUIPMENT_SLOTS[slotKey].currentItem = null; 
-                                }
-                            } else {
-                                EQUIPMENT_SLOTS[slotKey].currentItem = null;
-                            }
-                        }
-                    }
-                } else {
-                    for (const slotKey in EQUIPMENT_SLOTS) { 
-                        EQUIPMENT_SLOTS[slotKey].currentItem = null; 
-                    }
-                }
-                
-                updateEquipmentStats();
-                heroCurrentHP = gameData.heroCurrentHP || calculateMaxHP(); 
-
-                hasInteracted = true;
-                checkAndPlayMusic();
-                
-                // Agora, startGame só é chamado se autoStartGame for true (ou seja, pelo botão CARREGAR JOGO)
-                if (autoStartGame) {
-                    startGame();
-                    if (showAlert) {
-                        alert("Jogo salvo carregado com sucesso!");
-                    }
-                } 
-                
-                updateDisplay(); 
-                return true;
-
-            } catch (e) {
-                console.error("Erro ao carregar o jogo salvo:", e);
-                localStorage.removeItem('blazeAndSteelSave'); 
-                alert("Erro ao carregar o jogo salvo. O arquivo de save foi removido. Reiniciando em Novo Jogo.");
-                
-                return false;
-            }
-        }
-
-        // ====================================================================
-        // VII. FUNÇÕES DE PROGRESSÃO
-        // ====================================================================
-
-        function calculateMaxHP() {
-            let maxHP = heroBaseHP;
-            if (EQUIPMENT_SLOTS.armor.currentItem) {
-                maxHP += EQUIPMENT_SLOTS.armor.currentItem.hpBonus || 0;
-            }
-            return maxHP;
-        }
-
-        function calculateTotalATK() {
-            let totalATK = heroBaseATK;
-            if (EQUIPMENT_SLOTS.weapon.currentItem) {
-                totalATK += EQUIPMENT_SLOTS.weapon.currentItem.atk || 0;
-            }
-            const levelMultiplier = 1 + (powerLevel * 0.1); 
-            totalATK *= levelMultiplier;
-            return Math.round(totalATK);
-        }
-
-        // Treinamento (Ganha EXP)
-        function trainForStats(type) {
-            hasInteracted = true;
-            checkAndPlayMusic();
-            
-            const expGain = 10;
-            currentExp += expGain;
-            let message = `${heroName} treinou e ganhou ${expGain} EXP.`;
-            alert(message);
-            levelUp(); 
-            updateDisplay();
-            saveGame();
-        }
-
-        // Tenta Subir de Nível
-        function levelUp() {
-            let leveledUp = false;
-            while (currentExp >= expToNextLevel) {
-                leveledUp = true;
-                powerLevel++;
-                currentExp -= expToNextLevel;
-                expToNextLevel = Math.round(expToNextLevel * 1.5); 
-                
-                heroBaseHP += 5;
-                heroBaseATK += 1;
-                
-            }
-            if(leveledUp) {
-                updateEquipmentStats(); 
-                heroCurrentHP = calculateMaxHP(); 
-                alert(`✨ Parabéns! ${heroName} atingiu o Nível ${powerLevel}!`);
-            }
-            
-            updateDisplay();
-            saveGame();
-        }
-
-        // Compra upgrades de stats permanentes
-        function buyUpgrade(type) {
-            hasInteracted = true;
-            checkAndPlayMusic();
-            
-            if (type === 'atk' && gold >= atkUpgradeCost) {
-                gold -= atkUpgradeCost;
-                heroBaseATK += 1;
-                atkUpgradeCost = Math.round(atkUpgradeCost * 1.5);
-                alert(`⚔️ Ataque Base (Upgrade) aumentado para ${heroBaseATK}!`);
-            } else if (type === 'hp' && gold >= hpUpgradeCost) {
-                gold -= hpUpgradeCost;
-                heroBaseHP += 10;
-                updateEquipmentStats(); 
-                heroCurrentHP = calculateMaxHP(); 
-                hpUpgradeCost = Math.round(hpUpgradeCost * 1.5);
-                alert(`❤️ HP Base (Upgrade) aumentado para ${heroBaseHP}!`);
-            } else {
-                alert("Você não tem Ouro suficiente para este upgrade.");
-            }
-            updateDisplay();
-            saveGame();
-        }
-
-        // ====================================================================
-        // VIII. FUNÇÕES DE COMBATE
-        // ====================================================================
-
-        function selectMonster(level) {
-            const availableMonsters = MONSTERS_BY_LEVEL[level];
-            if (!availableMonsters || availableMonsters.length === 0) {
-                alert("Não há monstros disponíveis neste nível ainda.");
-                return;
-            }
-            
-            const baseMonster = availableMonsters[Math.floor(Math.random() * availableMonsters.length)];
-            
-            currentMonster = {
-                ...baseMonster,
-                currentHP: baseMonster.baseHP
-            };
-
-            monsterNameDisplay.innerHTML = `<p style="font-weight: bold; color: var(--color-combat);">Monstro Selecionado: ${currentMonster.name}</p><p>HP: ${currentMonster.baseHP} | ATK: ${currentMonster.atk}</p>`;
-            startBattleButton.disabled = isFighting || heroCurrentHP <= 0;
-            updateDisplay();
-        }
-
-        function startBattle() {
-            hasInteracted = true;
-            checkAndPlayMusic();
-            
-            if (!currentMonster) {
-                alert("Por favor, selecione um monstro antes de iniciar a batalha.");
-                return;
-            }
-            if (isFighting) return;
-            if (heroCurrentHP <= 0) {
-                alert("Seu herói está ferido! Descanse ou compre HP para curar.");
-                return;
-            }
-            
-            isFighting = true;
-            startBattleButton.disabled = true;
-
-            const finalHeroDamage = calculateTotalATK();
-            
-            combatLog.innerHTML = `<p style="font-weight: bold;">[Batalha Iniciada contra ${currentMonster.name}]</p>`;
-            logToCombat(`<p style="color: var(--color-combat);">Herói se prepara para lutar!</p>`);
-
-            let turn = 1;
-            const battleInterval = setInterval(() => {
-                
-                if (currentMonster.currentHP <= 0 || heroCurrentHP <= 0) {
-                    clearInterval(battleInterval);
-                    endBattle(currentMonster.currentHP <= 0);
-                    return;
-                }
-                
-                // Turno do Herói
-                const heroDamage = finalHeroDamage;
-                currentMonster.currentHP -= heroDamage;
-                logToCombat(`[Turno ${turn}] Herói ataca ${currentMonster.name} causando ${heroDamage} de dano! (HP Monstro: ${Math.max(0, currentMonster.currentHP)})`);
-
-                // Turno do Monstro
-                if (currentMonster.currentHP > 0) {
-                    const monsterDamage = currentMonster.atk;
-                    heroCurrentHP -= monsterDamage;
-                    logToCombat(`<span style="color: var(--color-combat);"> ${currentMonster.name} contra-ataca causando ${monsterDamage} de dano! (HP Herói: ${Math.max(0, heroCurrentHP)})</span>`);
-                }
-                
-                turn++;
-                updateDisplay(); 
-            }, 1000);
-            
-            saveGame();
-        }
-
-        function endBattle(isVictory) {
-            isFighting = false;
-            startBattleButton.disabled = false;
-            
-            if (isVictory) {
-                logToCombat(`<p style="color: var(--color-hp); font-weight: bold;">[VITÓRIA] ${currentMonster.name} derrotado!</p>`);
-                
-                currentExp += currentMonster.expReward;
-                gold += currentMonster.goldReward;
-                logToCombat(`Recompensas: ${currentMonster.expReward} EXP, ${currentMonster.goldReward} 💰 Ouro.`);
-                
-                if (Math.random() < currentMonster.itemDropChance) {
-                    const newItem = generateRandomItem(powerLevel);
-                    inventory.push(newItem);
-                    logToCombat(`<p style="color: var(--color-accent); font-weight: bold;">DROP! Você encontrou o item: ${newItem.name}!</p>`);
-                } else {
-                    logToCombat(`Nenhum item encontrado.`);
-                }
-                
-                levelUp();
-                
-            } else {
-                logToCombat(`<p style="color: var(--color-combat); font-weight: bold;">[DERROTA] O Herói desmaiou!</p>`);
-                heroCurrentHP = 0; 
-            }
-
-            currentMonster = null; 
-            updateDisplay();
-            saveGame();
-        }
-
-        function logToCombat(message) {
-            combatLog.innerHTML += `<p>${message}</p>`;
-            combatLog.scrollTop = combatLog.scrollHeight;
-        }
-
-        function generateRandomItem(level) {
-            const isWeapon = Math.random() < 0.5;
-            const rarityRoll = Math.random();
-            let rarity = "Comum";
-            let multiplier = 1;
-            
-            if (rarityRoll > 0.9) { rarity = "Lendário"; multiplier = 3; } 
-            else if (rarityRoll > 0.7) { rarity = "Raro"; multiplier = 2; }
-            else if (rarityRoll > 0.5) { rarity = "Incomum"; multiplier = 1.5; }
-            
-            const baseStat = Math.floor(Math.random() * level * multiplier) + 1;
-            
-            const item = {
-                id: nextItemId++,
-                rarity: rarity,
-                description: `Um item ${rarity.toLowerCase()} encontrado em combate.`,
-                type: isWeapon ? 'weapon' : 'armor',
-                atk: isWeapon ? baseStat : 0,
-                hpBonus: isWeapon ? 0 : baseStat * 5 
-            };
-            
-            item.name = `${rarity} ${isWeapon ? 'Arma' : 'Armadura'}`; 
-            return item;
-        }
-
-        // ====================================================================
-        // IX. FUNÇÕES DE EQUIPAMENTO E INVENTÁRIO
-        // ====================================================================
-
-        function renderEquipment() {
-            equipmentPanel.innerHTML = ''; 
-            for (const key in EQUIPMENT_SLOTS) {
-                const slot = EQUIPMENT_SLOTS[key];
-                const item = slot.currentItem;
-                
-                const slotDiv = document.createElement('div');
-                slotDiv.className = 'slot-container';
-                
-                const labelSpan = document.createElement('span');
-                labelSpan.className = 'slot-label';
-                labelSpan.textContent = slot.name + ':';
-
-                const itemDisplay = document.createElement('div');
-                itemDisplay.className = 'equipped-item-display';
-                
-                if (item) {
-                    let statText = '';
-                    const bonuses = [];
-                    if (item.atk) bonuses.push(`+${item.atk} ATK`);
-                    if (item.hpBonus) bonuses.push(`+${item.hpBonus} HP`);
-                    
-                    statText = bonuses.join(' | ');
-                    
-                    itemDisplay.innerHTML = `<span style="font-weight: bold;">${item.name}</span> <span style="font-size: 0.9em; color: var(--color-hp);">(${statText})</span>`;
-                    
-                    itemDisplay.onclick = () => {
-                        if (panels['equipment-panel'].style.display === 'block') {
-                            unequipItem(item);
-                        } else {
-                            inspectItem(item);
-                        }
-                    };
-                } else {
-                    itemDisplay.innerHTML = `<span class="empty-slot">Vazio</span>`;
-                }
-
-                slotDiv.appendChild(labelSpan);
-                slotDiv.appendChild(itemDisplay);
-                equipmentPanel.appendChild(slotDiv);
-            }
-        }
-        
-        function renderInventory() {
-            inventoryPanel.innerHTML = ''; 
-
-            const equippedIds = Object.values(EQUIPMENT_SLOTS)
-                .map(slot => slot.currentItem ? slot.currentItem.id : null)
-                .filter(id => id !== null);
-
-            inventory.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'item-card';
-                card.setAttribute('data-item-id', item.id);
-                
-                if (equippedIds.includes(item.id)) {
-                    card.classList.add('equipped');
-                }
-                
-                card.innerHTML = `
-                    <p style="font-weight: bold;">${item.name}</p>
-                    <p>Tipo: ${EQUIPMENT_SLOTS[item.type] ? EQUIPMENT_SLOTS[item.type].name : item.type}</p>
-                    <p style="color: var(--color-accent); font-size: 0.8em;">${item.rarity}</p>
-                `;
-                
-                card.onclick = () => inspectItem(item);
-                inventoryPanel.appendChild(card);
-            });
-            
-            if (inspectedItem && !inventory.some(item => item.id === inspectedItem.id)) {
-                inspectedItem = null;
-                inspectionArea.innerHTML = '<h3>Detalhes do Item</h3><p>Selecione um item no inventário.</p>';
-            } else if (inspectedItem) {
-                inspectItem(inspectedItem, false); 
-            }
-        }
-
-        function inspectItem(item, saveInspection = true) {
-            if (saveInspection) {
-                inspectedItem = item;
-            }
-            
-            const isEquipped = Object.values(EQUIPMENT_SLOTS).some(slot => slot.currentItem && slot.currentItem.id === item.id);
-            const buttonText = isEquipped ? 'DESEQUIPAR' : 'EQUIPAR';
-            const buttonColor = isEquipped ? 'var(--color-combat)' : 'var(--color-hp)';
-            const buttonAction = isEquipped ? `unequipItem(inspectedItem)` : `equipItem(inspectedItem)`;
-
-            let statDetails = '';
-            if (item.atk) statDetails += `<p>⚔️ Bônus ATK: +${item.atk}</p>`;
-            if (item.hpBonus) statDetails += `<p>❤️ Bônus HP: +${item.hpBonus}</p>`;
-
-            inspectionArea.innerHTML = `
-                <h3>${item.name}</h3>
-                <p><strong>Tipo:</strong> ${EQUIPMENT_SLOTS[item.type] ? EQUIPMENT_SLOTS[item.type].name : item.type}</p>
-                <p><strong>Raridade:</strong> <span style="color: var(--color-accent);">${item.rarity}</span></p>
-                <p><strong>Descrição:</strong> ${item.description}</p>
-                ${statDetails}
-                
-                <button onclick="${buttonAction}" style="background-color: ${buttonColor}; color: white; padding: 10px; border: none; border-radius: 5px; width: 100%; margin-top: 15px;">
-                    ${buttonText}
-                </button>
-            `;
-            
-            renderInventory(); 
-        }
-        
-        function updateEquipmentStats() {
-            let bonusHP = 0;
-            let bonusATK = 0;
-            
-            if (EQUIPMENT_SLOTS.armor.currentItem) {
-                bonusHP += EQUIPMENT_SLOTS.armor.currentItem.hpBonus || 0;
-            }
-            if (EQUIPMENT_SLOTS.weapon.currentItem) {
-                bonusATK += EQUIPMENT_SLOTS.weapon.currentItem.atk || 0;
-            }
-            
-            const totalMaxHP = heroBaseHP + bonusHP;
-            const totalATK = calculateTotalATK();
-            
-            document.getElementById('eq-base-hp').textContent = heroBaseHP;
-            document.getElementById('eq-bonus-hp').textContent = bonusHP;
-            document.getElementById('eq-max-hp').textContent = totalMaxHP;
-            
-            document.getElementById('eq-base-atk').textContent = heroBaseATK;
-            document.getElementById('eq-bonus-atk').textContent = bonusATK;
-            document.getElementById('eq-total-atk').textContent = totalATK;
-            
-            heroCurrentHP = Math.min(heroCurrentHP, totalMaxHP);
-        }
-
-        function equipItem(item, showAlert = true) {
-            hasInteracted = true;
-            checkAndPlayMusic();
-            
-            const slotKey = item.type;
-            
-            if (!EQUIPMENT_SLOTS[slotKey]) {
-                if (showAlert) alert(`Tipo de item inválido: ${item.type}`);
-                return;
-            }
-            
-            EQUIPMENT_SLOTS[slotKey].currentItem = item;
-            
-            renderEquipment();
-            renderInventory();
-            updateEquipmentStats(); 
-            updateDisplay(); 
-            if (showAlert) inspectItem(item); 
-            saveGame();
-            if (showAlert) alert(`${item.name} equipado no slot de ${EQUIPMENT_SLOTS[slotKey].name}.`);
-        }
-        
-        function unequipItem(item) {
-            hasInteracted = true;
-            checkAndPlayMusic();
-            
-            const slotKey = item.type;
-            
-            if (EQUIPMENT_SLOTS[slotKey].currentItem && EQUIPMENT_SLOTS[slotKey].currentItem.id === item.id) {
-                 EQUIPMENT_SLOTS[slotKey].currentItem = null;
-                 alert(`${item.name} desequipado.`);
-            }
-            
-            renderEquipment();
-            renderInventory();
-            updateEquipmentStats(); 
-            updateDisplay(); 
-            if (inspectedItem) {
-                inspectItem(inspectedItem); 
-            }
-            saveGame();
-        }
-
-
-        // X. INICIALIZAÇÃO
-        // ====================================================================
-
-        // 1. Garantimos que os painéis de jogo (sidebar e main-content) estão ocultos.
-        hideAllPanels(); 
-
-        // 2. Tentamos carregar os dados salvos.
-        loadGame();
-        
-        // 3. Forçamos a exibição do Menu Inicial.
-        startMenu.style.display = 'flex'; 
-        
-    </script>
-
-</body>
-</html>
+        funct
