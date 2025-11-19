@@ -900,6 +900,36 @@
         const contentArea = document.getElementById('content-area');
         const headerTitle = document.getElementById('header').getElementsByTagName('h2')[0];
         
+        function startGame(event) {
+    // 1. Evita o recarregamento, caso o botão esteja em um formulário
+    if (event) {
+        event.preventDefault(); 
+    }
+    
+    // 2. ESCONDE O MENU INICIAL. (Elemento de alto nível)
+    const startMenu = document.getElementById('start-menu');
+    if (startMenu) {
+        startMenu.style.display = 'none';
+    }
+    
+    // 3. (OPCIONAL) ESCONDE O WRAPPER PRINCIPAL DO JOGO, se ele estiver visível no início
+    // Se o seu jogo usa o `#app-wrapper` para a interface principal, ele DEVE estar escondido
+    const appWrapper = document.getElementById('app-wrapper'); 
+    if (appWrapper) {
+        appWrapper.style.display = 'none'; // Garante que a interface do jogo não apareça
+    }
+
+    // 4. MOSTRA O PAINEL DE CRIAÇÃO. (Elemento de alto nível)
+    const creationPanel = document.getElementById('character-creation-panel');
+    if (creationPanel) {
+        creationPanel.style.display = 'flex'; 
+    }
+
+    // 5. Funções de inicialização do criador
+    generateClassButtons(); 
+    checkCreationRequirements(); 
+}
+        
         // Painéis
         const panels = {
             // REMOVIDO: 'training-panel'
@@ -1217,36 +1247,6 @@ function finalizeCreation() {
 }
 
         // Exemplo de como a função deve estar:
-
-function startGame(event) {
-    // 1. Evita o recarregamento, caso o botão esteja em um formulário
-    if (event) {
-        event.preventDefault(); 
-    }
-    
-    // 2. ESCONDE O MENU INICIAL. (Elemento de alto nível)
-    const startMenu = document.getElementById('start-menu');
-    if (startMenu) {
-        startMenu.style.display = 'none';
-    }
-    
-    // 3. (OPCIONAL) ESCONDE O WRAPPER PRINCIPAL DO JOGO, se ele estiver visível no início
-    // Se o seu jogo usa o `#app-wrapper` para a interface principal, ele DEVE estar escondido
-    const appWrapper = document.getElementById('app-wrapper'); 
-    if (appWrapper) {
-        appWrapper.style.display = 'none'; // Garante que a interface do jogo não apareça
-    }
-
-    // 4. MOSTRA O PAINEL DE CRIAÇÃO. (Elemento de alto nível)
-    const creationPanel = document.getElementById('character-creation-panel');
-    if (creationPanel) {
-        creationPanel.style.display = 'flex'; 
-    }
-
-    // 5. Funções de inicialização do criador
-    generateClassButtons(); 
-    checkCreationRequirements(); 
-}
 
         // ====================================================================
         // V. FUNÇÕES DE ÁUDIO
