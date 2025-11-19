@@ -19,10 +19,10 @@
         }
 
         #start-menu img {
-            /* **CORREÇÃO CRÍTICA:** Limita o tamanho da imagem */
-            max-width: 80%; /* Garante que a logo caiba em telas menores */
+            /* CORREÇÃO FINAL: Com !important para garantir que não seja sobrescrito */
+            max-width: 80% !important; 
             height: auto;
-            margin-bottom: 40px; /* Adiciona espaço entre a logo e os botões */
+            margin-bottom: 40px; 
         }
         /* Variáveis de Cores (CSS Custom Properties) */
         :root {
