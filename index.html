@@ -998,7 +998,37 @@ window.startGame = function(event) {
             characterCreationPanel.style.display = 'flex'; 
             generateClassButtons(); 
             checkCreationRequirements(); 
+        } // <--- A showCharacterCreation DEVE TERMINAR AQUI!
+
+        // ✅ SUBSTITUA O 'funct' E AS LINHAS QUEBRADAS POR ESTE BLOCO:
+        function returnToMainMenu() {
+            if (!confirm("Você tem certeza que deseja retornar ao Menu Inicial? Seu progresso atual será salvo.")) {
+                return;
+            }
+            // saveGame(); // Se a função saveGame estiver definida
+            hideAllPanels(); 
+            startMenu.style.display = 'flex'; 
         }
         
-        // CORRIGIDO: Volta para a tela de Menu Inicial
-        funct
+</div> <script>
+        // Restauração das variáveis de DOM
+        sidebar = document.getElementById('sidebar'); 
+        mainContent = document.getElementById('main-content');
+        contentArea = document.getElementById('content-area');
+        headerTitle = document.getElementById('header').getElementsByTagName('h2')[0];
+
+        // Elementos principais
+        appWrapper = document.getElementById('app-wrapper');
+        startMenu = document.getElementById('start-menu');
+        characterCreationPanel = document.getElementById('character-creation-panel');
+        
+        // Início da Lógica (que estava no final do seu código)
+        hideAllPanels(); 
+        // loadGame(); // Descomentar se a função loadGame estiver DEFINIDA no bloco principal
+        startMenu.style.display = 'flex';
+        appWrapper.style.display = 'none';
+        
+    </script>
+    
+</body>
+</html>
