@@ -551,8 +551,6 @@
 
     
 
-    <div id="app-wrapper">
-
        <div id="start-menu">
     <img src="assets/blaze-and-steel.png" alt="Blaze and Steel Logo" style="max-width: 80%;">
     <button onclick="startGame()">NOVO JOGO</button>
@@ -589,33 +587,33 @@
         <button id="confirm-creation-button" onclick="finalizeCreation()" style="background-color: var(--color-evolve); color: white; padding: 12px 25px; border: none; border-radius: 5px; width: 100%;">
             INICIAR JOGO!
         </button>
-    </div>
-</div>
-
-<div id="app-wrapper" style="display: none;">
-    </div>
-
-        <div id="sidebar">
-            <div id="hero-info">
-                <div id="hero-info-display">
-                    <img id="hero-class-image" src="" alt="Foto do Herói" class="hidden">
-                    <h3 id="hero-name"></h3>
-                </div>
-                <p>Nível: <span id="power-level">1</span></p>
+</div> 
+</div> <div id="app-wrapper" style="display: none;"> 
+    
+    <div id="sidebar">
+        <div id="hero-info">
+            <div id="hero-info-display">
+                <img id="hero-class-image" src="" alt="Foto do Herói" class="hidden">
+                <h3 id="hero-name"></h3>
             </div>
-            
-            <nav class="sidebar-menu">
-                
-                <button id="btn-adventure" onclick="showPanel('adventure-panel')" class="active">Aventura</button>
-                <button id="btn-attributes" onclick="showPanel('attributes-panel')">Atributos</button>
-                <button id="btn-equipment" onclick="showPanel('equipment-panel')">Equipamento</button>
-                <button id="btn-inventory" onclick="showPanel('inventory-panel')">Inventário</button>
-                <button id="btn-status" onclick="showPanel('status-panel')">Status</button>
-                
-                <button id="btn-main-menu" onclick="returnToMainMenu()">Menu Inicial</button> 
-                
-            </nav>
+            <p>Nível: <span id="power-level">1</span></p>
         </div>
+        
+        <nav class="sidebar-menu">
+            <button id="btn-adventure" onclick="showPanel('adventure-panel')" class="active">Aventura</button>
+            <button id="btn-attributes" onclick="showPanel('attributes-panel')">Atributos</button>
+            <button id="btn-equipment" onclick="showPanel('equipment-panel')">Equipamento</button>
+            <button id="btn-inventory" onclick="showPanel('inventory-panel')">Inventário</button>
+            <button id="btn-status" onclick="showPanel('status-panel')">Status</button>
+            
+            <button id="btn-main-menu" onclick="returnToMainMenu()">Menu Inicial</button> 
+        </nav>
+    </div>
+
+    <div id="main-content">
+        </div>
+    
+</div> ```
 
         <div id="main-content">
             
