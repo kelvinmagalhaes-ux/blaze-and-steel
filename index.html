@@ -1051,13 +1051,38 @@
         }
 
         // Mostra o painel de conteúdo
-        function showPanel(panelId) {
+function showPanel(panelId) {
+    
     // 1. Esconde todos os painéis internos dentro de #content-area
-    // Seleciona todas as DIVs que são filhos diretos de #content-area
     const panels = document.querySelectorAll('#content-area > div'); 
     panels.forEach(panel => {
         panel.style.display = 'none';
     });
+
+    // 2. 🚨 CRUCIAL: Mostra o painel solicitado
+    const targetPanel = document.getElementById(panelId);
+    if (targetPanel) {
+        // Usamos 'flex' ou 'block' dependendo de como o CSS precisa.
+        // O layout do mapa deve funcionar com 'block' ou 'flex'. Vamos tentar 'flex'.
+        targetPanel.style.display = 'flex'; 
+    } else {
+        console.error(`Painel não encontrado: #${panelId}`);
+        return; 
+    }
+
+    // 3. Atualiza os botões ativos na Sidebar
+    const buttons = document.querySelectorAll('.sidebar-menu button');
+    buttons.forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Encontra e ativa o botão na sidebar que corresponde ao painel clicado
+    const buttonId = 'btn-' + panelId.replace('-panel', ''); 
+    const targetButton = document.getElementById(buttonId);
+    if (targetButton) {
+        targetButton.classList.add('active');
+    }
+}
 
     // 2. Mostra o painel solicitado
     const targetPanel = document.getElementById(panelId);
