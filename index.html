@@ -1120,8 +1120,9 @@
         }
         
         
-        // Finaliza a criação do personagem
-        function finalizeCreation() {
+// Finaliza a criação do personagem
+function finalizeCreation() {
+    // 1. Verificação de Requisitos (Classe e Nome)
     if (!selectedClass) {
         alert("Por favor, selecione uma classe.");
         return;
@@ -1134,6 +1135,7 @@
         return;
     }
 
+    // 2. Inicialização do Herói (Atributos e Inventário)
     try {
         const cls = CLASSES[selectedClass];
         heroBaseHP = cls.initialHP;
@@ -1161,11 +1163,16 @@
         console.error("Erro durante a inicialização de itens/atributos. O jogo será iniciado, mas pode haver problemas de status:", e);
     }
     
-    // 🟢 CRUCIAL: 1. Esconde TUDO (incluindo o painel de criação, start-menu, etc.)
+    // 3. Transição de Tela e Salvamento
+    // CRUCIAL: 1. Esconde TUDO (painel de criação, start-menu, etc.)
     hideAllPanels(); 
     
-    // 🟢 CRUCIAL: 2. MOSTRA APENAS O PAINEL PRINCIPAL DO JOGO (app-wrapper)
+    // CRUCIAL: 2. MOSTRA O PAINEL PRINCIPAL DO JOGO (app-wrapper)
     document.getElementById('app-wrapper').style.display = 'flex'; 
+    
+    // 🚨 NOVO: MOSTRA O PAINEL PADRÃO DO JOGO (O MAPA)
+    // Isso garante que o jogo não inicie vazio dentro do #app-wrapper
+    showPanel('adventure-map-panel'); 
     
     updateDisplay(); // Atualiza HP, EXP, etc.
     saveGame(); // Salva o novo herói
