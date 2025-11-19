@@ -632,128 +632,144 @@
         </div>
 
         <div id="content-area">
+    
+    <div id="adventure-map-panel" class="content-panel" style="display: block;"> 
+        <h2>🌍 Mapa da Aventura</h2>
+        <p>Clique em uma região para iniciar uma missão ou explorar.</p>
+
+        <img src="map.jpg" alt="Mapa da Aventura" usemap="#adventure-map" id="game-map" style="max-width: 100%; height: auto; border: 2px solid var(--color-accent);">
+
+        <map name="adventure-map">
+            <area shape="poly" coords="205,80,314,79,350,154,302,238,229,234,228,155" alt="Skyrim" href="#" onclick="selectRegion('Skyrim'); return false;">
+            <area shape="poly" coords="109,241,200,230,229,322,176,346,134,321" alt="Hammerfell" href="#" onclick="selectRegion('Hammerfell'); return false;">
+            <area shape="poly" coords="396,25,500,20,535,165,490,270,395,250" alt="Morrowind" href="#" onclick="selectRegion('Morrowind'); return false;">
+            <area shape="poly" coords="235,245,390,250,390,380,240,375" alt="Cyrodiil" href="#" onclick="selectRegion('Cyrodiil'); return false;">
+        </map>
+
+        <div id="region-details" style="margin-top: 20px; padding: 10px; border: 1px dashed #555;">
+            Detalhes da região ou informações da missão aparecerão aqui.
+        </div>
+        
+        <button onclick="showPanel('adventure-training-panel')" style="margin-top: 20px; background-color: #555; color: white;">Ver Opções de Treinamento</button>
+    </div>
+    
+    <div id="adventure-training-panel" class="content-panel" style="display: none;">
+        <img src="assets/adventure.png" alt="Adventure Time Logo" id="adventure-title-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x100?text=ADVENTURE';">
+        <h2>⚔️ Treinamento e Batalha</h2>
+        <p>Enfrente criaturas para ganhar Ouro, EXP e itens!</p>
+        
+        <div id="mission-area" class="content-panel">
+            <h3>Progresso e Treinamento</h3>
+            <p>Ganha experiência para subir de nível.</p>
+            <button onclick="trainForStats('attack')" style="background-color: var(--color-evolve); color: white; padding: 10px; margin: 5px;"> Treinar Habilidades (Ganho: 10 EXP) </button>
+
+            <div style="margin-top: 20px;">
+                <p>🌟 Nível de Poder: <span id="power-level-display">1</span></p>
+                <p>✨ EXP: <span id="exp-count">0</span> / <span id="exp-required">50</span></p>
+                <button id="level-up-button" onclick="levelUp()" disabled style="background-color: var(--color-evolve); color: white;"> SUBIR DE NÍVEL (Falta: 50 EXP) </button>
+            </div>
             
-            <div id="adventure-panel" style="display: block;"> 
-                <img src="assets/adventure.png" alt="Adventure Time Logo" id="adventure-title-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x100?text=ADVENTURE';">
-                <h2>🗺️ Aventura</h2>
-                <p>Enfrente criaturas para ganhar Ouro, EXP e itens!</p>
+            <hr style="margin: 20px 0;">
 
-                <div id="mission-area" class="content-panel">
-                    <h3>Progresso e Treinamento</h3>
-                    <p>Ganha experiência para subir de nível.</p>
-                    <button onclick="trainForStats('attack')" style="background-color: var(--color-evolve); color: white; padding: 10px; margin: 5px;"> Treinar Habilidades (Ganho: 10 EXP) </button>
+            <h3>Missões de Exploração</h3>
+            <p>Selecione seu nível de dificuldade:</p>
+            
+            <div style="margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 10px;">
+                <button onclick="selectMonster(1)">Floresta (Nv 1)</button>
+                <button onclick="selectMonster(5)">Pântano (Nv 5)</button>
+                <button onclick="selectMonster(10)">Montanhas (Nv 10)</button>
+            </div>
 
-                    <div style="margin-top: 20px;">
-                        <p>🌟 Nível de Poder: <span id="power-level-display">1</span></p>
-                        <p>✨ EXP: <span id="exp-count">0</span> / <span id="exp-required">50</span></p>
-                        <button id="level-up-button" onclick="levelUp()" disabled style="background-color: var(--color-evolve); color: white;"> SUBIR DE NÍVEL (Falta: 50 EXP) </button>
-                    </div>
-                    
-                    <hr style="margin: 20px 0;">
+            <div id="selected-monster-details" style="min-height: 50px; margin-bottom: 15px;">
+                <p id="monster-name-display">Selecione um local para ver o monstro...</p>
+            </div>
 
-                    <h3>Missões de Exploração</h3>
-                    <p>Selecione seu nível de dificuldade:</p>
-                    
-                    <div style="margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 10px;">
-                        <button onclick="selectMonster(1)">Floresta (Nv 1)</button>
-                        <button onclick="selectMonster(5)">Pântano (Nv 5)</button>
-                        <button onclick="selectMonster(10)">Montanhas (Nv 10)</button>
-                    </div>
-
-                    <div id="selected-monster-details" style="min-height: 50px; margin-bottom: 15px;">
-                        <p id="monster-name-display">Selecione um local para ver o monstro...</p>
-                    </div>
-
-                    <div style="display: flex; gap: 10px; align-items: center;">
-                        <button id="start-battle-button" onclick="startBattle()" disabled style="background-color: var(--color-combat); color: white; padding: 10px 20px; border: none; border-radius: 5px;">
-                            INICIAR BATALHA!
-                        </button>
-                    </div>
-                </div> 
-            </div> 
-        </div> 
-
-    </div> </div> ```
-
-                <div id="attributes-panel" style="display: none;"> <h2>✨ Atributos</h2>
-                    <p>Invista Ouro para melhorias permanentes nos atributos base.</p>
-                    
-                    <div id="upgrade-list" class="content-panel">
-                        <h3>Melhorias Permanentes (Ouro)</h3>
-                        <p>Melhorias permanentes nos atributos base.</p>
-                        
-                        <div style="margin-bottom: 10px;">
-                            <p>⚔️ Ataque Base: <span id="hero-base-atk-display">0</span></p>
-                            <button id="buy-atk-upgrade" onclick="buyUpgrade('atk')" style="background-color: var(--color-accent); color: black; padding: 8px 15px; border-radius: 5px;"> 
-                                Comprar +1 ATK (Custo: <span id="atk-upgrade-cost">0</span> 💰)
-                            </button>
-                        </div>
-                        
-                        <div>
-                            <p>❤️ HP Base: <span id="hero-base-hp-display">0</span></p>
-                            <button id="buy-hp-upgrade" onclick="buyUpgrade('hp')" style="background-color: var(--color-accent); color: black; padding: 8px 15px; border-radius: 5px;"> 
-                                Comprar +10 HP (Custo: <span id="hp-upgrade-cost">0</span> 💰)
-                            </button>
-                        </div>
-                    </div>
-                    
-                    </div>
-
-                <div id="equipment-panel" style="display: none;">
-                    <h2>⚔️ Equipamento</h2>
-                    <p>Equipe seus melhores itens para aumentar seu poder!</p>
-                    
-                    <div style="display: flex; gap: 20px;">
-                        <div class="content-panel" style="flex: 1;">
-                            <h3>Slots de Equipamento</h3>
-                            <div id="equipment-list" style="display: flex; flex-direction: column; gap: 10px;">
-                            </div>
-                        </div>
-                        
-                        <div class="content-panel" style="flex: 1;">
-                            <h3>Estatísticas Totais</h3>
-                            <div id="hero-stats-equipment">
-                                <p>❤️ HP Máximo: <span id="eq-max-hp">0</span> (Base: <span id="eq-base-hp">0</span> + Bônus: <span id="eq-bonus-hp">0</span>)</p>
-                                <p>⚔️ ATK Total: <span id="eq-total-atk">0</span> (Base: <span id="eq-base-atk">0</span> + Bônus: <span id="eq-bonus-atk">0</span>)</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="inventory-panel" style="display: none;">
-                    <h2>📦 Inventário</h2>
-                    <p>Selecione um item para ver os detalhes e equipá-lo/desequipá-lo.</p>
-                    
-                    <div style="display: flex; gap: 20px; margin-top: 20px;">
-                        <div class="content-panel" style="flex: 2;">
-                            <h3>Itens Coletados</h3>
-                            <div id="inventory-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;">
-                            </div>
-                        </div>
-                        
-                        <div id="item-inspection-area" class="content-panel" style="flex: 1;">
-                            <h3>Detalhes do Item</h3>
-                            <p>Selecione um item no inventário.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="status-panel" style="display: none;">
-                    <h2>👤 Status do Herói</h2>
-                    <div class="content-panel">
-                        <h3>Estatísticas Atuais</h3>
-                        <p>Nome: <span id="status-hero-name"></span></p>
-                        <p>Classe: <span id="status-hero-class"></span></p>
-                        <p>Nível: <span id="status-power-level">1</span></p>
-                        <p>HP Máximo: <span id="status-max-hp">0</span></p>
-                        <p>Ataque Total: <span id="status-total-atk">0</span></p>
-                    </div>
-                </div>
-                
-                </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button id="start-battle-button" onclick="startBattle()" disabled style="background-color: var(--color-combat); color: white; padding: 10px 20px; border: none; border-radius: 5px;">
+                    INICIAR BATALHA!
+                </button>
+            </div>
+        </div>
+        
+        <button onclick="showPanel('adventure-map-panel')" style="margin-top: 20px; background-color: #555; color: white;">Voltar para o Mapa</button>
+    </div> 
+    
+    <div id="attributes-panel" style="display: none;"> 
+        <h2>✨ Atributos</h2>
+        <p>Invista Ouro para melhorias permanentes nos atributos base.</p>
+        
+        <div id="upgrade-list" class="content-panel">
+            <h3>Melhorias Permanentes (Ouro)</h3>
+            <p>Melhorias permanentes nos atributos base.</p>
+            
+            <div style="margin-bottom: 10px;">
+                <p>⚔️ Ataque Base: <span id="hero-base-atk-display">0</span></p>
+                <button id="buy-atk-upgrade" onclick="buyUpgrade('atk')" style="background-color: var(--color-accent); color: black; padding: 8px 15px; border-radius: 5px;"> 
+                    Comprar +1 ATK (Custo: <span id="atk-upgrade-cost">0</span> 💰)
+                </button>
+            </div>
+            
+            <div>
+                <p>❤️ HP Base: <span id="hero-base-hp-display">0</span></p>
+                <button id="buy-hp-upgrade" onclick="buyUpgrade('hp')" style="background-color: var(--color-accent); color: black; padding: 8px 15px; border-radius: 5px;"> 
+                    Comprar +10 HP (Custo: <span id="hp-upgrade-cost">0</span> 💰)
+                </button>
+            </div>
         </div>
     </div>
 
+    <div id="equipment-panel" style="display: none;">
+        <h2>⚔️ Equipamento</h2>
+        <p>Equipe seus melhores itens para aumentar seu poder!</p>
+        
+        <div style="display: flex; gap: 20px;">
+            <div class="content-panel" style="flex: 1;">
+                <h3>Slots de Equipamento</h3>
+                <div id="equipment-list" style="display: flex; flex-direction: column; gap: 10px;">
+                </div>
+            </div>
+            
+            <div class="content-panel" style="flex: 1;">
+                <h3>Estatísticas Totais</h3>
+                <div id="hero-stats-equipment">
+                    <p>❤️ HP Máximo: <span id="eq-max-hp">0</span> (Base: <span id="eq-base-hp">0</span> + Bônus: <span id="eq-bonus-hp">0</span>)</p>
+                    <p>⚔️ ATK Total: <span id="eq-total-atk">0</span> (Base: <span id="eq-base-atk">0</span> + Bônus: <span id="eq-bonus-atk">0</span>)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="inventory-panel" style="display: none;">
+        <h2>📦 Inventário</h2>
+        <p>Selecione um item para ver os detalhes e equipá-lo/desequipá-lo.</p>
+        
+        <div style="display: flex; gap: 20px; margin-top: 20px;">
+            <div class="content-panel" style="flex: 2;">
+                <h3>Itens Coletados</h3>
+                <div id="inventory-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;">
+                </div>
+            </div>
+            
+            <div id="item-inspection-area" class="content-panel" style="flex: 1;">
+                <h3>Detalhes do Item</h3>
+                <p>Selecione um item no inventário.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="status-panel" style="display: none;">
+        <h2>👤 Status do Herói</h2>
+        <div class="content-panel">
+            <h3>Estatísticas Atuais</h3>
+            <p>Nome: <span id="status-hero-name"></span></p>
+            <p>Classe: <span id="status-hero-class"></span></p>
+            <p>Nível: <span id="status-power-level">1</span></p>
+            <p>HP Máximo: <span id="status-max-hp">0</span></p>
+            <p>Ataque Total: <span id="status-total-atk">0</span></p>
+        </div>
+    </div>
+
+</div>
     <script>
         // ====================================================================
         // I. ESTADO DO JOGO (Variáveis Globais)
