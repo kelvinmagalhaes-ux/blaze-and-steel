@@ -940,11 +940,15 @@
         // ====================================================================
 
         function hideAllPanels() {
-            startMenu.style.display = 'none';
-            characterCreationPanel.style.display = 'none';
-            sidebar.style.display = 'none';
-            mainContent.style.display = 'none';
-        }
+    // Esconde o Menu Inicial
+    startMenu.style.display = 'none';
+    
+    // Esconde o Painel de Criação de Herói
+    characterCreationPanel.style.display = 'none';
+    
+    // 🚨 CORRIGIDO: Esconda o APP WRAPPER inteiro, e NÃO a sidebar e o mainContent separadamente.
+    appWrapper.style.display = 'none';
+}
 
         function showCharacterCreation() {
             hideAllPanels(); 
