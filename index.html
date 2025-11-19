@@ -1158,12 +1158,13 @@ function startGame() {
     // 1. Esconde todos os painéis
     hideAllPanels(); 
     
-    // ... outras linhas ...
+    // 2. MOSTRA O PAINEL DE CRIAÇÃO DE CLASSE (ID CORRIGIDO)
+    document.getElementById('character-creation-panel').style.display = 'flex'; // Usando o ID que você encontrou
     
-    // 3. MOSTRA O PAINEL DE CRIAÇÃO DE CLASSE - CORRIGIDO O ID!
-    document.getElementById('character-creation-panel').style.display = 'flex';
+    // 3. NOVO: GERA OS BOTÕES DE CLASSE PARA QUE ELES APAREÇAM!
+    generateClassButtons(); // ESTA É A LINHA QUE FALTAVA
     
-    // ... outras linhas ...
+    // ... outras linhas como updateDisplay() ...
 }
 
         // ====================================================================
