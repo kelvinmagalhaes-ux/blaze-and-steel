@@ -7,13 +7,16 @@
     <style>
 
         #start-menu {
-            /* Garante que o menu ocupe todo o espaço e centraliza o conteúdo */
-            display: flex; /* Crucial para o layout */
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            /* ... outras propriedades de layout/tamanho ... */
-        }
+            /* Garante que o menu ocupe todo o espaço e centraliza o conteúdo */
+            width: 100%;       /* ADICIONADO: Ocupa toda a largura */
+            height: 100vh;     /* ADICIONADO/CRUCIAL: Ocupa 100% da altura da tela */
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; /* Agora esta linha vai funcionar corretamente! */
+            align-items: center;
+            padding: 20px; /* RECOMENDADO: Adiciona um respiro nas laterais */
+            /* ... outras propriedades de layout/tamanho ... */
+        }
 
         #start-menu img {
             /* **CORREÇÃO CRÍTICA:** Limita o tamanho da imagem */
