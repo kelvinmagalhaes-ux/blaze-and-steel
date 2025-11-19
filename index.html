@@ -587,9 +587,8 @@
         <button id="confirm-creation-button" onclick="finalizeCreation()" style="background-color: var(--color-evolve); color: white; padding: 12px 25px; border: none; border-radius: 5px; width: 100%;">
             INICIAR JOGO!
         </button>
-</div>  </div> 
-
-<div id="app-wrapper" style="display: none;">
+</div>
+</div> <div id="app-wrapper" style="display: none;">
     
     <div id="sidebar">
         <div id="hero-info">
@@ -609,68 +608,71 @@
             <button id="btn-main-menu" onclick="returnToMainMenu()">Menu Inicial</button>  
         </nav>
     </div> <div id="main-content">
-        </div> </div> ```
-
-        <div id="main-content">
+        <div style="position: absolute; top: 10px; right: 10px; z-index: 10; text-align: right;">
+            <button id="audio-control-button" onclick="toggleMute()" style="margin-bottom: 5px;">
+                🔊 Mute
+            </button>
             
-            <div style="position: absolute; top: 10px; right: 10px; z-index: 10; text-align: right;">
-                <button id="audio-control-button" onclick="toggleMute()" style="margin-bottom: 5px;">
-                    🔊 Mute
-                </button>
-                
-                <div class="volume-control-container" style="width: 150px; padding: 5px; margin-left: auto;">
-                    <label for="volume-slider-game" style="font-size: 0.8em; margin: 0;">Volume: <span id="volume-label-game">100</span></label>
-                    <input type="range" id="volume-slider-game" min="0" max="100" value="100" oninput="setVolume(this.value)">
-                </div>
+            <div class="volume-control-container" style="width: 150px; padding: 5px; margin-left: auto;">
+                <label for="volume-slider-game" style="font-size: 0.8em; margin: 0;">Volume: <span id="volume-label-game">100</span></label>
+                <input type="range" id="volume-slider-game" min="0" max="100" value="100" oninput="setVolume(this.value)">
             </div>
+        </div>
 
-
-            <div id="header">
-                <h2></h2>
-                <div class="resource-display">
-                    <div class="resource-item" style="color: var(--color-accent);">💰 Ouro: <span id="gold-count">0</span></div>
-                    </div>
+        <div id="header">
+            <h2></h2>
+            <div class="resource-display">
+                <div class="resource-item" style="color: var(--color-accent);">💰 Ouro: <span id="gold-count">0</span></div>
             </div>
+        </div>
 
-            <div id="content-area">
-                
-                <div id="adventure-panel" style="display: block;"> <img src="assets/adventure.png" alt="Adventure Time Logo" id="adventure-title-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x100?text=ADVENTURE';">
-                    <h2>🗺️ Aventura</h2>
-                    <p>Enfrente criaturas para ganhar Ouro, EXP e itens!</p>
+        <div id="content-area">
+            
+            <div id="adventure-panel" style="display: block;"> 
+                <img src="assets/adventure.png" alt="Adventure Time Logo" id="adventure-title-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x100?text=ADVENTURE';">
+                <h2>🗺️ Aventura</h2>
+                <p>Enfrente criaturas para ganhar Ouro, EXP e itens!</p>
 
-                    <div id="mission-area" class="content-panel">
-                        <h3>Progresso e Treinamento</h3>
-                        <p>Ganha experiência para subir de nível.</p>
-                        <button onclick="trainForStats('attack')" style="background-color: var(--color-evolve); color: white; padding: 10px; margin: 5px;"> Treinar Habilidades (Ganho: 10 EXP) </button>
+                <div id="mission-area" class="content-panel">
+                    <h3>Progresso e Treinamento</h3>
+                    <p>Ganha experiência para subir de nível.</p>
+                    <button onclick="trainForStats('attack')" style="background-color: var(--color-evolve); color: white; padding: 10px; margin: 5px;"> Treinar Habilidades (Ganho: 10 EXP) </button>
 
-                        <div style="margin-top: 20px;">
-                            <p>🌟 Nível de Poder: <span id="power-level-display">1</span></p>
-                            <p>✨ EXP: <span id="exp-count">0</span> / <span id="exp-required">50</span></p>
-                            <button id="level-up-button" onclick="levelUp()" disabled style="background-color: var(--color-evolve); color: white;"> SUBIR DE NÍVEL (Falta: 50 EXP) </button>
-                        </div>
-                        
-                        <hr style="margin: 20px 0;">
-
-                        <h3>Missões de Exploração</h3>
-                        <p>Selecione seu nível de dificuldade:</p>
-                        
-                        <div style="margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 10px;">
-                            <button onclick="selectMonster(1)">Floresta (Nv 1)</button>
-                            <button onclick="selectMonster(5)">Pântano (Nv 5)</button>
-                            <button onclick="selectMonster(10)">Montanhas (Nv 10)</button>
-                        </div>
-
-                        <div id="selected-monster-details" style="min-height: 50px; margin-bottom: 15px;">
-                            <p id="monster-name-display">Selecione um local para ver o monstro...</p>
-                        </div>
-
-                        <div style="display: flex; gap: 10px; align-items: center;">
-                            <button id="start-battle-button" onclick="startBattle()" disabled style="background-color: var(--color-combat); color: white; padding: 10px 20px; border: none; border-radius: 5px;">
-                                INICIAR BATALHA!
-                            </button>
-                            <p id="hero-current-hp-status">❤️ HP: 0 / 0</p>
-                        </div>
+                    <div style="margin-top: 20px;">
+                        <p>🌟 Nível de Poder: <span id="power-level-display">1</span></p>
+                        <p>✨ EXP: <span id="exp-count">0</span> / <span id="exp-required">50</span></p>
+                        <button id="level-up-button" onclick="levelUp()" disabled style="background-color: var(--color-evolve); color: white;"> SUBIR DE NÍVEL (Falta: 50 EXP) </button>
                     </div>
+                    
+                    <hr style="margin: 20px 0;">
+
+                    <h3>Missões de Exploração</h3>
+                    <p>Selecione seu nível de dificuldade:</p>
+                    
+                    <div style="margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 10px;">
+                        <button onclick="selectMonster(1)">Floresta (Nv 1)</button>
+                        <button onclick="selectMonster(5)">Pântano (Nv 5)</button>
+                        <button onclick="selectMonster(10)">Montanhas (Nv 10)</button>
+                    </div>
+
+                    <div id="selected-monster-details" style="min-height: 50px; margin-bottom: 15px;">
+                        <p id="monster-name-display">Selecione um local para ver o monstro...</p>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button id="start-battle-button" onclick="startBattle()" disabled style="background-color: var(--color-combat); color: white; padding: 10px 20px; border: none; border-radius: 5px;">
+                            INICIAR BATALHA!
+                        </button>
+                    </div>
+                </div> </div> </div> </div> </div> ```
+
+### 📝 Resumo da Ação:
+
+1.  **Substitua** o bloco de código que você me enviou pelo **bloco CORRIGIDO acima**.
+2.  **Remova quaisquer tags `</div>`** soltas que possam ter ficado no final do seu arquivo.
+3.  **Salve, comite** e faça um **Hard Reload**.
+
+O layout agora deve se corrigir e exibir a Sidebar (200px) ao lado do conteúdo da Aventura, graças ao `#app-wrapper` pai estar corretamente aninhado e ter `display: flex`.
 
                     <div id="combat-log-area" class="content-panel" style="height: 300px; overflow-y: scroll;">
                         <h3>Registro de Batalha</h3>
