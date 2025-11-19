@@ -1155,17 +1155,15 @@
         // Exemplo de como a função deve estar:
 
 function startGame() {
-    // 1. Esconde todos os painéis, incluindo o Menu Inicial
+    // 1. Esconde todos os painéis
     hideAllPanels(); 
     
-    // 2. Tenta carregar um novo herói (ou apenas reseta o estado)
-    // Se você tiver uma função resetHero(), ela iria aqui.
+    // ... outras linhas ...
     
-    // 3. MOSTRA O PAINEL DE CRIAÇÃO DE CLASSE
-    document.getElementById('class-selection-panel').style.display = 'flex';
+    // 3. MOSTRA O PAINEL DE CRIAÇÃO DE CLASSE - CORRIGIDO O ID!
+    document.getElementById('character-creation-panel').style.display = 'flex';
     
-    // Opcional: Para zerar o volume na primeira carga, se necessário
-    updateDisplay();
+    // ... outras linhas ...
 }
 
         // ====================================================================
