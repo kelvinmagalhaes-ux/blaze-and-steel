@@ -1152,15 +1152,21 @@
             saveGame(); 
         }
 
-        // Inicia o jogo após criação ou carregamento
-        function startGame() {
-            hideAllPanels(); 
+        // Exemplo de como a função deve estar:
 
-            sidebar.style.display = 'block';
-            mainContent.style.display = 'block'; 
-            showPanel('adventure-panel'); // Muda o painel inicial para Aventura
-            heroNameInput.value = '';
-        }
+function startGame() {
+    // 1. Esconde todos os painéis, incluindo o Menu Inicial
+    hideAllPanels(); 
+    
+    // 2. Tenta carregar um novo herói (ou apenas reseta o estado)
+    // Se você tiver uma função resetHero(), ela iria aqui.
+    
+    // 3. MOSTRA O PAINEL DE CRIAÇÃO DE CLASSE
+    document.getElementById('class-selection-panel').style.display = 'flex';
+    
+    // Opcional: Para zerar o volume na primeira carga, se necessário
+    updateDisplay();
+}
 
         // ====================================================================
         // V. FUNÇÕES DE ÁUDIO
