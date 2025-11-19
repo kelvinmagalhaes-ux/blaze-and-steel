@@ -297,7 +297,7 @@
             width: 100%;
             height: 100%;
             background-color: var(--color-primary);
-            z-index: 101;
+            z-index: 999;
             display: none; 
             justify-content: center;
             align-items: center;
@@ -903,28 +903,29 @@
         function startGame(event) {
     // 1. Evita o recarregamento
     if (event) {
-        event.preventDefault(); // [cite: 993]
+        event.preventDefault(); 
     }
     
-    // 2. ESCONDE O MENU INICIAL. (Usa a constante GLOBAL)
+    // 2. ESCONDE O MENU INICIAL. (Usa a constante global)
+    // startMenu foi definida nas linhas 991-997
     if (startMenu) {
         startMenu.style.display = 'none';
     }
     
-    // 3. ESCONDE O WRAPPER PRINCIPAL. (Usa a constante GLOBAL)
+    // 3. ESCONDE O WRAPPER PRINCIPAL. (Usa a constante global)
     if (appWrapper) {
-        appWrapper.style.display = 'none';
+        appWrapper.style.display = 'none'; 
     }
 
-    // 4. MOSTRA O PAINEL DE CRIAÇÃO. (Usa a constante GLOBAL)
+    // 4. MOSTRA O PAINEL DE CRIAÇÃO. (Usa a constante global)
     if (characterCreationPanel) {
         // Usa a constante com o nome completo: characterCreationPanel
         characterCreationPanel.style.display = 'flex'; 
     }
 
-    // 5. Funções de inicialização do criador
+    // 5. Funções de inicialização
     generateClassButtons(); 
-    checkCreationRequirements(); // [cite: 998]
+    checkCreationRequirements(); 
 }
         
         // Painéis
