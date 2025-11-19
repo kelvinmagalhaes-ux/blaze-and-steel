@@ -907,7 +907,14 @@ startMenu = document.getElementById('start-menu');
 characterCreationPanel = document.getElementById('character-creation-panel');
 appWrapper = document.getElementById('app-wrapper');
 
-window.startGame = function(event) {
+window.startGame = function returnToMainMenu() {
+    if (!confirm("Você tem certeza que deseja retornar ao Menu Inicial? Seu progresso atual será salvo.")) {
+        return;
+    }
+    saveGame();
+    hideAllPanels();
+    startMenu.style.display = 'flex';
+}ion(event) {
     if (event) event.preventDefault();
 
     if (!startMenu || !characterCreationPanel || !appWrapper) {
