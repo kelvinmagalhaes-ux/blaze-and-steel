@@ -553,7 +553,7 @@
 
        <div id="start-menu">
     <img src="assets/blaze-and-steel.png" alt="Blaze and Steel Logo" style="max-width: 80%;">
-    <button onclick="startGame(event)">NOVO JOGO</button>
+    <button type="button" onclick="startGame(event)">NOVO JOGO</button>
     <button id="btn-load-game" onclick="loadGame(true, true)">CARREGAR JOGO</button>
     <p class="credits">Criado por @psikelvinmagalhaes</p>
 </div>
@@ -1219,26 +1219,30 @@ function finalizeCreation() {
         // Exemplo de como a função deve estar:
 
 function startGame(event) {
-    // 🚨 1. CORREÇÃO CRUCIAL: Impede que o navegador recarregue a página
+    // 1. CORREÇÃO CRUCIAL: Impede o recarregamento.
+    // Se a página ainda recarrega, o botão está DENTRO de um <form> sem type="button" 
+    // ou você precisa do 'event.preventDefault()'.
     if (event) {
         event.preventDefault(); 
     }
     
-    // 2. Esconde o Menu Inicial
-    // O Menu Inicial e o Painel de Criação são elementos de alto nível.
-    // Você precisa esconder o Menu Inicial diretamente.
+    // 2. ESCONDE O MENU INICIAL. (Elemento de alto nível)
     const startMenu = document.getElementById('start-menu');
     if (startMenu) {
         startMenu.style.display = 'none';
+    } else {
+        console.error("Erro: Menu inicial não encontrado!");
     }
     
-    // 3. Mostra o Painel de Criação de Personagem
+    // 3. MOSTRA O PAINEL DE CRIAÇÃO. (Elemento de alto nível)
     const creationPanel = document.getElementById('character-creation-panel');
     if (creationPanel) {
-        creationPanel.style.display = 'flex'; // Usando 'flex' para exibir o painel
+        creationPanel.style.display = 'flex'; // Usamos 'flex' para ter certeza
+    } else {
+        console.error("Erro: Painel de criação não encontrado!");
     }
 
-    // 4. GERA OS BOTÕES DE CLASSE
+    // 4. Funções de inicialização do criador
     generateClassButtons(); 
     checkCreationRequirements(); 
 }
