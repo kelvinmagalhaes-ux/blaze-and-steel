@@ -25,6 +25,37 @@
             max-width: 600px !important; /* Garante que não fique gigante em telas 4K */
             margin-bottom: 40px;
         }
+
+        #start-menu button {
+            /* Estilo básico do botão */
+            background-color: var(--color-combat); /* Cor de fundo (vermelho escuro) */
+            color: var(--color-text); /* Cor do texto */
+            border: none;
+            padding: 15px 30px; /* Preenchimento interno */
+            margin: 10px 0; /* Espaçamento entre os botões */
+            font-size: 1.2em; /* Tamanho da fonte */
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px; /* Cantos arredondados */
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Animação suave */
+            min-width: 250px; /* Largura mínima para os botões */
+            text-transform: uppercase; /* Texto em maiúsculas */
+            letter-spacing: 1px; /* Espaçamento entre letras */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Sombra para profundidade */
+        }
+
+        /* Efeito ao passar o mouse */
+        #start-menu button:hover {
+            background-color: #e74c3c; /* Um vermelho um pouco mais claro */
+            transform: translateY(-2px); /* Efeito de "subir" levemente */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6); /* Sombra maior */
+        }
+
+        /* Efeito ao clicar */
+        #start-menu button:active {
+            transform: translateY(0); /* Volta à posição original */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Sombra menor */
+        }
         
         /* Variáveis de Cores (CSS Custom Properties) */
         :root {
