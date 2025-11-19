@@ -900,18 +900,19 @@ let mainContent;
 let contentArea;
 let headerTitle;
         
-    window.startGame = function(event) {
+   } // 🚨 Adicione uma chave de fechamento aqui para forçar o fechamento da função anterior
+
+window.startGame = function(event) {
     if (event) {
         event.preventDefault(); 
     }
     
-    // 🚨 CHECAGEM CRÍTICA: Se a variável global startMenu ainda for nula/vazia, o HTML não carregou.
+    // O resto do código (que você já tinha)
     if (!startMenu) {
         console.error("Erro de Inicialização: Recarregue a página.");
         return; 
     }
     
-    // Lógica principal: Esconde o menu e mostra a criação
     if (startMenu) {
         startMenu.style.display = 'none';
     }
@@ -924,6 +925,12 @@ let headerTitle;
         characterCreationPanel.style.display = 'flex'; 
     }
 
+    generateClassButtons(); 
+    checkCreationRequirements(); 
+}
+
+// 🚨 E adicione uma chave de abertura aqui para reabrir o bloco que foi fechado
+{
     generateClassButtons(); 
     checkCreationRequirements(); 
 }
