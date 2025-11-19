@@ -902,7 +902,12 @@ let mainContent;
 let contentArea;
 let headerTitle;
         
-    window.startGame = function(event) {
+    // Inicialização de elementos essenciais
+startMenu = document.getElementById('start-menu');
+characterCreationPanel = document.getElementById('character-creation-panel');
+appWrapper = document.getElementById('app-wrapper');
+
+window.startGame = function(event) {
     if (event) event.preventDefault();
 
     if (!startMenu || !characterCreationPanel || !appWrapper) {
