@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floresta dos Iniciantes - Blaze and Steel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/game.css">
+    <link rel="stylesheet" href="../css/battle.css">
+    <link rel="stylesheet" href="../css/battle-animations.css">
+    <style>
+        body {
+            background: #0a1a0a url('../assets/fundo.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #battle-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .back-button {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #4a7c59;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(74, 124, 89, 0.5);
+            transform: scale(1.05);
+        }
+
+        .battle-area {
+            display: flex;
+            flex: 1;
+            justify-content: space-around;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .player, .enemy {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #4a7c59;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+        }
+
+        .character-image {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .health-bar-container {
+            width: 100%;
+            height: 20px;
+            background: #333;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .health-bar {
+            height: 100%;
+            background: #4CAF50;
+            width: 100%;
+            transition: width 0.3s;
+        }
+
+        .actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .action-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .attack-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .defend-btn {
+            background: #3498db;
+            color: white;
+        }
+
+        .item-btn {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .flee-btn {
+            background: #f39c12;
+            color: white;
+        }
+
+        .battle-log {
+            margin-top: 20px;
+            height: 150px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #4a7c59;
+            border-radius: 5px;
+            padding: 10px;
+            font-family: monospace;
+        }
+
+        .log-entry {
+            margin: 5px 0;
+            padding: 3px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        /* Estilos para as habilidades especiais */
+        .special-abilities {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .ability-btn {
+            background: linear-gradient(135deg, #6e48aa 0%, #9d50bb 100%);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .ability-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .ability-btn:active {
+            transform: translateY(0);
+        }
+
+        .ability-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .ability-cooldown {
+            position: relative;
+        }
+
+        .cooldown-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="battle-container">
+        <div class="header">
+            <button class="back-button" id="back-button">VOLTAR AO MAPA</button>
+            <h1 class="location-name">Floresta dos Iniciantes</h1>
+            <div class="level-display">Nivel: <span id="player-level">1</span></div>
+            <h1>Floresta dos Iniciantes</h1>
+            <div id="player-level">Nível: 1</div>
+        </div>
+
+        <div class="battle-area">
+            <!-- Jogador -->
+            <div class="character player">
+                <div class="character-stats">
+                    <h2 id="player-name">Jogador</h2>
+                    <div class="level">Nível <span id="player-level">1</span></div>
+                    <div class="health-container">
+                        <div class="health-bar" id="player-health-bar">
+                </div>
+                <div class="character-stats">
+                    <div class="stat-row">
+                        <span class="stat-value" id="player-hp">100/100</span>
+                    </div>
+                    <div class="health-bar">
+                        <div class="health-fill" id="player-health-fill"></div>
+                    </div>
+                    <div class="stat-row">
+                        <span>Nivel: <span id="player-level-stat">1</span></span>
+                    </div>
+                    <div class="stat-row">
+                        <span>ATK: <span id="player-atk">10</span></span>
+                        <span>ATK: <span id="player-matk">8</span></span>
+                    </div>
+                    <div class="stat-row">
+                        <span>DEF: <span id="player-def">8</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="vs-circle">VS</div>
+
+            <div class="battle-panel enemy-panel">
+                <h2>MONSTRO</h2>
+                <div class="character-sprite">
+                    <img id="enemy-sprite" src="" alt="Inimigo">
+                    <div id="enemy-name">Aranha Gigante</div>
+                </div>
+                <div class="character-stats">
+                    <div class="stat-row">
+                        <span class="stat-value" id="enemy-hp">1/1</span>
+                    </div>
+                    <div class="health-bar">
+                        <div class="health-fill" id="enemy-health-fill"></div>
+                    </div>
+                    <div class="stat-row">
+                        <span>Nivel: <span id="enemy-level">3</span></span>
+                    </div>
+                    <div class="stat-row">
+                        <span>ATK: <span id="enemy-atk">5</span></span>
+                        <span>ATK: <span id="enemy-matk">15</span></span>
+                    </div>
+                    <div class="stat-row">
+                        <span>DEF: <span id="enemy-def">5</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="battle-actions">
+            <div class="action-buttons">
+                <button class="action-button attack-btn" id="attack-btn">
+                    <i class="fas fa-crosshairs"></i> GOLPE POWEROSO
+                </button>
+                <button class="action-button defend-btn" id="defend-btn">
+                    <i class="fas fa-shield-alt"></i> DEFENDER
+                </button>
+                <button class="action-button skill-btn" id="skill-btn">
+                    <i class="fas fa-bolt"></i> HABILIDADES
+                </button>
+                <button class="action-button item-btn" id="item-btn">
+                    <i class="fas fa-shield"></i> ITENS
+                </button>
+                <button class="action-button flee-btn" id="flee-btn">
+                    <i class="fas fa-running"></i> FUGIR
+                </button>
+            </div>
+        </div>
+
+        <!-- Container para habilidades especiais -->
+        <div class="special-abilities" id="special-abilities">
+            <!-- As habilidades serão adicionadas dinamicamente via JavaScript -->
+        </div>
+
+
+        <!-- Log de Batalha -->
+        <div class="battle-log" id="battle-log">
+            <div class="log-entry log-info">Batalha iniciada!</div>
+            <div class="log-entry">Um Lobo selvagem apareceu!</div>
+        </div>
+    </div>
+
+    <script>
+        // Habilidades especiais por classe
+        const classAbilities = {
+            guerreiro: [
+                {
+                    name: 'Golpe Poderoso',
+                    description: 'Um golpe poderoso que causa 200% do dano de ataque.',
+                    damageMultiplier: 2.0,
+                    cooldown: 3,
+                    currentCooldown: 0,
+                    execute: function(player, enemy) {
+                        const damage = Math.max(1, Math.floor(player.attack * this.damageMultiplier) - Math.floor(enemy.defense / 2));
+                        enemy.health = Math.max(0, enemy.health - damage);
+                        return { damage, message: `Você usou ${this.name} e causou ${damage} de dano!` };
+                    }
+                },
+                {
+                    name: 'Defesa Total',
+                    description: 'Aumenta sua defesa em 100% por 2 turnos.',
+                    defenseMultiplier: 2.0,
+                    duration: 2,
+                    cooldown: 4,
+                    currentCooldown: 0,
+                    execute: function(player, enemy) {
+                        if (!player.buffs) player.buffs = {};
+                        player.buffs.defense = {
+                            value: player.defense * (this.defenseMultiplier - 1),
+                            duration: this.duration,
+                            originalDefense: player.defense
+                        };
+                        player.defense += player.buffs.defense.value;
+                        return { damage: 0, message: `Você usou ${this.name} e aumentou sua defesa!` };
+                    }
+                }
+            ],
+            mago: [
+                {
+                    name: 'Bola de Fogo',
+                    description: 'Lança uma bola de fogo que causa 180% do dano de ataque.',
+                    damageMultiplier: 1.8,
+                    cooldown: 2,
+                    currentCooldown: 0,
+                    execute: function(player, enemy) {
+                        const damage = Math.max(1, Math.floor(player.attack * this.damageMultiplier));
+                        enemy.health = Math.max(0, enemy.health - damage);
+                        return { damage, message: `Você lançou uma Bola de Fogo e causou ${damage} de dano!` };
+                    }
+                },
+                {
+                    name: 'Cura',
+                    description: 'Cura 50% da sua vida máxima.',
+                    healMultiplier: 0.5,
+                    cooldown: 5,
+                    currentCooldown: 0,
+                    execute: function(player, enemy) {
+                        const healAmount = Math.floor(player.maxHealth * this.healMultiplier);
+                        player.health = Math.min(player.maxHealth, player.health + healAmount);
+                        return { damage: 0, message: `Você se curou em ${healAmount} pontos de vida!` };
+                    }
+                }
+            ]
+        };
+
+        // Estado do jogo
+        const gameState = JSON.parse(localStorage.getItem('gameState')) || {
+            player: {
+                name: 'Jogador',
+                class: 'guerreiro', // Classe padrão
+                level: 1,
+                maxHealth: 100,
+                health: 100,
+                attack: 10,
+                defense: 5,
+                experience: 0,
+                nextLevelExp: 100,
+                gold: 0,
+            },
+            inventory: [],
+            currentEnemy: {
+                name: 'Lobo',
+                maxHealth: 50,
+                health: 50,
+                attack: 8,
+                defense: 3,
+                experience: 25,
+                gold: 10
+            },
+            battleLog: ['Um Lobo selvagem apareceu!']
+        };
+
+        // Elementos da interface
+        const elements = {
+            playerName: document.getElementById('player-name'),
+            playerHealthBar: document.getElementById('player-health-bar'),
+            playerHealth: document.getElementById('player-health'),
+            enemyName: document.getElementById('enemy-name'),
+            enemyHealthBar: document.getElementById('enemy-health-bar'),
+            enemyHealth: document.getElementById('enemy-health'),
+            battleLog: document.getElementById('battle-log'),
+            playerLevel: document.getElementById('player-level')
+        };
+
+        // Inicialização do jogo
+        function init() {
+            console.log('Inicializando jogo...');
+            
+            // Inicializa o jogo se não houver estado salvo
+            if (!gameState.player) {
+                console.log('Criando novo jogador...');
+                gameState.player = {
+                    name: 'Jogador',
+                    class: 'guerreiro', // Classe padrão
+                    level: 1,
+                    maxHealth: 100,
+                    health: 100,
+                    attack: 10,
+                    defense: 5,
+                    experience: 0,
+                    nextLevelExp: 100,
+                    gold: 0,
+                    cooldowns: {}, // Para rastrear cooldowns das habilidades
+                    buffs: {}, // Para rastrear buffs ativos
+                    abilities: [] // Habilidades do jogador
+                };
+                gameState.inventory = [];
+                gameState.battleLog = []; // Inicializa o log de batalha
+                
+                // Salva o estado inicial do jogo
+                saveGame();
+            }
+            
+            // Garante que o jogador tenha um nome
+            if (!gameState.player.name) {
+                gameState.player.name = 'Jogador';
+            }
+            
+            // Inicializa as habilidades do jogador
+            initializePlayerAbilities();
+            
+            // Garante que um inimigo seja gerado antes de atualizar a UI
+            if (!gameState.currentEnemy) {
+                spawnNewEnemy();
+            }
+            
+            // Configura os ouvintes de eventos
+            setupEventListeners();
+            
+            // Atualiza a interface do usuário
+            updateUI();
+            
+            // Adiciona mensagem inicial
+            addToBattleLog('Bem-vindo à Floresta dos Iniciantes!', 'log-info');
+            
+            console.log('Jogo inicializado com sucesso!');
+            
+            // Garante que o jogador tenha um nome
+            if (!gameState.player.name) {
+                gameState.player.name = 'Jogador';
+            }
+            
+            // Garante que um inimigo seja gerado antes de atualizar a UI
+            spawnNewEnemy();
+            updateUI();
+            setupEventListeners();
+            
+            // Inicializa as habilidades do jogador
+            initializePlayerAbilities();
+            updateAbilityButtons();
+            
+            // Adiciona mensagem inicial
+            addToBattleLog('Bem-vindo à Floresta dos Iniciantes!');
+        }
+
+        // Atualiza a interface do usuário
+        function updateUI() {
+            const { player, currentEnemy } = gameState;
+            
+            // Verifica se os elementos existem antes de acessá-los
+            if (elements.playerName) elements.playerName.textContent = player.name;
+            if (elements.playerHealthBar) elements.playerHealthBar.style.width = `${Math.max(0, (player.health / player.maxHealth) * 100)}%`;
+            if (elements.playerHealth) elements.playerHealth.textContent = `${player.health}/${player.maxHealth}`;
+            if (elements.playerLevel) elements.playerLevel.textContent = `Nível: ${player.level}`;
+            
+            // Atualiza informações do inimigo se ele existir
+            if (currentEnemy) {
+                if (elements.enemyName) elements.enemyName.textContent = currentEnemy.name;
+                if (elements.enemyHealthBar) elements.enemyHealthBar.style.width = `${Math.max(0, (currentEnemy.health / currentEnemy.maxHealth) * 100)}%`;
+                if (elements.enemyHealth) elements.enemyHealth.textContent = `${currentEnemy.health}/${currentEnemy.maxHealth}`;
+                
+                // Atualiza o nível do inimigo se o elemento existir
+                const enemyLevelElement = document.getElementById('enemy-level');
+                if (enemyLevelElement) enemyLevelElement.textContent = currentEnemy.level || 1;
+            }
+            
+            // Atualiza os botões de habilidades
+            updateAbilityButtons();
+            
+            // Atualiza o log de batalha
+            updateBattleLog();
+        }
+
+        // Configura os ouvintes de eventos
+        function setupEventListeners() {
+            // Botão de voltar
+            const backButton = document.getElementById('back-button');
+            if (backButton) {
+                backButton.onclick = function() {
+                    if (confirm('Deseja mesmo sair da batalha?')) {
+                        saveGame();
+                        window.location.href = 'mapa-mundi.html';
+                    }
+                };
+            }
+
+            // Ações de batalha
+            const attackBtn = document.getElementById('attack-btn');
+            const defendBtn = document.getElementById('defend-btn');
+            const itemBtn = document.getElementById('item-btn');
+            const fleeBtn = document.getElementById('flee-btn');
+            
+            if (attackBtn) attackBtn.onclick = playerAttack;
+            if (defendBtn) defendBtn.onclick = playerDefend;
+            if (itemBtn) itemBtn.onclick = openInventory;
+            if (fleeBtn) fleeBtn.onclick = tryToFlee;
+        }
+
+        // Inicializa as habilidades do jogador
+        function initializePlayerAbilities() {
+            const playerClass = gameState.player.class || 'guerreiro';
+            gameState.player.abilities = JSON.parse(JSON.stringify(classAbilities[playerClass] || classAbilities['guerreiro']));
+            
+            // Inicializa os cooldowns
+            if (!gameState.player.cooldowns) {
+                gameState.player.cooldowns = {};
+                gameState.player.abilities.forEach(ability => {
+                    gameState.player.cooldowns[ability.name] = 0;
+                });
+            }
+        }
+
+        // Atualiza os botões de habilidades
+        function updateAbilityButtons() {
+            const abilitiesContainer = document.getElementById('special-abilities');
+            if (!abilitiesContainer) return;
+            
+            abilitiesContainer.innerHTML = '';
+            
+            if (!gameState.player.abilities || gameState.player.abilities.length === 0) {
+                return;
+            }
+            
+            gameState.player.abilities.forEach((ability, index) => {
+                const button = document.createElement('button');
+                button.className = 'ability-btn';
+                button.textContent = ability.name;
+                button.title = `${ability.description}\nTempo de Recarga: ${ability.cooldown} turnos`;
+                
+                // Verifica se a habilidade está em cooldown
+                const isOnCooldown = gameState.player.cooldowns[ability.name] > 0;
+                
+                if (isOnCooldown) {
+                    button.disabled = true;
+                    const cooldownDiv = document.createElement('div');
+                    cooldownDiv.className = 'ability-cooldown';
+                    
+                    const overlay = document.createElement('div');
+                    overlay.className = 'cooldown-overlay';
+                    overlay.textContent = gameState.player.cooldowns[ability.name];
+                    
+                    button.appendChild(cooldownDiv);
+                    cooldownDiv.appendChild(overlay);
+                    button.title += `\nEm recarga por mais ${gameState.player.cooldowns[ability.name]} turnos`;
+                } else {
+                    button.onclick = () => useAbility(index);
+                }
+                
+                abilitiesContainer.appendChild(button);
+            });
+        }
+        
+        // Usa uma habilidade especial
+        function useAbility(abilityIndex) {
+            const { player, currentEnemy } = gameState;
+            
+            if (!currentEnemy) {
+                addToBattleLog('Nenhum inimigo encontrado!', 'log-info');
+                return;
+            }
+            
+            const ability = player.abilities[abilityIndex];
+            
+            // Verifica se a habilidade está em cooldown
+            if (player.cooldowns[ability.name] > 0) {
+                addToBattleLog(`${ability.name} ainda está em recarga!`, 'log-info');
+                return;
+            }
+            
+            // Efeito visual de habilidade
+            const abilityEffect = document.createElement('div');
+            abilityEffect.className = 'ability-effect';
+            abilityEffect.innerHTML = `<div class="ability-animation">${ability.name}!</div>`;
+            
+            // Adiciona o efeito ao container de batalha
+            const battleContainer = document.getElementById('battle-container');
+            battleContainer.appendChild(abilityEffect);
+            
+            // Remove o efeito após a animação
+            setTimeout(() => {
+                battleContainer.removeChild(abilityEffect);
+            }, 1000);
+            
+            // Executa a habilidade
+            const result = ability.execute(player, currentEnemy);
+            
+            // Mostra o dano ou cura
+            if (result.damage > 0) {
+                const target = ability.target === 'enemy' ? currentEnemy : player;
+                const targetElement = document.getElementById(ability.target === 'enemy' ? 'enemy-image' : 'player-image');
+                showFloatingDamage(result.damage, targetElement, ability.type || 'damage');
+            }
+            
+            addToBattleLog(result.message, `log-${ability.type || 'info'}`);
+            
+            // Define o cooldown
+            player.cooldowns[ability.name] = ability.cooldown + 1; // +1 porque será decrementado no final do turno
+            
+            // Atualiza a UI
+            updateAbilityButtons();
+            updateUI();
+            
+            // Verifica se o inimigo foi derrotado
+            if (currentEnemy.health <= 0) {
+                // Pequeno atraso para a animação de derrota
+                setTimeout(() => enemyDefeated(), 800);
+            } else {
+                // Pequeno atraso para o turno do inimigo
+                setTimeout(enemyTurn, 1500);
+            }
+            
+            saveGame();
+        }
+
+        // Atualiza os cooldowns das habilidades
+        function updateCooldowns() {
+            const { player } = gameState;
+            
+            if (!player.cooldowns) return;
+            
+            // Decrementa os cooldowns
+            Object.keys(player.cooldowns).forEach(abilityName => {
+                if (player.cooldowns[abilityName] > 0) {
+                    player.cooldowns[abilityName]--;
+                }
+            });
+            
+            // Atualiza os botões de habilidades
+            updateAbilityButtons();
+        }
+        
+        // Remove buffs expirados
+        function updateBuffs() {
+            const { player } = gameState;
+            
+            if (player.buffs) {
+                // Atualiza a duração dos buffs
+                Object.keys(player.buffs).forEach(buffName => {
+                    const buff = player.buffs[buffName];
+                    if (buff.duration !== undefined) {
+                        buff.duration--;
+                        
+                        // Remove o buff se a duração acabou
+                        if (buff.duration <= 0) {
+                            // Reverte o efeito do buff
+                            if (buffName === 'defense' && buff.originalDefense !== undefined) {
+                                player.defense = buff.originalDefense;
+                                addToBattleLog('Seu bônus de defesa acabou!');
+                            }
+                            delete player.buffs[buffName];
+                        }
+                    }
+                });
+                
+                // Remove o objeto de buffs se estiver vazio
+                if (Object.keys(player.buffs).length === 0) {
+                    delete player.buffs;
+                }
+            }
+        }
+
+        // Ataque básico do jogador
+        function playerAttack() {
+            if (!gameState.currentEnemy) {
+                addToBattleLog('Nenhum inimigo encontrado!', 'log-info');
+                return;
+            }
+            
+            const { player, currentEnemy } = gameState;
+            const damage = Math.max(1, player.attack - Math.floor(Math.random() * currentEnemy.defense));
+            
+            // Efeito visual de ataque
+            const enemyImage = document.getElementById('enemy-image');
+            enemyImage.classList.add('damage-animation');
+            
+            // Remove a classe após a animação
+            setTimeout(() => {
+                enemyImage.classList.remove('damage-animation');
+            }, 300);
+            
+            // Mostra o dano flutuante
+            showFloatingDamage(damage, enemyImage, 'damage');
+            
+            currentEnemy.health = Math.max(0, currentEnemy.health - damage);
+            addToBattleLog(`Você atacou o ${currentEnemy.name} e causou ${damage} de dano!`, 'log-damage');
+            
+            // Atualiza a UI antes de verificar se o inimigo foi derrotado
+            updateUI();
+            
+            if (currentEnemy.health <= 0) {
+                // Pequeno atraso para a animação de derrota
+                setTimeout(() => enemyDefeated(), 800);
+            } else {
+                // Pequeno atraso para o turno do inimigo
+                setTimeout(enemyTurn, 1500);
+            }
+            
+            saveGame();
+        }
+
+        // Mostra dano flutuante
+        function showFloatingDamage(amount, targetElement, type = 'damage') {
+            const floatingText = document.createElement('div');
+            floatingText.className = `floating-text ${type}`;
+            floatingText.textContent = (type === 'heal' ? '+' : '') + amount;
+            
+            // Posiciona o texto sobre o alvo
+            const rect = targetElement.getBoundingClientRect();
+            floatingText.style.left = `${rect.left + (rect.width / 2)}px`;
+            floatingText.style.top = `${rect.top}px`;
+            
+            document.body.appendChild(floatingText);
+            
+            // Anima o texto flutuante
+            setTimeout(() => {
+                floatingText.style.opacity = '0';
+                floatingText.style.transform = 'translateY(-50px)';
+                
+                // Remove o elemento após a animação
+                setTimeout(() => {
+                    document.body.removeChild(floatingText);
+                }, 1000);
+            }, 100);
+        }
+        
+        // Defesa do jogador
+        function playerDefend() {
+            const defenseBonus = Math.floor(gameState.player.defense * 0.5);
+            
+            // Efeito visual de defesa
+            const playerImage = document.getElementById('player-image');
+            playerImage.classList.add('defend-animation');
+            
+            // Remove a classe após a animação
+            setTimeout(() => {
+                playerImage.classList.remove('defend-animation');
+            }, 1000);
+            
+            gameState.player.defense += defenseBonus;
+            
+            // Adiciona um buff temporário
+            if (!gameState.player.buffs) gameState.player.buffs = {};
+            gameState.player.buffs.defense = {
+                value: defenseBonus,
+                duration: 2, // Dura 2 turnos (incluindo este)
+                originalDefense: gameState.player.defense - defenseBonus
+            };
+            
+            addToBattleLog(`Você se preparou para se defender! Defesa aumentada em ${defenseBonus}.`, 'log-buff');
+            
+            // Atualiza a UI para mostrar o buff
+            updateUI();
+            
+            // Pequeno atraso antes do turno do inimigo
+            setTimeout(enemyTurn, 1000);
+        }
+
+        // Turno do inimigo
+        function enemyTurn() {
+            if (!gameState.currentEnemy || gameState.currentEnemy.health <= 0) return;
+            
+            const { player, currentEnemy } = gameState;
+            
+            // Verifica se o inimigo está atordoado
+            if (currentEnemy.stunned && currentEnemy.stunned > 0) {
+                addToBattleLog(`O ${currentEnemy.name} está atordoado e não pode agir!`);
+                currentEnemy.stunned--;
+                updateUI();
+                return;
+            }
+            
+            // Lógica simples de IA: 70% de chance de atacar, 30% de se defender
+            if (Math.random() < 0.7) {
+                // Ataque básico
+                const damage = Math.max(1, currentEnemy.attack - Math.floor(Math.random() * player.defense));
+                player.health = Math.max(0, player.health - damage);
+                addToBattleLog(`O ${currentEnemy.name} te atacou e causou ${damage} de dano!`);
+                
+                // Verifica se o jogador foi derrotado
+                if (player.health <= 0) {
+                    playerDefeated();
+                }
+            } else {
+                // Defesa
+                const defenseBonus = Math.floor(currentEnemy.defense * 0.3);
+                currentEnemy.defense += defenseBonus;
+                addToBattleLog(`O ${currentEnemy.name} se preparou para se defender!`);
+                
+                // A defesa volta ao normal após o turno do jogador
+                setTimeout(() => {
+                    if (gameState.currentEnemy) { // Verifica se o inimigo ainda existe
+                        currentEnemy.defense = Math.max(5, currentEnemy.defense - defenseBonus);
+                        addToBattleLog(`A defesa do ${currentEnemy.name} voltou ao normal.`);
+                        updateUI();
+                    }
+                }, 1500);
+            }
+            
+            // Atualiza a UI
+            updateUI();
+            
+            // Atualiza cooldowns das habilidades do jogador e buffs
+            updateCooldowns();
+            updateBuffs();
+            
+            saveGame();
+        }
+
+        // Inimigo derrotado
+        function enemyDefeated() {
+            const { player, currentEnemy } = gameState;
+            
+            // Experiência e ouro
+            const expGain = currentEnemy.experience;
+            const goldGain = currentEnemy.gold;
+            
+            player.experience += expGain;
+            player.gold = (player.gold || 0) + goldGain;
+            
+            addToBattleLog(`Você derrotou o ${currentEnemy.name}!`);
+            addToBattleLog(`Ganhou ${expGain} de experiência e ${goldGain} de ouro.`);
+            
+            // Verifica se subiu de nível
+            checkLevelUp();
+            
+            // Prepara o próximo inimigo
+            setTimeout(() => {
+                if (confirm('Deseja continuar lutando na Floresta dos Iniciantes?')) {
+                    spawnNewEnemy();
+                } else {
+                    saveGame();
+                    window.location.href = 'mapa-mundi.html';
+                }
+            }, 1000);
+        }
+
+        // Jogador derrotado
+        function playerDefeated() {
+            addToBattleLog('Você foi derrotado!');
+            
+            // Reseta a vida do jogador
+            gameState.player.health = Math.floor(gameState.player.maxHealth * 0.5);
+            
+            setTimeout(() => {
+                if (confirm('Você foi derrotado! Deseja voltar ao mapa?')) {
+                    saveGame();
+                    window.location.href = 'mapa-mundi.html';
+                }
+            }, 500);
+        }
+
+        // Tenta fugir da batalha
+        function tryToFlee() {
+            const fleeChance = 0.7; // 70% de chance de fugir
+            
+            if (Math.random() < fleeChance) {
+                addToBattleLog('Você fugiu da batalha!');
+                saveGame();
+                setTimeout(() => {
+                    window.location.href = 'mapa-mundi.html';
+                }, 1000);
+            } else {
+                addToBattleLog('Você não conseguiu fugir!');
+                enemyTurn();
+            }
+            
+            updateUI();
+        }
+
+        // Abre o inventário
+        function openInventory() {
+            // Implementação do inventário
+            addToBattleLog('Inventário aberto (em desenvolvimento)');
+        }
+
+        // Gera um novo inimigo
+        function spawnNewEnemy() {
+            console.log('Gerando novo inimigo...');
+            
+            const enemies = [
+                {
+                    name: 'Lobo',
+                    maxHealth: 50,
+                    attack: 8,
+                    defense: 3,
+                    experience: 25,
+                    gold: 10,
+                    image: '../assets/monstros/Lobo.png'
+                },
+                {
+                    name: 'Goblin',
+                    maxHealth: 40,
+                    attack: 10,
+                    defense: 2,
+                    experience: 30,
+                    gold: 15,
+                    image: '../assets/monstros/Goblin.png'
+                },
+                {
+                    name: 'Aranha Gigante',
+                    maxHealth: 35,
+                    attack: 12,
+                    defense: 1,
+                    experience: 20,
+                    gold: 8,
+                    image: '../assets/monstros/Aranha Gigante.png'
+                }
+            ];
+            
+            try {
+                // Seleciona um inimigo aleatório e cria uma cópia profunda
+                const randomEnemy = JSON.parse(JSON.stringify(enemies[Math.floor(Math.random() * enemies.length)]));
+                
+                // Ajusta os status do inimigo com base no nível do jogador
+                const playerLevel = gameState.player?.level || 1;
+                const levelMultiplier = Math.max(1, playerLevel * 0.5);
+                
+                // Cria o objeto do inimigo com os status ajustados
+                gameState.currentEnemy = {
+                    name: randomEnemy.name,
+                    maxHealth: Math.floor(randomEnemy.maxHealth * levelMultiplier),
+                    health: Math.floor(randomEnemy.maxHealth * levelMultiplier),
+                    attack: Math.floor(randomEnemy.attack * levelMultiplier),
+                    defense: Math.floor(randomEnemy.defense * levelMultiplier),
+                    experience: Math.floor(randomEnemy.experience * levelMultiplier),
+                    gold: Math.floor(randomEnemy.gold * levelMultiplier),
+                    level: Math.max(1, Math.floor(playerLevel * (0.8 + Math.random() * 0.4))),
+                    image: randomEnemy.image
+                };
+                
+                console.log('Inimigo gerado:', gameState.currentEnemy);
+                
+                // Atualiza a imagem do inimigo
+                const enemyImageElement = document.getElementById('enemy-image');
+                if (enemyImageElement) {
+                    enemyImageElement.style.backgroundImage = `url('${randomEnemy.image}')`;
+                    enemyImageElement.style.backgroundSize = 'contain';
+                    enemyImageElement.style.backgroundRepeat = 'no-repeat';
+                    enemyImageElement.style.backgroundPosition = 'center';
+                } else {
+                    console.error('Elemento enemy-image não encontrado no DOM');
+                }
+                
+                // Adiciona mensagem ao log
+                addToBattleLog(`Um ${randomEnemy.name} selvagem apareceu!`, 'log-info');
+                
+                // Atualiza a interface
+                updateUI();
+                
+                return gameState.currentEnemy;
+                
+            } catch (error) {
+                console.error('Erro ao gerar inimigo:', error);
+                
+                // Retorna um inimigo padrão em caso de erro
+                const defaultEnemy = {
+                    name: 'Lobo',
+                    maxHealth: 50,
+                    health: 50,
+                    attack: 8,
+                    defense: 3,
+                    experience: 25,
+                    gold: 10,
+                    level: 1,
+                    image: '../assets/monstros/Lobo.png'
+                };
+                
+                gameState.currentEnemy = defaultEnemy;
+                addToBattleLog('Um Lobo selvagem apareceu!', 'log-info');
+                updateUI();
+                
+                return defaultEnemy;
+            }
+        }
+
+        // Verifica se o jogador subiu de nível
+        function checkLevelUp() {
+            const { player } = gameState;
+            
+            while (player.experience >= player.nextLevelExp) {
+                player.level++;
+                player.experience -= player.nextLevelExp;
+                player.nextLevelExp = Math.floor(player.nextLevelExp * 1.5);
+                
+                // Melhoria de status
+                player.maxHealth += 10;
+                player.health = player.maxHealth;
+                player.attack += 2;
+                player.defense += 1;
+                
+                addToBattleLog(`Parabéns! Você subiu para o nível ${player.level}!`);
+            }
+            
+            updateUI();
+        }
+
+        // Adiciona uma mensagem ao log de batalha
+        function addToBattleLog(message, type = 'log-info') {
+            const entry = { message, type, timestamp: new Date().toISOString() };
+            gameState.battleLog.push(entry);
+            
+            // Mantém apenas as últimas 50 entradas
+            if (gameState.battleLog.length > 50) {
+                gameState.battleLog.shift();
+            }
+            
+            updateBattleLog();
+            
+            // Rola para a última mensagem
+            const logElement = document.getElementById('battle-log');
+            if (logElement) {
+                logElement.scrollTop = logElement.scrollHeight;
+            }
+        }
+
+        // Atualiza o log de batalha na tela
+        function updateBattleLog() {
+            const logElement = document.getElementById('battle-log');
+            if (!logElement) return;
+            
+            logElement.innerHTML = gameState.battleLog
+                .map(entry => {
+                    // Formata a mensagem com base no tipo
+                    let formattedMessage = entry.message;
+                    const time = new Date(entry.timestamp).toLocaleTimeString();
+                    
+                    return `<div class="log-entry ${entry.type}">[${time}] ${formattedMessage}</div>`;
+                })
+                .join('');
+                
+            // Rola para a última mensagem
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        // Salva o jogo
+        function saveGame() {
+            // Remove o inimigo atual antes de salvar
+            const gameStateToSave = { ...gameState };
+            delete gameStateToSave.currentEnemy;
+            
+            localStorage.setItem('gameState', JSON.stringify(gameStateToSave));
+        }
+
+        // Carrega o jogo salvo
+        function loadGame() {
+            const savedGame = localStorage.getItem('gameState');
+            if (savedGame) {
+                const parsed = JSON.parse(savedGame);
+                Object.assign(gameState.player, parsed.player || {});
+            }
+        }
+
+        // Inicializa o jogo quando a página carregar
+        window.addEventListener('load', () => {
+            loadGame();
+            init();
+        });
+    </script>
+</body>
+</html>

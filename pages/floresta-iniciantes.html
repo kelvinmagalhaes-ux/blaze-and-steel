@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#000000">
+    <title>Floresta dos Iniciantes - Blaze and Steel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/battle-layout.css">
+</head>
+<body>
+    <div id="battle-container">
+        <!-- Botão de voltar -->
+        <button class="back-button" id="back-button">
+            <i class="fas fa-arrow-left"></i> VOLTAR AO MAPA
+        </button>
+
+        <!-- Área do Jogador (Lado Esquerdo) -->
+        <div class="character player">
+            <div class="character-sprite">
+                <img id="player-sprite" src="" alt="Personagem">
+                <div class="damage-effect" id="player-damage"></div>
+            </div>
+            <div class="character-panel">
+                <div class="character-name" id="player-name">Jogador</div>
+                <div class="health-bar">
+                    <div class="health-fill" id="player-health-fill"></div>
+                </div>
+                <div class="stat-row">
+                    <span>HP: <span id="player-hp">100/100</span></span>
+                </div>
+                <div class="stat-row">
+                    <span>Nível: <span id="player-level-stat">1</span></span>
+                    <span>XP: <span id="player-xp">0</span>/100</span>
+                </div>
+                <div class="stat-row">
+                    <span>ATK: <span id="player-atk">10</span></span>
+                    <span>MATK: <span id="player-matk">5</span></span>
+                    <span>DEF: <span id="player-def">8</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Área do Inimigo (Lado Direito) -->
+        <div class="character enemy">
+            <div class="character-sprite">
+                <img id="enemy-sprite" src="" alt="Inimigo">
+                <div class="damage-effect" id="enemy-damage"></div>
+            </div>
+            <div class="character-panel">
+                <div class="character-name" id="enemy-name">Inimigo</div>
+                <div class="health-bar">
+                    <div class="health-fill" id="enemy-health-fill"></div>
+                </div>
+                <div class="stat-row">
+                    <span>HP: <span id="enemy-hp">50/50</span></span>
+                </div>
+                <div class="stat-row">
+                    <span>Nível: <span id="enemy-level">1</span></span>
+                </div>
+                <div class="stat-row">
+                    <span>ATK: <span id="enemy-atk">5</span></span>
+                    <span>MATK: <span id="enemy-matk">3</span></span>
+                    <span>DEF: <span id="enemy-def">4</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Indicador de turno -->
+        <div class="turn-indicator" id="battle-turn">Seu Turno</div>
+
+        <!-- Log de batalha -->
+        <div class="battle-log" id="battle-log">
+            <div class="log-entry">Uma batalha começou!</div>
+        </div>
+
+        <!-- Área de ações do jogador -->
+        <div class="action-buttons" id="action-buttons">
+            <button class="action-btn" id="attack-btn">
+                <i class="fas fa-sword"></i> Atacar
+            </button>
+            <button class="action-btn" id="defend-btn">
+                <i class="fas fa-shield-alt"></i> Defender
+            </button>
+            <button class="action-btn" id="ability-btn">
+                <i class="fas fa-fire"></i> Habilidade
+            </button>
+            <button class="action-btn" id="item-btn">
+                <i class="fas fa-potion"></i> Item
+            </button>
+        </div>
+
+        <!-- Container de habilidades especiais (inicialmente oculto) -->
+        <div class="special-abilities-container" id="special-abilities" style="display: none;">
+            <!-- As habilidades serão adicionadas dinamicamente aqui -->
+        </div>
+    </div>
+
+    <!-- Scripts JavaScript -->
+    <script>
+        // Habilidades especiais por classe
+        const classAbilities = {
+            guerreiro: [
+                {
+                    name: 'Golpe Poderoso',
+                    description: 'Um ataque poderoso que causa 200% do dano normal.',
+                    damageMultiplier: 2.0,
+                    cooldown: 3,
+                    currentCooldown: 0,
+                    execute: function(player, enemy) {
+                        const damage = Math.max(1, Math.floor(player.atk * this.damageMultiplier) - Math.floor(enemy.def / 2));
+                        enemy.hp = Math.max(0, enemy.hp - damage);
+                        return `Você usa Golpe Poderoso e causa ${damage} de dano!`;
+                    }
+                },
+                {
+                    name: 'Defesa Total',
+                    description: 'Aumenta sua defesa em 100% por 2 turnos.',
+                    defenseMultiplier: 2.0,
+                    duration: 2,
+                    cooldown: 4,
+                    currentCooldown: 0,
+                    execute: function(player, enemy) {
+                        player.buffs.push({
+                            type: 'defense',
+                            value: player.def * (this.defenseMultiplier - 1),
+                            duration: this.duration,
+                            name: 'Defesa Total'
+                        });
+                        player.def += player.def * (this.defenseMultiplier - 1);
+                        return `Você assume uma postura defensiva! DEF aumentada por ${this.duration} turnos.`;
+                    }
+                }
+            ],
+            mago: [
+                {
+                    name: 'Bola de Fogo',
+                    description: 'Lança uma bola de fogo que causa dano mágico.',
+                    damageMultiplier: 1.5,
+                    cooldown: 2,
+                    currentCooldown: 0,
+                    execute: function(player, enemy) {
+                        const damage = Math.max(1, Math.floor(player.matk * this.damageMultiplier));
+                        enemy.hp = Math.max(0, enemy.hp - damage);
+                        return `Você lança uma Bola de Fogo e causa ${damage} de dano!`;
+                    }
+                },
+                {
+                    name: 'Cura',
+                    description: 'Cura 50% da sua vida máxima.',
+                    healMultiplier: 0.5,
+                    cooldown: 3,
+                    currentCooldown: 0,
+                    execute: function(player, enemy) {
+                        const healAmount = Math.min(player.maxHp - player.hp, Math.floor(player.maxHp * this.healMultiplier));
+                        player.hp += healAmount;
+                        return `Você se cura em ${healAmount} pontos de vida!`;
+                    }
+                }
+            ]
+        };
+
+        // Estado do jogo
+        const gameState = {
+            player: {
+                name: 'Jogador',
+                class: 'guerreiro',
+                level: 1,
+                xp: 0,
+                xpToNextLevel: 100,
+                maxHp: 100,
+                hp: 100,
+                atk: 10,
+                matk: 5,
+                def: 8,
+                buffs: [],
+                abilities: []
+            },
+            enemy: {
+                name: 'Goblin',
+                level: 1,
+                maxHp: 50,
+                hp: 50,
+                atk: 5,
+                matk: 3,
+                def: 4,
+                xpReward: 25,
+                goldReward: 10
+            },
+            isPlayerTurn: true,
+            battleLog: [],
+            playerDefending: false
+        };
+
+        // Elementos da interface
+        const elements = {
+            playerHp: document.getElementById('player-hp'),
+            playerHealthFill: document.getElementById('player-health-fill'),
+            playerAtk: document.getElementById('player-atk'),
+            playerMatk: document.getElementById('player-matk'),
+            playerDef: document.getElementById('player-def'),
+            playerLevel: document.getElementById('player-level-stat'),
+            playerSprite: document.getElementById('player-sprite'),
+            playerName: document.getElementById('player-name'),
+            
+            enemyHp: document.getElementById('enemy-hp'),
+            enemyHealthFill: document.getElementById('enemy-health-fill'),
+            enemyAtk: document.getElementById('enemy-atk'),
+            enemyMatk: document.getElementById('enemy-matk'),
+            enemyDef: document.getElementById('enemy-def'),
+            enemyLevel: document.getElementById('enemy-level'),
+            enemySprite: document.getElementById('enemy-sprite'),
+            enemyName: document.getElementById('enemy-name'),
+            
+            battleLog: document.getElementById('battle-log'),
+            actionButtons: document.getElementById('action-buttons'),
+            specialAbilities: document.getElementById('special-abilities'),
+            
+            attackBtn: document.getElementById('attack-btn'),
+            defendBtn: document.getElementById('defend-btn'),
+            abilityBtn: document.getElementById('ability-btn'),
+            itemBtn: document.getElementById('item-btn'),
+            backButton: document.getElementById('back-button'),
+            
+            battleTurn: document.getElementById('battle-turn')
+        };
+
+        // Inicialização do jogo
+        function init() {
+            // Carrega o jogo salvo, se existir
+            loadGame();
+            
+            // Configura os sprites
+            updateSprites();
+            
+            // Atualiza a interface do usuário
+            updateUI();
+            
+            // Configura os ouvintes de eventos
+            setupEventListeners();
+            
+            // Inicializa as habilidades do jogador
+            initializePlayerAbilities();
+            
+            // Adiciona mensagem inicial ao log
+            addToBattleLog(`Um ${gameState.enemy.name} selvagem apareceu!`, 'log-info');
+        }
+
+        // Atualiza a interface do usuário
+        function updateUI() {
+            // Atualiza as informações do jogador
+            const playerHpPercent = Math.max(0, Math.min(100, (gameState.player.hp / gameState.player.maxHp) * 100));
+            elements.playerHp.textContent = `${Math.ceil(gameState.player.hp)}/${gameState.player.maxHp}`;
+            elements.playerHealthFill.style.width = `${playerHpPercent}%`;
+            elements.playerAtk.textContent = gameState.player.atk;
+            elements.playerMatk.textContent = gameState.player.matk;
+            elements.playerDef.textContent = gameState.player.def;
+            elements.playerLevel.textContent = gameState.player.level;
+            elements.playerName.textContent = gameState.player.name;
+            
+            // Atualiza as informações do inimigo
+            const enemyHpPercent = Math.max(0, Math.min(100, (gameState.enemy.hp / gameState.enemy.maxHp) * 100));
+            elements.enemyHp.textContent = `${Math.ceil(gameState.enemy.hp)}/${gameState.enemy.maxHp}`;
+            elements.enemyHealthFill.style.width = `${enemyHpPercent}%`;
+            elements.enemyAtk.textContent = gameState.enemy.atk;
+            elements.enemyMatk.textContent = gameState.enemy.matk;
+            elements.enemyDef.textContent = gameState.enemy.def;
+            elements.enemyLevel.textContent = gameState.enemy.level;
+            elements.enemyName.textContent = gameState.enemy.name;
+            
+            // Efeito visual quando a vida está baixa
+            if (playerHpPercent < 30) {
+                elements.playerHealthFill.style.background = '#ff0000';
+            } else {
+                elements.playerHealthFill.style.background = '#2ecc71';
+            }
+            
+            if (enemyHpPercent < 30) {
+                elements.enemyHealthFill.style.background = '#ff0000';
+            } else {
+                elements.enemyHealthFill.style.background = '#e74c3c';
+            }
+            
+            // Atualiza o indicador de turno
+            elements.battleTurn.textContent = gameState.isPlayerTurn ? 'Seu Turno' : 'Turno do Inimigo';
+            
+            // Atualiza os botões de habilidade
+            updateAbilityButtons();
+        }
+        function initializePlayerAbilities() {
+            const playerClass = gameState.player.class;
+            
+            // Limpa as habilidades existentes
+            elements.specialAbilities.innerHTML = '';
+            
+            // Adiciona as habilidades da classe
+            if (classAbilities[playerClass]) {
+                gameState.player.abilities = JSON.parse(JSON.stringify(classAbilities[playerClass]));
+                
+                gameState.player.abilities.forEach((ability, index) => {
+                    const abilityBtn = document.createElement('button');
+                    abilityBtn.className = 'action-button ability-btn';
+                    abilityBtn.innerHTML = `<i class="fas fa-fire"></i> ${ability.name}`;
+                    abilityBtn.title = ability.description;
+                    abilityBtn.addEventListener('click', () => useAbility(index));
+                    
+                    const cooldownOverlay = document.createElement('div');
+                    cooldownOverlay.className = 'cooldown-overlay';
+                    cooldownOverlay.style.display = 'none';
+                    
+                    const cooldownText = document.createElement('div');
+                    cooldownText.className = 'cooldown-text';
+                    
+                    const abilityContainer = document.createElement('div');
+                    abilityContainer.className = 'ability-container';
+                    abilityContainer.appendChild(abilityBtn);
+                    abilityContainer.appendChild(cooldownOverlay);
+                    abilityContainer.appendChild(cooldownText);
+                    
+                    elements.specialAbilities.appendChild(abilityContainer);
+                });
+            }
+            
+            // Adiciona botão de voltar
+            const backBtn = document.createElement('button');
+            backBtn.className = 'action-button back-btn';
+            backBtn.innerHTML = '<i class="fas fa-arrow-left"></i> Voltar';
+            backBtn.addEventListener('click', () => {
+                elements.actionButtons.style.display = 'grid';
+                elements.specialAbilities.style.display = 'none';
+            });
+            
+            elements.specialAbilities.appendChild(backBtn);
+        }
+
+        // Atualiza os botões de habilidades
+        function updateAbilityButtons() {
+            const abilityContainers = elements.specialAbilities.querySelectorAll('.ability-container');
+            
+            gameState.player.abilities.forEach((ability, index) => {
+                const container = abilityContainers[index];
+                if (!container) return;
+                
+                const button = container.querySelector('button');
+                const cooldownOverlay = container.querySelector('.cooldown-overlay');
+                const cooldownText = container.querySelector('.cooldown-text');
+                
+                if (ability.currentCooldown > 0) {
+                    button.disabled = true;
+                    cooldownOverlay.style.display = 'block';
+                    cooldownText.textContent = ability.currentCooldown;
+                    cooldownText.style.display = 'block';
+                } else {
+                    button.disabled = false;
+                    cooldownOverlay.style.display = 'none';
+                    cooldownText.style.display = 'none';
+                }
+            });
+        }
+
+        // Usa uma habilidade especial
+        function useAbility(abilityIndex) {
+            const ability = gameState.player.abilities[abilityIndex];
+            
+            if (ability.currentCooldown > 0) {
+                addToBattleLog('A habilidade ainda está em recarga!', 'log-info');
+                return;
+            }
+            
+            // Executa a habilidade
+            const result = ability.execute(gameState.player, gameState.enemy);
+            addToBattleLog(result, 'log-info');
+            
+            // Define o cooldown
+            ability.currentCooldown = ability.cooldown + 1; // +1 porque será decrementado no final do turno
+            
+            // Atualiza a interface
+            updateUI();
+            
+            // Verifica se o inimigo foi derrotado
+            if (gameState.enemy.hp <= 0) {
+                enemyDefeated();
+                return;
+            }
+            
+            // Passa para o turno do inimigo
+            setTimeout(enemyTurn, 1000);
+        }
+
+        // Atualiza os cooldowns
+        function updateCooldowns() {
+            gameState.player.abilities.forEach(ability => {
+                if (ability.currentCooldown > 0) {
+                    ability.currentCooldown--;
+                }
+            });
+            
+            // Atualiza os buffs do jogador
+            updateBuffs();
+        }
+
+        // Atualiza os buffs do jogador
+        function updateBuffs() {
+            const expiredBuffs = [];
+            
+            gameState.player.buffs.forEach((buff, index) => {
+                buff.duration--;
+                
+                if (buff.duration <= 0) {
+                    expiredBuffs.unshift(index); // Adiciona no início para remover do final para o início
+                    
+                    // Reverte o efeito do buff
+                    if (buff.type === 'defense') {
+                        gameState.player.def -= buff.value;
+                        addToBattleLog(`O efeito de ${buff.name} acabou!`, 'log-info');
+                    }
+                }
+            });
+            
+            // Remove os buffs expirados
+            expiredBuffs.forEach(index => {
+                gameState.player.buffs.splice(index, 1);
+            });
+        }
+
+        // Ataque básico do jogador
+        function playerAttack() {
+            if (!gameState.isPlayerTurn) return;
+            
+            // Ativa a animação de ataque
+            const playerSprite = elements.playerSprite;
+            if (gameState.player.class === 'guerreiro') {
+                // Salva o sprite original
+                const originalSrc = playerSprite.src;
+                
+                // Define as variáveis CSS para os sprites
+                playerSprite.style.setProperty('--original-sprite', `url('${originalSrc}')`);
+                playerSprite.style.setProperty('--attack-sprite', 'url(../assets/classes/guerreiro_sheets2.png)');
+                
+                // Garante que o caminho do sprite de ataque está correto
+                console.log('Attack sprite path:', '../assets/classes/guerreiro_sheets2.png');
+                
+                // Adiciona a classe de ataque
+                playerSprite.classList.add('attacking');
+                
+                // Remove a classe de ataque após a animação terminar
+                playerSprite.addEventListener('animationend', function onAnimationEnd() {
+                    playerSprite.classList.remove('attacking');
+                    playerSprite.style.backgroundImage = 'none';
+                    playerSprite.removeEventListener('animationend', onAnimationEnd);
+                }, { once: true });
+            }
+            
+            // Calcula o dano
+            const damage = Math.max(1, gameState.player.atk - Math.floor(gameState.enemy.def / 2));
+            
+            // Aplica o dano após um pequeno atraso para sincronizar com a animação
+            setTimeout(() => {
+                gameState.enemy.hp = Math.max(0, gameState.enemy.hp - damage);
+                
+                // Mostra o dano flutuante
+                showFloatingDamage(damage, elements.enemySprite.parentElement, 'damage');
+                
+                // Atualiza a UI
+                updateUI();
+                
+                // Adiciona ao log de batalha
+                addToBattleLog(`Você atacou o ${gameState.enemy.name} e causou ${damage} de dano!`, 'log-damage');
+                
+                // Verifica se o inimigo foi derrotado
+                if (gameState.enemy.hp <= 0) {
+                    enemyDefeated();
+                } else {
+                    // Passa o turno para o inimigo após um pequeno atraso
+                    gameState.isPlayerTurn = false;
+                    updateUI();
+                    
+                    setTimeout(() => {
+                        enemyTurn();
+                    }, 1500);
+                }
+            }, 200); // Pequeno atraso para sincronizar com a animação
+        }
+
+        // Mostra dano flutuante
+        function showFloatingDamage(amount, targetElement, type = 'damage') {
+            const floatingText = document.createElement('div');
+            floatingText.className = `floating-damage ${type}`;
+            
+            // Configura o texto e estilo baseado no tipo
+            if (type === 'damage') {
+                floatingText.textContent = `-${Math.ceil(amount)}`;
+                floatingText.style.color = '#ff6b6b';
+                floatingText.style.textShadow = '0 0 5px #ff0000';
+                
+                // Efeito de dano no sprite
+                const damageEffect = document.getElementById(`${targetElement.id}-damage`);
+                if (damageEffect) {
+                    damageEffect.classList.add('active');
+                    setTimeout(() => {
+                        damageEffect.classList.remove('active');
+                    }, 300);
+                }
+            } else if (type === 'heal') {
+                floatingText.textContent = `+${Math.ceil(amount)}`;
+                floatingText.style.color = '#51cf66';
+                floatingText.style.textShadow = '0 0 5px #00ff00';
+            } else {
+                floatingText.textContent = `${amount}`;
+                floatingText.style.color = '#4dabf7';
+            }
+            
+            // Posiciona o texto acima do alvo
+            const rect = targetElement.getBoundingClientRect();
+            const containerRect = document.getElementById('battle-container').getBoundingClientRect();
+            
+            // Posiciona o texto relativo ao container da batalha
+            floatingText.style.position = 'absolute';
+            floatingText.style.left = `${rect.left - containerRect.left + (rect.width / 2)}px`;
+            floatingText.style.top = `${rect.top - containerRect.top}px`;
+            floatingText.style.fontSize = '24px';
+            floatingText.style.fontWeight = 'bold';
+            floatingText.style.pointerEvents = 'none';
+            floatingText.style.transform = 'translateX(-50%)';
+            floatingText.style.zIndex = '1000';
+            floatingText.style.transition = 'all 0.5s ease-out';
+            
+            // Adiciona o texto ao container da batalha
+            document.getElementById('battle-container').appendChild(floatingText);
+            
+            // Anima o texto flutuante
+            let pos = rect.top - containerRect.top;
+            let opacity = 1;
+            let scale = 1;
+            
+            const animate = () => {
+                if (opacity <= 0) {
+                    floatingText.remove();
+                    return;
+                }
+                
+                pos -= 1;
+                opacity -= 0.01;
+                scale += 0.01;
+                
+                floatingText.style.top = `${pos}px`;
+                floatingText.style.opacity = opacity;
+                floatingText.style.transform = `translateX(-50%) scale(${scale})`;
+                
+                requestAnimationFrame(animate);
+            };
+            
+            requestAnimationFrame(animate);
+        }
+
+        // Defesa do jogador
+        function playerDefend() {
+            if (!gameState.isPlayerTurn) return;
+            
+            gameState.playerDefending = true;
+            
+            // Aplica um pequeno bônus de defesa para o próximo ataque
+            const defenseBonus = Math.floor(gameState.player.def * 0.5);
+            gameState.player.def += defenseBonus;
+            
+            // Adiciona um buff temporário
+            gameState.player.buffs.push({
+                type: 'defense',
+                value: defenseBonus,
+                duration: 1,
+                name: 'Defesa'
+            });
+            
+            // Atualiza a interface
+            updateUI();
+            
+            // Adiciona mensagem ao log
+            addToBattleLog('Você se prepara para se defender! DEF aumentada temporariamente.', 'log-info');
+            
+            // Passa para o turno do inimigo
+            gameState.isPlayerTurn = false;
+            updateUI();
+            
+            setTimeout(enemyTurn, 1000);
+        }
+
+        // Turno do inimigo
+        function enemyTurn() {
+            if (gameState.enemy.hp <= 0) return;
+            
+            // Lógica simples de IA: 70% de chance de atacar, 30% de chance de se defender
+            const action = Math.random() < 0.7 ? 'attack' : 'defend';
+            
+            if (action === 'attack') {
+                // Ataque básico do inimigo
+                const damage = Math.max(1, gameState.enemy.atk - Math.floor(gameState.player.def / 2));
+                
+                // Verifica se o jogador está defendendo
+                const finalDamage = gameState.playerDefending ? Math.max(1, Math.floor(damage * 0.5)) : damage;
+                
+                // Aplica o dano
+                gameState.player.hp = Math.max(0, gameState.player.hp - finalDamage);
+                
+                // Atualiza a interface
+                updateUI();
+                
+                // Mostra o dano flutuante
+                showFloatingDamage(finalDamage, elements.playerSprite, 'damage');
+                
+                // Adiciona mensagem ao log
+                addToBattleLog(`O ${gameState.enemy.name} atacou e causou ${finalDamage} de dano!`, 'log-damage');
+                
+                // Verifica se o jogador foi derrotado
+                if (gameState.player.hp <= 0) {
+                    playerDefeated();
+                    return;
+                }
+            } else {
+                // Inimigo se defende
+                const defenseBonus = Math.floor(gameState.enemy.def * 0.3);
+                gameState.enemy.def += defenseBonus;
+                
+                // Adiciona mensagem ao log
+                addToBattleLog(`O ${gameState.enemy.name} se prepara para se defender!`, 'log-info');
+                
+                // Remove o bônus de defesa no próximo turno
+                setTimeout(() => {
+                    gameState.enemy.def -= defenseBonus;
+                    updateUI();
+                }, 0);
+            }
+            
+            // Reseta a defesa do jogador
+            gameState.playerDefending = false;
+            
+            // Atualiza os cooldowns
+            updateCooldowns();
+            
+            // Volta para o turno do jogador
+            gameState.isPlayerTurn = true;
+            updateUI();
+        }
+
+        // Inimigo derrotado
+        function enemyDefeated() {
+            // Adiciona experiência ao jogador
+            const xpGained = gameState.enemy.xpReward;
+            gameState.player.xp += xpGained;
+            
+            // Adiciona ouro ao jogador
+            const goldGained = gameState.enemy.goldReward;
+            // Aqui você pode adicionar ouro ao inventário do jogador
+            
+            // Adiciona mensagem ao log
+            addToBattleLog(`Você derrotou o ${gameState.enemy.name}! +${xpGained} XP`, 'log-info');
+            
+            // Verifica se o jogador subiu de nível
+            checkLevelUp();
+            
+            // Gera um novo inimigo após um breve atraso
+            setTimeout(() => {
+                spawnNewEnemy();
+                updateUI();
+                addToBattleLog(`Um novo ${gameState.enemy.name} apareceu!`, 'log-info');
+            }, 2000);
+        }
+
+        // Jogador derrotado
+        function playerDefeated() {
+            // Adiciona mensagem ao log
+            addToBattleLog('Você foi derrotado!', 'log-damage');
+            
+            // Desabilita os botões de ação
+            document.querySelectorAll('.action-button').forEach(button => {
+                button.disabled = true;
+            });
+            
+            // Mostra opção para tentar novamente
+            setTimeout(() => {
+                if (confirm('Você foi derrotado! Deseja tentar novamente?')) {
+                    location.reload();
+                } else {
+                    window.location.href = 'mapa-mundi.html';
+                }
+            }, 1000);
+        }
+
+        // Tenta fugir da batalha
+        function tryToFlee() {
+            if (!gameState.isPlayerTurn) return;
+            
+            // 70% de chance de fugir com sucesso
+            if (Math.random() < 0.7) {
+                addToBattleLog('Você fugiu da batalha!', 'log-info');
+                
+                // Volta para o mapa após um breve atraso
+                setTimeout(() => {
+                    window.location.href = 'mapa-mundi.html';
+                }, 1500);
+            } else {
+                addToBattleLog('Você não conseguiu fugir!', 'log-info');
+                
+                // Passa para o turno do inimigo
+                gameState.isPlayerTurn = false;
+                updateUI();
+                
+                setTimeout(enemyTurn, 1000);
+            }
+        }
+
+        // Abre o inventário
+        function openInventory() {
+            // Implemente a abertura do inventário aqui
+            addToBattleLog('Inventário aberto!', 'log-info');
+            // Por enquanto, apenas simula o uso de uma poção
+            if (confirm('Usar Poção de Cura (recupera 30 de HP)?')) {
+                const healAmount = Math.min(30, gameState.player.maxHp - gameState.player.hp);
+                if (healAmount > 0) {
+                    gameState.player.hp += healAmount;
+                    addToBattleLog(`Você usou uma Poção de Cura e recuperou ${healAmount} de HP!`, 'log-heal');
+                    updateUI();
+                    
+                    // Mostra o efeito de cura
+                    showFloatingDamage(healAmount, elements.playerSprite, 'heal');
+                    
+                    // Passa para o turno do inimigo
+                    gameState.isPlayerTurn = false;
+                    updateUI();
+                    
+                    setTimeout(enemyTurn, 1000);
+                } else {
+                    addToBattleLog('Sua vida já está cheia!', 'log-info');
+                }
+            }
+        }
+
+        // Gera um novo inimigo
+        function spawnNewEnemy() {
+            // Lista de inimigos possíveis
+            const enemies = [
+                {
+                    name: 'Goblin',
+                    level: 1,
+                    maxHp: 50,
+                    hp: 50,
+                    atk: 5,
+                    matk: 3,
+                    def: 4,
+                    xpReward: 25,
+                    goldReward: 10,
+                    sprite: '../assets/monstros/Goblin.png'
+                },
+                {
+                    name: 'Lobo',
+                    level: 2,
+                    maxHp: 70,
+                    hp: 70,
+                    atk: 7,
+                    matk: 2,
+                    def: 5,
+                    xpReward: 35,
+                    goldReward: 15,
+                    sprite: '../assets/monstros/Lobo.png'
+                },
+                {
+                    name: 'Aranha Gigante',
+                    level: 3,
+                    maxHp: 90,
+                    hp: 90,
+                    atk: 8,
+                    matk: 4,
+                    def: 6,
+                    xpReward: 45,
+                    goldReward: 20,
+                    sprite: '../assets/monstros/Aranha Gigante.png'
+                }
+            ];
+            
+            // Escolhe um inimigo aleatório
+            const enemyIndex = Math.floor(Math.random() * enemies.length);
+            gameState.enemy = JSON.parse(JSON.stringify(enemies[enemyIndex]));
+            
+            // Atualiza o sprite do inimigo
+            updateSprites();
+            
+            // Ajusta os status do inimigo com base no nível do jogador
+            const levelDifference = gameState.player.level - gameState.enemy.level;
+            if (levelDifference > 0) {
+                // Inimigo mais fraco que o jogador
+                gameState.enemy.maxHp = Math.max(10, gameState.enemy.maxHp + (levelDifference * 5));
+                gameState.enemy.hp = gameState.enemy.maxHp;
+                gameState.enemy.atk = Math.max(1, gameState.enemy.atk + levelDifference);
+                gameState.enemy.def = Math.max(1, gameState.enemy.def + levelDifference);
+                gameState.enemy.xpReward = Math.max(5, gameState.enemy.xpReward + (levelDifference * 2));
+                gameState.enemy.goldReward = Math.max(1, gameState.enemy.goldReward + levelDifference);
+            }
+            
+            // Garante que é o turno do jogador
+            gameState.isPlayerTurn = true;
+        }
+
+        // Verifica se o jogador subiu de nível
+        function checkLevelUp() {
+            if (gameState.player.xp >= gameState.player.xpToNextLevel) {
+                gameState.player.level++;
+                gameState.player.xp -= gameState.player.xpToNextLevel;
+                gameState.player.xpToNextLevel = Math.floor(gameState.player.xpToNextLevel * 1.5);
+                
+                // Melhora os status do jogador
+                gameState.player.maxHp += 10;
+                gameState.player.hp = gameState.player.maxHp;
+                gameState.player.atk += 2;
+                gameState.player.matk += 1;
+                gameState.player.def += 1;
+                
+                // Adiciona mensagem ao log
+                addToBattleLog(`Parabéns! Você subiu para o nível ${gameState.player.level}!`, 'log-info');
+                
+                // Verifica se o jogador subiu mais de um nível
+                if (gameState.player.xp >= gameState.player.xpToNextLevel) {
+                    checkLevelUp();
+                }
+            }
+        }
+
+        // Adiciona uma mensagem ao log de batalha
+        function addToBattleLog(message, type = 'log-info') {
+            const entry = {
+                message: message,
+                type: type,
+                timestamp: new Date().toLocaleTimeString()
+            };
+            
+            gameState.battleLog.push(entry);
+            
+            // Mantém apenas as últimas 50 mensagens
+            if (gameState.battleLog.length > 50) {
+                gameState.battleLog.shift();
+            }
+            
+            // Atualiza o log na tela
+            updateBattleLog();
+        }
+
+        // Atualiza o log de batalha na tela
+        function updateBattleLog() {
+            elements.battleLog.innerHTML = '';
+            
+            gameState.battleLog.forEach(entry => {
+                const logEntry = document.createElement('div');
+                logEntry.className = `log-entry ${entry.type}`;
+                logEntry.textContent = `[${entry.timestamp}] ${entry.message}`;
+                elements.battleLog.appendChild(logEntry);
+            });
+            
+            // Rola para a última mensagem
+            elements.battleLog.scrollTop = elements.battleLog.scrollHeight;
+        }
+
+        // Salva o jogo
+        function saveGame() {
+            const saveData = {
+                player: gameState.player,
+                timestamp: new Date().getTime()
+            };
+            
+            localStorage.setItem('blazeAndSteelSave', JSON.stringify(saveData));
+        }
+
+        // Carrega o jogo salvo
+        function loadGame() {
+            const saveData = localStorage.getItem('blazeAndSteelSave');
+            
+            if (saveData) {
+                try {
+                    const parsedData = JSON.parse(saveData);
+                    
+                    // Atualiza os dados do jogador
+                    if (parsedData.player) {
+                        Object.assign(gameState.player, parsedData.player);
+                        gameState.player.hp = gameState.player.maxHp; // Recupera a vida ao carregar
+                        gameState.player.buffs = []; // Limpa os buffs
+                    }
+                    
+                    console.log('Jogo carregado com sucesso!');
+                } catch (error) {
+                    console.error('Erro ao carregar o jogo:', error);
+                }
+            }
+        }
+
+        // Atualiza os sprites do jogador e do inimigo
+        function updateSprites() {
+            // Inverte o sprite do jogador para ele olhar para a direita
+            elements.playerSprite.style.transform = 'scaleX(-1)';
+            
+            // Define o sprite do jogador com base na classe
+            let playerSprite = '';
+            switch (gameState.player.class) {
+                case 'guerreiro':
+                    playerSprite = '../assets/classes/guerreiro_sheets.png'; // Usando o sprite sheet
+                    break;
+                case 'arqueiro':
+                    playerSprite = '../assets/classes/arqueiro.png';
+                    break;
+                case 'mago':
+                    playerSprite = '../assets/classes/mago.png';
+                    break;
+                default:
+                    playerSprite = '../assets/classes/guerreiro_sheets.png'; // Usando o sprite sheet como padrão
+            }
+            
+            // Aplica o sprite ao elemento
+            elements.playerSprite.src = playerSprite;
+            
+            // Configuração específica para o sprite sheet do guerreiro
+            if (gameState.player.class === 'guerreiro') {
+                elements.playerSprite.classList.add('sprite-sheet');
+                elements.playerSprite.style.objectFit = 'cover';
+                elements.playerSprite.style.objectPosition = '0 0';
+            } else {
+                elements.playerSprite.classList.remove('sprite-sheet');
+                elements.playerSprite.style.width = '200px';
+                elements.playerSprite.style.height = '300px';
+                elements.playerSprite.style.objectFit = 'contain';
+                elements.playerSprite.style.objectPosition = 'bottom';
+            }
+            
+            elements.playerSprite.style.filter = 'drop-shadow(0 0 10px rgba(0, 0, 0, 0.5))';
+            
+            // Define o sprite do inimigo
+            if (gameState.enemy && gameState.enemy.sprite) {
+                elements.enemySprite.src = gameState.enemy.sprite;
+                elements.enemySprite.style.backgroundColor = 'transparent';
+            } else {
+                // Se não houver sprite definido, usa um placeholder
+                elements.enemySprite.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+                elements.enemySprite.style.borderRadius = '10px';
+            }
+            
+            // Aplica estilos ao sprite do inimigo
+            elements.enemySprite.style.width = '200px';
+            elements.enemySprite.style.height = '300px';
+            elements.enemySprite.style.objectFit = 'contain';
+            elements.enemySprite.style.objectPosition = 'bottom';
+            elements.enemySprite.style.filter = 'drop-shadow(0 0 10px rgba(0, 0, 0, 0.5))';
+            
+            // Garante que os sprites estejam visíveis
+            elements.playerSprite.style.display = 'block';
+            elements.enemySprite.style.display = 'block';
+        }
+
+        // Configura os ouvintes de eventos
+        function setupEventListeners() {
+            console.log('Configurando ouvintes de eventos...');
+            
+            // Verifica se os elementos existem antes de adicionar os ouvintes
+            const requiredElements = [
+                'attackBtn', 'defendBtn', 'abilityBtn', 'itemBtn', 'backButton',
+                'actionButtons', 'specialAbilities', 'battleTurn'
+            ];
+            
+            // Verifica se todos os elementos necessários existem
+            const missingElements = [];
+            requiredElements.forEach(elementId => {
+                if (!elements[elementId]) {
+                    missingElements.push(elementId);
+                }
+            });
+            
+            if (missingElements.length > 0) {
+                console.error('Elementos não encontrados:', missingElements.join(', '));
+                addToBattleLog('Erro ao carregar a interface. Por favor, recarregue a página.', 'log-damage');
+                return;
+            }
+
+            try {
+                // Botão de ataque
+                elements.attackBtn.addEventListener('click', () => {
+                    console.log('Botão de ataque clicado');
+                    if (gameState.isPlayerTurn) {
+                        playerAttack();
+                    }
+                });
+                
+                // Botão de defesa
+                elements.defendBtn.addEventListener('click', () => {
+                    console.log('Botão de defesa clicado');
+                    if (gameState.isPlayerTurn) {
+                        playerDefend();
+                    }
+                });
+                
+                // Botão de habilidades
+                elements.abilityBtn.addEventListener('click', () => {
+                    console.log('Botão de habilidades clicado');
+                    if (gameState.isPlayerTurn) {
+                        elements.actionButtons.style.display = 'none';
+                        elements.specialAbilities.style.display = 'grid';
+                    }
+                });
+                
+                // Botão de itens
+                elements.itemBtn.addEventListener('click', () => {
+                    console.log('Botão de itens clicado');
+                    if (gameState.isPlayerTurn) {
+                        if (typeof openInventory === 'function') {
+                            openInventory();
+                        } else {
+                            console.error('Função openInventory não encontrada');
+                            addToBattleLog('Sistema de itens não disponível no momento.', 'log-info');
+                        }
+                    }
+                });
+                
+                // Botão de voltar
+                elements.backButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('Botão de voltar clicado');
+                    if (confirm('Deseja realmente sair da batalha?')) {
+                        saveGame();
+                        window.location.href = 'mapa-mundi.html';
+                    }
+                });
+                
+                console.log('Ouvintes de eventos configurados com sucesso!');
+            } catch (error) {
+                console.error('Erro ao configurar ouvintes de eventos:', error);
+                addToBattleLog('Erro ao configurar controles. Por favor, recarregue a página.', 'log-damage');
+            }
+        }
+
+        // Inicializa o jogo quando a página carregar
+        window.addEventListener('load', () => {
+            init();
+            
+            // Salva o jogo a cada minuto
+            setInterval(saveGame, 60000);
+            
+            // Salva o jogo quando a página for fechada
+            window.addEventListener('beforeunload', saveGame);
+            
+            // Adiciona evento de clique ao botão de voltar
+            elements.backButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                saveGame();
+                window.location.href = 'mapa-mundi.html';
+            });
+        });
+    </script>
+</body>
+</html>
