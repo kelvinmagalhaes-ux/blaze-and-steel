@@ -1,0 +1,243 @@
+/* 
+ * battle.css - Estilos para a tela de batalha
+ * Mantém apenas as animações e estilos específicos para interações
+ */
+
+/* Efeitos de animação básicos */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Animações de batalha */
+@keyframes attack {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(50px); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes takeDamage {
+    0% { background-color: transparent; }
+    50% { background-color: rgba(255, 0, 0, 0.3); }
+    100% { background-color: transparent; }
+}
+
+@keyframes heal {
+    0% { background-color: transparent; }
+    50% { background-color: rgba(0, 255, 0, 0.3); }
+    100% { background-color: transparent; }
+}
+
+/* Classes de animação */
+.animate-attack {
+    animation: attack 0.3s ease-in-out;
+}
+
+.animate-damage {
+    animation: takeDamage 0.5s ease-in-out;
+}
+
+.animate-heal {
+    animation: heal 0.5s ease-in-out;
+}
+
+/* Efeito de pulso para o VS */
+@keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+.vs-circle {
+    animation: pulse 2s infinite;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background: #8b0000;
+    border: 3px solid #ff0000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 4px #000;
+    z-index: 10;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+/* Efeito de brilho suave no fundo */
+#battle-container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(74, 124, 89, 0.1) 0%, transparent 25%),
+        radial-gradient(circle at 80% 70%, rgba(74, 124, 89, 0.1) 0%, transparent 25%);
+    z-index: -1;
+    pointer-events: none;
+    animation: backgroundPulse 15s infinite alternate;
+}
+
+@keyframes backgroundPulse {
+    0% { opacity: 0.3; }
+    100% { opacity: 0.6; }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .battle-area {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .battle-panel {
+        width: 90%;
+        height: auto;
+        min-height: 300px;
+    }
+    
+    .action-buttons {
+        grid-template-columns: 1fr 1fr !important;
+    }
+    
+    .vs-circle {
+        position: relative !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        margin: 10px auto;
+        animation: none;
+    }
+    
+    .vs-circle::before {
+        content: 'VS';
+        display: block;
+        width: 60px;
+        height: 60px;
+        background: #8b0000;
+        border: 3px solid #ff0000;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        font-weight: bold;
+        color: white;
+        text-shadow: 2px 2px 4px #000;
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    }
+}
+
+/* Efeitos de hover para botões */
+.action-button {
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-button::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.5s;
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+.action-button:hover::after {
+    left: 100%;
+}
+
+.action-button:active {
+    transform: translateY(1px) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Animações para o log de batalha */
+@keyframes slideInLog {
+    from { 
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+    to { 
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.battle-log .log-entry {
+    animation: slideInLog 0.3s ease-out;
+}
+
+/* Efeito de brilho ao receber dano */
+@keyframes damageFlash {
+    0% { box-shadow: 0 0 10px 5px rgba(255, 0, 0, 0.5); }
+    100% { box-shadow: none; }
+}
+
+.player-panel.damage-flash {
+    animation: damageFlash 0.5s ease-out;
+}
+
+/* Efeito de cura */
+@keyframes healFlash {
+    0% { box-shadow: 0 0 10px 5px rgba(0, 255, 0, 0.5); }
+    100% { box-shadow: none; }
+}
+
+.player-panel.heal-flash {
+    animation: healFlash 0.5s ease-out;
+}
+
+/* Estilos para o log de batalha */
+.battle-log {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #4a7c59;
+    border-radius: 10px;
+    height: 150px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    color: #fff;
+    font-size: 14px;
+    line-height: 1.4;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.log-entry {
+    margin: 5px 0;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.log-info { color: #4af; }
+.log-damage { color: #f44; }
+.log-heal { color: #4f4; }
+.log-buff { color: #ff4; }
+
+/* Barra de rolagem personalizada */
+.battle-log::-webkit-scrollbar { width: 8px; }
+.battle-log::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); border-radius: 4px; }
+.battle-log::-webkit-scrollbar-thumb { background: #4a7c59; border-radius: 4px; }
+.battle-log::-webkit-scrollbar-thumb:hover { background: #5a8c69; }

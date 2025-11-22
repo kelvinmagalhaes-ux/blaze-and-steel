@@ -1,0 +1,407 @@
+/* 
+ * battle-screen.css
+ * Estilos específicos para a tela de batalha
+ */
+
+/* Container principal da batalha */
+#battle-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0a1a0a 0%, #1a3a1a 100%);
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Cabeçalho da batalha */
+.battle-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: rgba(0, 0, 0, 0.7);
+    border-bottom: 2px solid #4a7c59;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Botão de voltar */
+.back-button {
+    background: #8b0000;
+    border: 2px solid #ff0000;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.back-button:hover {
+    background: #a52a2a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.back-button i {
+    font-size: 16px;
+}
+
+/* Área de batalha */
+.battle-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: calc(100vh - 200px);
+    padding: 0 50px;
+    position: relative;
+}
+
+/* Painéis do jogador e inimigo */
+.battle-panel {
+    background: rgba(0, 0, 0, 0.7);
+    border: 3px solid #4a7c59;
+    border-radius: 15px;
+    padding: 20px;
+    width: 40%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Cabeçalho do painel */
+.battle-panel h2 {
+    margin: 0 0 15px 0;
+    color: #fff;
+    text-align: center;
+    font-size: 24px;
+    text-shadow: 2px 2px 4px #000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Sprite do personagem/inimigo */
+.character-sprite {
+    width: 200px;
+    height: 200px;
+    margin: 10px 0;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.character-sprite img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Nome do personagem/inimigo */
+#player-name,
+#enemy-name {
+    position: absolute;
+    bottom: -25px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    text-shadow: 1px 1px 2px #000;
+}
+
+/* Estatísticas do personagem/inimigo */
+.character-stats {
+    width: 100%;
+    margin-top: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #4a7c59;
+}
+
+/* Linha de estatísticas */
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 8px 0;
+    font-size: 14px;
+}
+
+/* Valor das estatísticas */
+.stat-value {
+    font-weight: bold;
+    color: #ffcc00;
+}
+
+/* Barra de vida */
+.health-bar {
+    width: 100%;
+    height: 20px;
+    background: #333;
+    border-radius: 10px;
+    margin: 10px 0;
+    overflow: hidden;
+    border: 2px solid #000;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.health-fill {
+    height: 100%;
+    transition: width 0.3s ease-in-out;
+}
+
+#player-health-fill {
+    background: linear-gradient(to right, #00ff00, #00cc00);
+    width: 100%;
+}
+
+#enemy-health-fill {
+    background: linear-gradient(to right, #ff0000, #cc0000);
+    width: 100%;
+}
+
+/* Círculo VS */
+.vs-circle {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background: #8b0000;
+    border: 3px solid #ff0000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 4px #000;
+    z-index: 10;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+/* Ações de batalha */
+.battle-actions {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-top: 2px solid #4a7c59;
+    z-index: 100;
+}
+
+/* Botões de ação */
+.action-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.action-button {
+    padding: 12px 8px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 12px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.action-button i {
+    font-size: 16px;
+}
+
+/* Estilos específicos para cada botão */
+.attack-btn {
+    background: linear-gradient(to bottom, #ff4444, #cc0000);
+    border: 2px solid #ff0000;
+}
+
+.defend-btn {
+    background: linear-gradient(to bottom, #4444ff, #0000cc);
+    border: 2px solid #0000ff;
+}
+
+.skill-btn {
+    background: linear-gradient(to bottom, #aa44ff, #7700cc);
+    border: 2px solid #aa00ff;
+}
+
+.item-btn {
+    background: linear-gradient(to bottom, #ffaa44, #cc7700);
+    border: 2px solid #ff8800;
+}
+
+.flee-btn {
+    background: linear-gradient(to bottom, #44aa44, #007700);
+    border: 2px solid #00aa00;
+}
+
+/* Efeito de hover nos botões */
+.action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.action-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Efeito de brilho ao passar o mouse */
+.action-button::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.5s;
+}
+
+.action-button:hover::after {
+    left: 100%;
+}
+
+/* Log de batalha */
+.battle-log {
+    position: fixed;
+    bottom: 120px;
+    left: 20px;
+    right: 20px;
+    height: 100px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #4a7c59;
+    border-radius: 10px;
+    padding: 10px 15px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.4;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Estilos para as entradas do log */
+.log-entry {
+    margin: 5px 0;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    animation: slideInLog 0.3s ease-out;
+}
+
+/* Cores para diferentes tipos de mensagens */
+.log-info { color: #4af; }
+.log-damage { color: #f44; }
+.log-heal { color: #4f4; }
+.log-buff { color: #ff4; }
+
+/* Barra de rolagem personalizada */
+.battle-log::-webkit-scrollbar { width: 8px; }
+.battle-log::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); border-radius: 4px; }
+.battle-log::-webkit-scrollbar-thumb { background: #4a7c59; border-radius: 4px; }
+.battle-log::-webkit-scrollbar-thumb:hover { background: #5a8c69; }
+
+/* Animações */
+@keyframes slideInLog {
+    from { 
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+    to { 
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .battle-area {
+        flex-direction: column;
+        padding: 20px;
+        height: auto;
+        gap: 20px;
+    }
+    
+    .battle-panel {
+        width: 100%;
+        height: auto;
+        min-height: 300px;
+    }
+    
+    .action-buttons {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .vs-circle {
+        position: relative;
+        top: 0;
+        left: 0;
+        transform: none;
+        margin: 20px auto;
+        animation: none;
+    }
+    
+    .battle-log {
+        position: relative;
+        bottom: auto;
+        left: 0;
+        right: 0;
+        margin: 20px;
+        height: 150px;
+    }
+    
+    .battle-actions {
+        position: relative;
+    }
+}
+
+/* Efeito de brilho suave no fundo */
+#battle-container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(74, 124, 89, 0.1) 0%, transparent 25%),
+        radial-gradient(circle at 80% 70%, rgba(74, 124, 89, 0.1) 0%, transparent 25%);
+    z-index: -1;
+    pointer-events: none;
+    animation: backgroundPulse 15s infinite alternate;
+}
+
+@keyframes backgroundPulse {
+    0% { opacity: 0.3; }
+    100% { opacity: 0.6; }
+}

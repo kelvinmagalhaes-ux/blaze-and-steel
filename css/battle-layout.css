@@ -1,0 +1,515 @@
+/* 
+ * battle-layout.css
+ * Estilo para batalha 2D em turnos
+ */
+
+/* Reset e estilos base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Container principal */
+#battle-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: url('../assets/fundo_combate.jpg') no-repeat center center;
+    background-size: cover;
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 50px;
+}
+
+/* Personagens na batalha */
+.character {
+    position: relative;
+    width: 40%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estilo para o jogador (lado esquerdo) */
+.character.player {
+    /* O transform foi movido para a classe .player-sprite */
+    /* para evitar inverter todo o conteúdo do painel */
+    transform: none;
+}
+
+/* Estilo para o inimigo (lado direito) */
+.character.enemy {
+    transform: scaleX(1);
+}
+
+/* Painel de status dos personagens */
+.character-panel {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #8b5a2b;
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 10;
+}
+
+/* Painel do Jogador */
+.player-panel {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    width: 220px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #8b5a2b;
+    border-radius: 8px;
+    padding: 6px;
+    z-index: 20;  /* Aumentado para ficar acima do log */
+    transform: scaleX(1);
+    font-size: 0.9em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Painel do Inimigo */
+.enemy-panel {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 220px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #8b5a2b;
+    border-radius: 8px;
+    padding: 6px;
+    z-index: 20;  /* Aumentado para ficar acima do log */
+    font-size: 0.9em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Container de habilidades especiais */
+.special-abilities-container {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    width: 80%;
+    max-width: 800px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #8b5a2b;
+    border-radius: 10px;
+    z-index: 100;
+}
+
+.ability-container {
+    position: relative;
+    width: 100%;
+    height: 60px;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.ability-btn {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, #4a7c59, #3a5a40);
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    position: relative;
+    z-index: 1;
+}
+
+.ability-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.cooldown-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 2;
+    transition: height 0.3s ease;
+}
+
+.cooldown-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 1.2em;
+    text-shadow: 0 0 5px black;
+    z-index: 3;
+}
+
+/* Área de ações do jogador */
+.action-buttons {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    width: 80%;
+    max-width: 800px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #8b5a2b;
+    border-radius: 10px;
+    z-index: 100;
+}
+
+/* Indicador de turno */
+.turn-indicator {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 1.1em;
+    z-index: 50;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    border: 2px solid #8b5a2b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Log de batalha */
+.battle-log {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    max-width: 600px;
+    height: 150px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #8b5a2b;
+    border-radius: 10px;
+    padding: 10px;
+    overflow-y: auto;
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+    z-index: 5;  /* Abaixo dos painéis mas acima do fundo */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+/* Estilo para as entradas do log */
+.log-entry {
+    margin: 5px 0;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Estilo para mensagens de dano */
+.log-damage {
+    color: #ff6b6b;
+    font-weight: bold;
+}
+
+/* Estilo para mensagens de cura */
+.log-heal {
+    color: #51cf66;
+    font-weight: bold;
+}
+
+/* Estilo para mensagens de informação */
+.log-info {
+    color: #4dabf7;
+}
+
+/* Estilo para o sprite do jogador */
+#player-sprite {
+    width: 200px;
+    height: 300px;
+    object-fit: contain;
+    object-position: bottom;
+    transform: scaleX(-1);
+    transition: transform 0.3s ease;
+}
+
+/* Classe para garantir que apenas o sprite seja invertido */
+.player-sprite {
+    transform: scaleX(-1);
+}
+
+/* Animação de ataque */
+@keyframes attackAnimation {
+    0% { 
+        transform: scaleX(-1) translateX(0);
+        background-image: var(--original-sprite, none);
+        z-index: 30;  /* Garante que fique acima de elementos de fundo */
+    }
+    20% { 
+        transform: scaleX(-1) translateX(-50px);
+        background-image: var(--attack-sprite, none);
+        z-index: 30;
+    }
+    80% { 
+        transform: scaleX(-1) translateX(-50px);
+        background-image: var(--attack-sprite, none);
+        z-index: 30;
+    }
+    100% { 
+        transform: scaleX(-1) translateX(0);
+        background-image: var(--original-sprite, none);
+        z-index: auto;
+    }
+}
+
+/* Classe de ataque aplicada durante a animação */
+.attacking {
+    animation: attackAnimation 0.8s ease-in-out forwards;
+    position: relative;
+    z-index: 30;  /* Garante que fique acima de outros elementos durante o ataque */
+    will-change: transform;  /* Otimização de performance */
+}
+
+.attacking {
+    animation: attackAnimation 0.8s ease-in-out forwards;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    background-image: var(--original-sprite, none);
+}
+
+/* Garante que o sprite fique na posição correta */
+.character-sprite {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 300px;
+    overflow: hidden;
+}
+
+/* Estilo para o sprite sheet do guerreiro */
+.character-sprite img.sprite-sheet {
+    width: 300px; /* Largura total do sprite sheet (3 frames de 200px) */
+    height: 120px;
+    object-fit: cover;
+    object-position: 0 0;
+    image-rendering: pixelated;
+}
+
+/* Animação do sprite sheet */
+@keyframes walk {
+    0% { object-position: 0 0; }
+    50% { object-position: -200px 0; }
+    100% { object-position: -400px 0; }
+}
+
+/* Aplica a animação apenas durante o ataque */
+#battle-container .character.player .sprite-sheet.attacking {
+    animation: walk 0.5s steps(3) 1; /* Executa a animação apenas uma vez */
+}
+
+/* Botão de voltar */
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(139, 90, 43, 0.8);
+    border: 2px solid #b87333;
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 100;
+}
+
+/* Estilos para os botões de ação */
+.action-btn {
+    padding: 12px 15px;
+    background: linear-gradient(to bottom, #4a7c59, #3a5a40);
+    border: 2px solid #344e41;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    background: linear-gradient(to bottom, #3a5a40, #2d4739);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.action-btn:active {
+    transform: translateY(1px);
+}
+
+/* Estilo para o botão de ataque */
+#attack-btn { background: linear-gradient(to bottom, #d00000, #9d0208); border-color: #6a040f; }
+#attack-btn:hover { background: linear-gradient(to bottom, #9d0208, #6a040f); }
+
+/* Estilo para o botão de defesa */
+#defend-btn { background: linear-gradient(to bottom, #1a759f, #184e77); border-color: #0d3b66; }
+#defend-btn:hover { background: linear-gradient(to bottom, #184e77, #0d3b66); }
+
+/* Estilo para o botão de habilidade */
+#ability-btn { background: linear-gradient(to bottom, #ff9e00, #e85d04); border-color: #dc2f02; }
+#ability-btn:hover { background: linear-gradient(to bottom, #e85d04, #dc2f02); }
+
+/* Estilo para o botão de item */
+#item-btn { background: linear-gradient(to bottom, #7209b7, #560bad); border-color: #480ca8; }
+#item-btn:hover { background: linear-gradient(to bottom, #560bad, #480ca8); }
+
+/* Barra de vida */
+.health-bar {
+    width: 100%;
+    height: 20px;
+    background: #333;
+    border: 2px solid #000;
+    border-radius: 10px;
+    margin: 5px 0;
+    overflow: hidden;
+}
+
+.health-fill {
+    height: 100%;
+    background: linear-gradient(to right, #e63946, #f72585);
+    width: 100%;
+    transition: width 0.3s ease;
+}
+
+/* Estilos básicos para os elementos */
+.character-sprite {
+    width: 200px;
+    height: 300px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 5;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+}
+
+.character-sprite img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: bottom;
+}
+
+/* Efeitos de dano */
+.damage-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.damage-effect.active {
+    opacity: 1;
+    animation: damageFlash 0.5s ease-out;
+}
+
+@keyframes damageFlash {
+    0% { opacity: 0.8; }
+    100% { opacity: 0; }
+}
+
+.character-name {
+    text-align: center;
+    font-weight: bold;
+    margin: 5px 0;
+    font-size: 1.2em;
+    color: #fff;
+    text-shadow: 1px 1px 2px #000;
+}
+
+.health-bar {
+    width: 100%;
+    height: 8px;  /* Reduzido de 12px para 8px */
+    background: #3a1f0e;
+    border: 1px solid #8b5a2b;
+    border-radius: 3px;  /* Borda mais arredondada para combinar com a altura menor */
+    margin: 2px 0;  /* Margem reduzida */
+    overflow: hidden;
+}
+
+.health-fill {
+    height: 100%;
+    background: #e74c3c;
+    width: 100%;
+    transition: width 0.3s ease;
+}
+
+.player-panel .health-fill {
+    background: #2ecc71;
+    transition: width 0.3s ease;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 3px 0;  /* Margem reduzida */
+    font-size: 0.85em;  /* Fonte ligeiramente menor */
+    line-height: 1.2;   /* Espaçamento entre linhas ajustado */
+}
+
+.action-btn {
+    background: rgba(139, 90, 43, 0.8);
+    border: 2px solid #b87333;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.action-btn:hover {
+    background: rgba(184, 115, 51, 0.8);
+}
+
+.log-entry {
+    margin: 3px 0;
+    padding: 2px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}

@@ -1,0 +1,246 @@
+/* 
+ * battle-effects.css
+ * Efeitos especiais para a tela de batalha
+ */
+
+/* Efeito de brilho nos painéis */
+.battle-panel {
+    position: relative;
+    overflow: hidden;
+}
+
+.battle-panel::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    transform: rotate(45deg);
+    animation: panelShine 5s infinite;
+    pointer-events: none;
+}
+
+@keyframes panelShine {
+    0% { transform: translateX(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) rotate(45deg); }
+}
+
+/* Efeito de brilho nos botões */
+.action-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.action-btn::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(30deg);
+    animation: buttonShine 5s infinite;
+    pointer-events: none;
+}
+
+@keyframes buttonShine {
+    0% { transform: translateX(-100%) rotate(30deg); }
+    20% { transform: translateX(100%) rotate(30deg); }
+    100% { transform: translateX(100%) rotate(30deg); }
+}
+
+/* Efeito de brilho na barra de vida */
+.health-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.4) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    animation: healthShine 3s infinite;
+    pointer-events: none;
+}
+
+@keyframes healthShine {
+    0% { transform: translateX(-100%); }
+    20% { transform: translateX(100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Efeito de brilho no log de batalha */
+.battle-log::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+        to right,
+        transparent,
+        #8b5a2b,
+        transparent
+    );
+    animation: logShine 3s infinite;
+}
+
+@keyframes logShine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Efeito de brilho no botão de voltar */
+.back-button {
+    position: relative;
+    overflow: hidden;
+}
+
+.back-button::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        to right,
+        transparent,
+        rgba(255, 0, 0, 0.3),
+        transparent
+    );
+    transform: rotate(30deg);
+    animation: backButtonShine 6s infinite;
+    pointer-events: none;
+}
+
+@keyframes backButtonShine {
+    0% { transform: translateX(-100%) rotate(30deg); }
+    20% { transform: translateX(100%) rotate(30deg); }
+    100% { transform: translateX(100%) rotate(30deg); }
+}
+
+/* Efeito de brilho nos sprites */
+.character-sprite::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+        circle at center,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.character-sprite:hover::after {
+    opacity: 1;
+    animation: spriteShine 2s infinite;
+}
+
+@keyframes spriteShine {
+    0% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 0.5; }
+}
+
+/* Efeito de brilho nos nomes dos personagens */
+.character-name {
+    position: relative;
+    display: inline-block;
+}
+
+.character-name::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: #ffd700;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+.character-name:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* Efeito de brilho nas bordas dos painéis */
+.battle-panel {
+    position: relative;
+}
+
+.battle-panel::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #ffd700, #ff6b6b, #ffd700);
+    background-size: 200% 200%;
+    z-index: -1;
+    border-radius: 17px;
+    animation: borderGlow 3s ease infinite;
+    opacity: 0.7;
+}
+
+@keyframes borderGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Efeito de brilho nos botões de ação */
+.action-btn {
+    position: relative;
+    z-index: 1;
+}
+
+.action-btn::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #4a7c59, #2a5c39, #4a7c59);
+    background-size: 200% 200%;
+    z-index: -1;
+    border-radius: 10px;
+    animation: buttonGlow 3s ease infinite;
+    opacity: 0.7;
+}
+
+@keyframes buttonGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}

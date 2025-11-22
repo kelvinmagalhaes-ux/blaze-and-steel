@@ -1,0 +1,500 @@
+/* Estilos Gerais */
+body {
+    margin: 0;
+    background: #111 url('../assets/fundo.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Overlay para melhor legibilidade */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+}
+
+/* Menu Inicial */
+#start-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+    padding: 40px 0;
+}
+
+.game-logo {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.game-version {
+    color: #888;
+    margin-bottom: 40px;
+    font-size: 14px;
+}
+
+/* Botões */
+button {
+    padding: 15px 30px;
+    background: #333;
+    border: 2px solid #555;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 300px;
+}
+
+button:hover { 
+    background: #444;
+    border-color: #666;
+    transform: translateY(-2px);
+}
+
+/* Criação de Personagem */
+#creation-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    max-width: 800px;
+    width: 100%;
+    padding: 40px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+}
+
+.class-boxes {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.class-option {
+    background: #222;
+    padding: 20px;
+    border: 2px solid #555;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    width: 150px;
+}
+
+.class-option:hover {
+    border-color: #e67e22;
+    transform: translateY(-5px);
+}
+
+.class-option.selected {
+    border-color: #e67e22;
+    background: rgba(230, 126, 34, 0.1);
+}
+
+.class-option img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+input {
+    padding: 12px 15px;
+    font-size: 16px;
+    border: 2px solid #555;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+}
+
+input:focus {
+    outline: none;
+    border-color: #e67e22;
+}
+
+/* Estilos para a batalha */
+
+/* Container de habilidades */
+#ability-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px 0;
+    justify-content: center;
+}
+
+/* Botões de habilidade */
+.ability-btn {
+    background: linear-gradient(135deg, #4a6bff, #6b4aff);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    padding: 8px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.ability-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    background: linear-gradient(135deg, #5a7bff, #7b5aff);
+}
+
+.ability-btn:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.ability-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Efeitos visuais para botões em cooldown */
+.ability-btn.on-cooldown {
+    background: linear-gradient(135deg, #6c757d, #5a6268);
+    position: relative;
+    color: #e0e0e0;
+}
+
+.ability-btn.no-mana {
+    background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+    position: relative;
+}
+
+/* Efeitos de status */
+.status-effects-container {
+    display: flex;
+    gap: 5px;
+    margin: 10px 0;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.status-effect {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    font-size: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    cursor: help;
+    transition: transform 0.2s;
+}
+
+.status-effect:hover {
+    transform: scale(1.1);
+}
+
+/* Cores para diferentes tipos de status */
+.status-effect[data-status="queimando"] {
+    background: linear-gradient(135deg, #ff6b35, #ff8c5a);
+}
+
+.status-effect[data-status="sangrando"] {
+    background: linear-gradient(135deg, #ef476f, #ff6b8b);
+}
+
+.status-effect[data-status="atordoado"] {
+    background: linear-gradient(135deg, #ffd166, #ffde89);
+    color: #333;
+}
+
+.status-effect[data-status="envenenado"] {
+    background: linear-gradient(135deg, #06d6a0, #2ce8b5);
+}
+
+/* Tooltip para efeitos de status */
+.status-effect::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-5px);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s;
+    z-index: 100;
+}
+
+.status-effect:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-10px);
+}
+
+/* Animações */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Efeito de dano crítico */
+.critical-hit {
+    color: #ffcc00;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(255, 204, 0, 0.7);
+    animation: pulse 0.3s ease-in-out;
+}
+
+/* Efeito de esquiva */
+.dodge {
+    color: #00ccff;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 204, 255, 0.7);
+}
+
+/* Efeito de status aplicado */
+.status-applied {
+    animation: shake 0.3s ease-in-out;
+}
+
+/* Ajustes para dispositivos móveis */
+@media (max-width: 768px) {
+    #ability-buttons {
+        gap: 8px;
+    }
+    
+    .ability-btn {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+    
+    .status-effect {
+        width: 24px;
+        height: 24px;
+        font-size: 11px;
+    }
+}
+
+/* Efeitos de Batalha */
+@keyframes floatUp {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-50px); opacity: 0; }
+}
+
+@keyframes attackAnimation {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(20px); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes takeDamage {
+    0% { filter: brightness(1) saturate(100%); }
+    50% { filter: brightness(1.5) saturate(200%); }
+    100% { filter: brightness(1) saturate(100%); }
+}
+
+.damage-number {
+    position: absolute;
+    color: #ff4444;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px #000;
+    animation: floatUp 1s ease-out forwards;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.heal-number {
+    color: #4CAF50 !important;
+}
+
+.attack-animation {
+    animation: attackAnimation 0.3s ease;
+}
+
+.take-damage {
+    animation: takeDamage 0.3s ease;
+}
+
+/* Indicador de Turno */
+.turn-indicator {
+    box-shadow: 0 0 15px 5px rgba(255, 215, 0, 0.7);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+/* Log de Batalha */
+.battle-log {
+    margin-top: 20px;
+    height: 150px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid #4a7c59;
+    border-radius: 5px;
+    padding: 10px;
+    font-family: monospace;
+    scrollbar-width: thin;
+    scrollbar-color: #4a7c59 #1a1a1a;
+}
+
+.battle-log::-webkit-scrollbar {
+    width: 8px;
+}
+
+.battle-log::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+.battle-log::-webkit-scrollbar-thumb {
+    background-color: #4a7c59;
+    border-radius: 4px;
+}
+
+.log-entry {
+    margin: 5px 0;
+    padding: 3px 0;
+    border-bottom: 1px solid #333;
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.log-entry.damage { color: #ff6b6b; }
+.log-entry.heal { color: #6bff6b; }
+.log-entry.info { color: #6ba3ff; }
+.log-entry.important { 
+    color: #ffd700; 
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+}
+
+/* Barra de Experiência */
+.exp-container {
+    width: 100%;
+    height: 10px;
+    background: #333;
+    border-radius: 5px;
+    margin-top: 5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.exp-bar {
+    height: 100%;
+    background: #4CAF50;
+    border-radius: 5px;
+    width: 0%;
+    transition: width 0.5s ease;
+    position: relative;
+}
+
+.exp-text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    font-size: 10px;
+    color: white;
+    text-shadow: 1px 1px 1px #000;
+    line-height: 10px;
+}
+
+/* Efeito de brilho na barra de experiência */
+.exp-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+        rgba(255,255,255,0) 0%, 
+        rgba(255,255,255,0.3) 50%, 
+        rgba(255,255,255,0) 100%);
+    animation: shine 2s infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Efeito de pulso para itens importantes */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.pulse-effect {
+    animation: pulse 0.5s ease;
+}
+
+/* Efeito de brilho para itens raros */
+.rare-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.rare-item::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    transform: rotate(45deg);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) rotate(45deg); }
+}
